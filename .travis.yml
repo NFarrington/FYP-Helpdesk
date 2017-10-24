@@ -1,0 +1,30 @@
+
+language: php
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+
+addons:
+  mariadb: '10.2'
+
+install:
+  - nvm install node
+  - composer self-update
+
+before_script:
+  - cp .env.travis .env
+  - mysql -e 'CREATE DATABASE `tvs-helpdesk`;'
+  - composer install --prefer-dist --no-interaction --optimize-autoloader --no-suggest
+  - php artisan key:generate --no-interaction
+  - php artisan migrate --no-interaction
+  - npm install
+
+script:
+  - vendor/bin/phpunit
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - node_modules
