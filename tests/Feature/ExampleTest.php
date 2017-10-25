@@ -17,4 +17,11 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function testPageNotFound()
+    {
+        $response = $this->get(str_random(32));
+
+        $response->assertStatus(404);
+    }
 }
