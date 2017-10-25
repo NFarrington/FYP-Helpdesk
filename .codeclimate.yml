@@ -27,6 +27,7 @@ ratings:
   - "**.php"
 exclude_paths:
 - config/
+- database/migrations/
 - node_modules/
 - public/
 - tests/
