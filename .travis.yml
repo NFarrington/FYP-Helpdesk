@@ -22,10 +22,14 @@ before_script:
   - php artisan key:generate --no-interaction
   - php artisan migrate --no-interaction
   - npm install
+  - npm run prod
   - ./cc-test-reporter before-build
 
 script:
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_failure:
+  - cat storage/logs/laravel.log
 
 after_script:
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --coverage-input-type clover --exit-code $TRAVIS_TEST_RESULT; fi
