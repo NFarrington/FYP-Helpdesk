@@ -8,7 +8,9 @@
 /storage/*.key
 /vendor
 /.idea
+/.phpstorm.meta.php
 /.vagrant
+/_ide_helper.php
 Homestead.json
 Homestead.yaml
 npm-debug.log
