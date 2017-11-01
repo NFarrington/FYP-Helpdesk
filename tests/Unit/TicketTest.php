@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Ticket;
+use App\Models\TicketPost;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -50,7 +51,7 @@ class TicketTest extends TestCase
     public function testTicketHasPosts()
     {
         $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
-        $ticketPost = factory(Ticket::class)->create(['ticket_id' => $ticket->id]);
+        $ticketPost = factory(TicketPost::class)->create(['ticket_id' => $ticket->id]);
 
         $this->assertEquals($ticketPost->id, $ticket->posts->first()->id);
     }

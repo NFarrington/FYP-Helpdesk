@@ -60,8 +60,8 @@ class TicketTest extends TestCase
             'description' => $ticketPost->content,
         ]);
 
-        $response->assertRedirect(route('tickets.show'));
-        $this->assertDatabaseHas((new Ticket())->getTable(), [
+        $response->assertRedirect(route('tickets.show', 1));
+        $this->assertDatabaseHas($ticket->getTable(), [
             'user_id' => $this->user->id,
             'summary' => $ticketPost->summary,
         ]);
@@ -92,7 +92,7 @@ class TicketTest extends TestCase
      */
     public function testTicketsCanBeRepliedTo()
     {
-        $ticket = factory(Ticket::class)->create(['submitter_id' => $this->user->id]);
+        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
         $ticketPost = factory(TicketPost::class)->make();
         $this->actingAs($this->user);
 
