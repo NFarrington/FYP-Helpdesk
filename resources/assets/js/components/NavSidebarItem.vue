@@ -7,7 +7,7 @@
         props: ['route', 'name'],
         computed: {
             isActive: function () {
-                return window.location.href == this.route;
+                return window.location.href.startsWith(this.route);
             }
         }
     }
