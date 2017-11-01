@@ -50,8 +50,8 @@ class TicketTest extends TestCase
      */
     public function testTicketSubmitsSuccessfully()
     {
-        $ticket = factory(Ticket::class)->make();
         $ticketPost = factory(TicketPost::class)->make();
+        $ticket = $ticketPost->ticket;
 
         $this->actingAs($this->user);
         $this->get(route('tickets.create'));
@@ -60,10 +60,10 @@ class TicketTest extends TestCase
             'description' => $ticketPost->content,
         ]);
 
-        $response->assertRedirect(route('tickets.show', 1));
+        $response->assertRedirect(route('tickets.show', $ticket->id+1));
         $this->assertDatabaseHas($ticket->getTable(), [
             'user_id' => $this->user->id,
-            'summary' => $ticketPost->summary,
+            'summary' => $ticket->summary,
         ]);
         $this->assertDatabaseHas($ticketPost->getTable(), [
             'user_id' => $this->user->id,
@@ -97,7 +97,7 @@ class TicketTest extends TestCase
         $this->actingAs($this->user);
 
         $this->get(route('tickets.show', $ticket->id));
-        $response = $this->put(route('tickets.update', $ticket->id), [
+        $response = $this->post(route('posts.store', $ticket->id), [
             'reply' => $ticketPost->content,
         ]);
 
