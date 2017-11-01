@@ -9,26 +9,6 @@ use Illuminate\Http\Request;
 class TicketPostController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -56,18 +36,10 @@ class TicketPostController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\TicketPost  $ticketPost
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TicketPost $ticketPost)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
      *
      * @param  \App\Models\TicketPost  $ticketPost
      * @return \Illuminate\Http\Response
@@ -80,6 +52,9 @@ class TicketPostController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\TicketPost  $ticketPost
      * @return \Illuminate\Http\Response
@@ -91,6 +66,9 @@ class TicketPostController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
      *
      * @param  \App\Models\TicketPost  $ticketPost
      * @return \Illuminate\Http\Response

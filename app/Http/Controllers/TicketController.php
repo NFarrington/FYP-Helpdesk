@@ -12,6 +12,9 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -80,6 +83,9 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
      * @param  \App\Models\Ticket   $ticket
      * @return \Illuminate\Http\Response
      */
@@ -90,6 +96,9 @@ class TicketController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Ticket   $ticket
@@ -102,6 +111,9 @@ class TicketController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
      *
      * @param  \App\Models\Ticket   $ticket
      * @return \Illuminate\Http\Response
