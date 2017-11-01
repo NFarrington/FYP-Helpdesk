@@ -42,6 +42,18 @@ class AuthenticationTest extends TestCase
     }
 
     /**
+     * Test the login page loads successfully.
+     *
+     * @return void
+     */
+    public function testLoginPageRedirectsAuthenticatedUsers()
+    {
+        $response = $this->actingAs($this->user)->get(route('login'));
+
+        $response->assertRedirect(route('home'));
+    }
+
+    /**
      * Test the registration page loads successfully.
      *
      * @return void
