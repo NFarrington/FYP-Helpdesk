@@ -19,7 +19,7 @@ trait CreatesApplication
         $app->make(Kernel::class)->bootstrap();
 
         // use a dedicated testing database if configured
-        if (($testingDb = env('DB_TEST_DATABASE')) !== NULL) {
+        if (($testingDb = env('DB_TEST_DATABASE')) !== null) {
             $connection = DB::getDefaultConnection();
             config(["database.connections.$connection.database" => $testingDb]);
         }
