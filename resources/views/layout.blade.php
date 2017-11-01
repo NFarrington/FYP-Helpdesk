@@ -65,7 +65,7 @@
                 </ul>
             @else
                 <ul class="nav nav-sidebar">
-                    <li class="active"><a href="#">Overview</a></li>
+                    <nav-sidebar-item name="Overview" route="{{ route('home') }}"></nav-sidebar-item>
                     <!--li><a href="#">Reports</a></li>
                     <li><a href="#">Analytics</a></li>
                     <li><a href="#">Export</a></li-->
