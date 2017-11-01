@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Faker\Factory as FakerFactory;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
