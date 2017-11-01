@@ -26,6 +26,8 @@ class TicketController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Ticket::class);
+
         return view('tickets.create');
     }
 
@@ -37,6 +39,8 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Ticket::class);
+
         $this->validate($request, [
             'summary' => 'required|string|max:250',
             'description' => 'required|string|max:5000',
@@ -50,7 +54,7 @@ class TicketController extends Controller
 
         /** @var TicketPost $ticketPost */
         $ticketPost = TicketPost::make([
-            'content' => $request->input('description')
+            'content' => $request->input('description'),
         ]);
 
         $ticketPost->user()->associate($user);
