@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketPost;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -24,7 +26,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        return view('tickets.create');
     }
 
     /**
@@ -35,7 +37,27 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'summary' => 'required|string|max:250',
+            'description' => 'required|string|max:5000',
+        ]);
+
+        /** @var User $user */
+        $user = $request->user();
+        $ticket = $user->tickets()->create([
+            'summary' => $request->input('summary'),
+        ]);
+
+        /** @var TicketPost $ticketPost */
+        $ticketPost = TicketPost::make([
+            'content' => $request->input('description')
+        ]);
+
+        $ticketPost->user()->associate($user);
+        $ticketPost->ticket()->associate($ticket);
+        $ticketPost->save();
+
+        return redirect(route('tickets.show', $ticket->id));
     }
 
     /**
@@ -46,7 +68,9 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        $this->authorize('view', $ticket);
+
+        return view('tickets.view')->with('ticket', $ticket);
     }
 
     /**
