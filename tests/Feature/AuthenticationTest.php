@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -42,7 +44,7 @@ class AuthenticationTest extends TestCase
     }
 
     /**
-     * Test the login page loads successfully.
+     * Test the login page redirects authenticated users.
      *
      * @return void
      */
@@ -66,13 +68,33 @@ class AuthenticationTest extends TestCase
     }
 
     /**
-     * Test the login page loads successfully.
+     * Test the registration page redirects authenticated users.
      *
      * @return void
      */
     public function testRegistrationPageRedirectsAuthenticatedUsers()
     {
         $response = $this->actingAs($this->user)->get(route('register'));
+
+        $response->assertRedirect(route('home'));
+    }
+
+    /**
+     * Test registration succeeds.
+     *
+     * @return void
+     */
+    public function testRegistrationSucceeds()
+    {
+        $faker = FakerFactory::create(config('app.faker_locale', 'en_US'));
+
+        $this->get(route('register'));
+        $response = $this->post(route('register'), [
+            'name' => $faker->name,
+            'email' => $faker->unique()->safeEmail,
+            'password' => 'secret',
+            'password_confirmation' => 'secret',
+        ]);
 
         $response->assertRedirect(route('home'));
     }
