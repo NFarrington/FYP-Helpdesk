@@ -102,5 +102,6 @@ class TicketTest extends TestCase
         ]);
 
         $response->assertRedirect(route('tickets.show', $ticket->id));
+        $this->assertDatabaseHas($ticketPost->getTable(), ['content' => $ticketPost->content]);
     }
 }
