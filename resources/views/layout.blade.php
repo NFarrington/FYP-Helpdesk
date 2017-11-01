@@ -60,8 +60,8 @@
         <div class="col-sm-3 col-md-2 sidebar">
             @guest
                 <ul class="nav nav-sidebar">
-                    <li class="active"><a href="{{ route('login') }}">Login</a></li>
-                    <li class="active"><a href="{{ route('register') }}">Register</a></li>
+                    <nav-sidebar-item name="Login" route="{{ route('login') }}"></nav-sidebar-item>
+                    <nav-sidebar-item name="Register" route="{{ route('register') }}"></nav-sidebar-item>
                 </ul>
             @else
                 <ul class="nav nav-sidebar">
