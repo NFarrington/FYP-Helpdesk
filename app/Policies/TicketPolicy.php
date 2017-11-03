@@ -13,6 +13,8 @@ class TicketPolicy
     /**
      * Determine whether the user can view the ticket.
      *
+     * @todo    implement
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Ticket  $ticket
      * @return mixed
@@ -25,6 +27,8 @@ class TicketPolicy
     /**
      * Determine whether the user can create tickets.
      *
+     * @todo    implement
+     *
      * @param  \App\Models\User  $user
      * @return mixed
      */
@@ -36,6 +40,8 @@ class TicketPolicy
     /**
      * Determine whether the user can update the ticket.
      *
+     * @todo    implement
+     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Ticket  $ticket
      * @return mixed
@@ -45,15 +51,18 @@ class TicketPolicy
         return true;
     }
 
-//    /**
-//     * Determine whether the user can delete the ticket.
-//     *
-//     * @param  \App\Models\User  $user
-//     * @param  \App\Models\Ticket  $ticket
-//     * @return mixed
-//     */
-//    public function delete(User $user, Ticket $ticket)
-//    {
-//        return true;
-//    }
+    /**
+     * Determine whether the user can delete the ticket.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Ticket  $ticket
+     * @return mixed
+     */
+    public function delete(User $user, Ticket $ticket)
+    {
+        return true;
+    }
 }

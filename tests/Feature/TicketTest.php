@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Ticket;
 use App\Models\TicketPost;
+use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -57,7 +58,7 @@ class TicketTest extends TestCase
         $this->get(route('tickets.create'));
         $response = $this->post(route('tickets.store'), [
             'summary' => $ticket->summary,
-            'description' => $ticketPost->content,
+            'content' => $ticketPost->content,
         ]);
 
         $response->assertRedirect(route('tickets.show', $ticket->id + 1));
@@ -103,5 +104,26 @@ class TicketTest extends TestCase
 
         $response->assertRedirect(route('tickets.show', $ticket->id));
         $this->assertDatabaseHas($ticketPost->getTable(), ['content' => $ticketPost->content]);
+    }
+
+    /**
+     * Test a submitted ticket can be closed.
+     *
+     * @return void
+     */
+    public function testTicketsCanBeClosed()
+    {
+        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
+        $this->actingAs($this->user);
+
+        $this->get(route('tickets.show', $ticket->id));
+        $response = $this->put(route('tickets.update', $ticket->id), [
+            'close' => 'true',
+        ]);
+
+        $response->assertRedirect(route('tickets.index'));
+
+        $ticket = $ticket->fresh();
+        $this->assertEquals(TicketStatus::STATUS_CLOSED, $ticket->status->state);
     }
 }

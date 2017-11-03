@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereUserId($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TicketPost[] $posts
+ * @property int $status_id
+ * @property-read \App\Models\TicketStatus $status
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereStatusId($value)
  */
 class Ticket extends Model
 {
@@ -32,16 +36,6 @@ class Ticket extends Model
     ];
 
     /**
-     * The user who submitted the ticket.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * Posts associated with the ticket.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -49,5 +43,25 @@ class Ticket extends Model
     public function posts()
     {
         return $this->hasMany(TicketPost::class);
+    }
+
+    /**
+     * Status associated with the ticket.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function status()
+    {
+        return $this->belongsTo(TicketStatus::class);
+    }
+
+    /**
+     * The user who submitted the ticket.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

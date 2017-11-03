@@ -38,9 +38,9 @@ class TicketPostTest extends TestCase
      */
     public function testTicketPostHasUser()
     {
-        $ticket = factory(TicketPost::class)->create(['user_id' => $this->user->id]);
+        $ticketPost = factory(TicketPost::class)->create(['user_id' => $this->user->id]);
 
-        $this->assertEquals($this->user->id, $ticket->user->id);
+        $this->assertEquals($this->user->id, $ticketPost->user->id);
     }
 
     /**

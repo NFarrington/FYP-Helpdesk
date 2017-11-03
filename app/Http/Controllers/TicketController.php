@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\TicketPost;
+use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -46,19 +47,19 @@ class TicketController extends Controller
 
         $this->validate($request, [
             'summary' => 'required|string|max:250',
-            'description' => 'required|string|max:5000',
+            'content' => 'required|string|max:5000',
         ]);
 
         /** @var User $user */
         $user = $request->user();
-        $ticket = $user->tickets()->create([
-            'summary' => $request->input('summary'),
-        ]);
+
+        /** @var Ticket $ticket */
+        $ticket = $user->tickets()->make($request->only('summary'));
+        $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
+        $ticket->save();
 
         /** @var TicketPost $ticketPost */
-        $ticketPost = TicketPost::make([
-            'content' => $request->input('description'),
-        ]);
+        $ticketPost = TicketPost::make($request->only('content'));
 
         $ticketPost->user()->associate($user);
         $ticketPost->ticket()->associate($ticket);
@@ -97,16 +98,20 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Ticket   $ticket
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        $this->authorize('update', $ticket);
+
+        if ($request->input('close') === 'true') {
+            $ticket->status()->associate(TicketStatus::closed()->orderBy('id')->first());
+            $ticket->save();
+        }
+
+        return redirect(route('tickets.index'))->with('status', "Ticket {$ticket->id} closed successfully.");
     }
 
     /**
