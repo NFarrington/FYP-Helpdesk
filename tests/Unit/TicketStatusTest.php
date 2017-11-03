@@ -3,11 +3,9 @@
 namespace Tests\Unit;
 
 use App\Models\Ticket;
-use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TicketStatusTest extends TestCase
