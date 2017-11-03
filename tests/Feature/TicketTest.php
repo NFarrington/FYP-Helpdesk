@@ -57,7 +57,7 @@ class TicketTest extends TestCase
         $this->get(route('tickets.create'));
         $response = $this->post(route('tickets.store'), [
             'summary' => $ticket->summary,
-            'description' => $ticketPost->content,
+            'content' => $ticketPost->content,
         ]);
 
         $response->assertRedirect(route('tickets.show', $ticket->id + 1));

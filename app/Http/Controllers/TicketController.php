@@ -46,7 +46,7 @@ class TicketController extends Controller
 
         $this->validate($request, [
             'summary' => 'required|string|max:250',
-            'description' => 'required|string|max:5000',
+            'content' => 'required|string|max:5000',
         ]);
 
         /** @var User $user */
@@ -56,9 +56,7 @@ class TicketController extends Controller
         ]);
 
         /** @var TicketPost $ticketPost */
-        $ticketPost = TicketPost::make([
-            'content' => $request->input('description'),
-        ]);
+        $ticketPost = TicketPost::make($request->only('content'));
 
         $ticketPost->user()->associate($user);
         $ticketPost->ticket()->associate($ticket);

@@ -25,15 +25,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                <label for="description" class="col-md-4 control-label">Description</label>
+                            <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}">
+                                <label for="content" class="col-md-4 control-label">Content</label>
 
                                 <div class="col-md-6">
-                                    <textarea id="description" class="form-control" name="description" rows="3" maxlength="5000" required></textarea>
+                                    <textarea id="content" class="form-control" name="content" rows="3" maxlength="5000" required></textarea>
 
-                                    @if ($errors->has('description'))
+                                    @if ($errors->has('content'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('description') }}</strong>
+                                        <strong>{{ $errors->first('content') }}</strong>
                                     </span>
                                     @endif
                                 </div>
