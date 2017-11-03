@@ -45,15 +45,18 @@ class TicketPolicy
         return true;
     }
 
-//    /**
-//     * Determine whether the user can delete the ticket.
-//     *
-//     * @param  \App\Models\User  $user
-//     * @param  \App\Models\Ticket  $ticket
-//     * @return mixed
-//     */
-//    public function delete(User $user, Ticket $ticket)
-//    {
-//        return true;
-//    }
+    /**
+     * Determine whether the user can delete the ticket.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Ticket  $ticket
+     * @return mixed
+     */
+    public function delete(User $user, Ticket $ticket)
+    {
+        return true;
+    }
 }
