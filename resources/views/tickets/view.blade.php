@@ -4,6 +4,28 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Ticket Details</div>
+                    <div class="panel-body">
+                        <p>ID: {{ $ticket->id }}</p>
+                        <p>Summary: {{ $ticket->summary }}</p>
+                        <p>Actions:</p>
+                        <form class="form-horizontal" method="POST" action="{{ route('tickets.update', $ticket->id) }}">
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+
+                            <input type="hidden" name="close" value="true">
+
+                            <div class="form-group">
+                                <div class="col-md-8">
+                                    <button type="submit" class="btn btn-danger">
+                                        Close Ticket
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 @foreach($ticket->posts->sortByDesc('created_at') as $post)
                     <div class="panel panel-default">
                         <div class="panel-body">
