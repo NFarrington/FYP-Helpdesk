@@ -7,6 +7,7 @@ use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TicketStatusTest extends TestCase
@@ -47,5 +48,23 @@ class TicketStatusTest extends TestCase
         ]);
 
         $this->assertNotEmpty($status->tickets);
+    }
+
+    /**
+     * Test a ticket status is linked to tickets.
+     *
+     * @return void
+     */
+    public function testTicketStatusScopesCorrectly()
+    {
+        TicketStatus::query()->delete();
+        factory(TicketStatus::class, 3)->states('agent')->create();
+        factory(TicketStatus::class, 3)->states('customer')->create();
+        factory(TicketStatus::class, 3)->states('closed')->create();
+
+        $this->assertEquals(3, TicketStatus::withAgent()->count());
+        $this->assertEquals(3, TicketStatus::withCustomer()->count());
+        $this->assertEquals(6, TicketStatus::open()->count());
+        $this->assertEquals(3, TicketStatus::closed()->count());
     }
 }

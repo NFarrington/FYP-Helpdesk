@@ -66,7 +66,7 @@ class TicketTest extends TestCase
     {
         $status = TicketStatus::open()->first();
 
-        $ticket = factory(TicketPost::class)->create([
+        $ticket = factory(Ticket::class)->create([
             'user_id' => $this->user->id,
             'status_id' => $status->id,
         ]);
