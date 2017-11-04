@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\DB;
 
 trait CreatesApplication
 {
@@ -16,6 +17,12 @@ trait CreatesApplication
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
+
+        // use a dedicated testing database if configured
+        if (($testingDb = env('DB_TEST_DATABASE')) !== null) {
+            $connection = DB::getDefaultConnection();
+            config(["database.connections.$connection.database" => $testingDb]);
+        }
 
         return $app;
     }

@@ -1,10 +1,16 @@
 /node_modules
+/public/css
+/public/fonts
+/public/js
 /public/hot
+/public/mix-manifest.json
 /public/storage
 /storage/*.key
 /vendor
 /.idea
+/.phpstorm.meta.php
 /.vagrant
+/_ide_helper.php
 Homestead.json
 Homestead.yaml
 npm-debug.log

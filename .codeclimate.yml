@@ -14,6 +14,9 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+    checks:
+      CleanCode/StaticAccess:
+        enabled: false
 ratings:
   paths:
   - "**.css"
@@ -24,6 +27,7 @@ ratings:
   - "**.php"
 exclude_paths:
 - config/
+- database/migrations/
 - node_modules/
 - public/
 - tests/

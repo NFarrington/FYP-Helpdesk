@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Ticket;
+use App\Models\TicketPost;
+use App\Models\TicketStatus;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class TicketController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $this->authorize('create', Ticket::class);
+
+        return view('tickets.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->authorize('create', Ticket::class);
+
+        $this->validate($request, [
+            'summary' => 'required|string|max:250',
+            'content' => 'required|string|max:5000',
+        ]);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        /** @var Ticket $ticket */
+        $ticket = $user->tickets()->make($request->only('summary'));
+        $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
+        $ticket->save();
+
+        /** @var TicketPost $ticketPost */
+        $ticketPost = TicketPost::make($request->only('content'));
+
+        $ticketPost->user()->associate($user);
+        $ticketPost->ticket()->associate($ticket);
+        $ticketPost->save();
+
+        return redirect(route('tickets.show', $ticket->id));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Ticket   $ticket
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Ticket $ticket)
+    {
+        $this->authorize('view', $ticket);
+
+        return view('tickets.view')->with('ticket', $ticket);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
+     * @param  \App\Models\Ticket   $ticket
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Ticket $ticket)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Ticket   $ticket
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Ticket $ticket)
+    {
+        $this->authorize('update', $ticket);
+
+        if ($request->input('close') === 'true') {
+            $ticket->status()->associate(TicketStatus::closed()->orderBy('id')->first());
+            $ticket->save();
+        }
+
+        return redirect(route('tickets.index'))->with('status', "Ticket {$ticket->id} closed successfully.");
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @codeCoverageIgnore
+     * @todo    implement
+     *
+     * @param  \App\Models\Ticket   $ticket
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Ticket $ticket)
+    {
+        //
+    }
+}
