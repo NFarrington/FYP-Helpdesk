@@ -67,7 +67,7 @@
                 </ul>
                 <ul class="nav nav-sidebar">
                     <nav-sidebar-item name="Create Ticket" route="{{ route('tickets.create') }}"></nav-sidebar-item>
-                    <nav-sidebar-item name="View Tickets" route="{{ route('tickets.index') }}"></nav-sidebar-item>
+                    <nav-sidebar-item name="My Tickets" route="{{ route('tickets.index') }}"></nav-sidebar-item>
                 </ul>
             @endguest
         </div>
@@ -75,7 +75,6 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             @yield('content')
         </div>
-
     </div>
 </div>
 
