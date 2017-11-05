@@ -31,3 +31,4 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 // Ticket Routes...
 Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
+Route::resource('users', 'UserController');
