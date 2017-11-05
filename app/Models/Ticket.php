@@ -79,7 +79,7 @@ class Ticket extends Model
     {
         return $query->whereHas('status', function ($query) {
             $query->withAgent();
-        })->get();
+        });
     }
 
     /**
@@ -92,7 +92,7 @@ class Ticket extends Model
     {
         return $query->whereHas('status', function ($query) {
             $query->withCustomer();
-        })->get();
+        });
     }
 
     /**
@@ -105,7 +105,7 @@ class Ticket extends Model
     {
         return $query->whereHas('status', function ($query) {
             $query->open();
-        })->get();
+        });
     }
 
     /**
@@ -118,6 +118,6 @@ class Ticket extends Model
     {
         return $query->whereHas('status', function ($query) {
             $query->closed();
-        })->get();
+        });
     }
 }
