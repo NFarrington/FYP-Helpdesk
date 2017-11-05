@@ -33,6 +33,20 @@ class TicketTest extends TestCase
     }
 
     /**
+     * Test the ticket index loads successfully.
+     *
+     * @return void
+     */
+    public function testTicketIndexPageLoads()
+    {
+        $ticket = factory(Ticket::class)->states('open');
+        $response = $this->actingAs($this->user)->get(route('tickets.index'));
+
+        $response->assertStatus(200);
+        $response->assertSeeText($ticket->summary);
+    }
+
+    /**
      * Test the ticket submission page loads successfully.
      *
      * @return void
