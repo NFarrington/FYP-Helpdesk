@@ -39,11 +39,13 @@ class TicketTest extends TestCase
      */
     public function testTicketIndexPageLoads()
     {
-        $ticket = factory(Ticket::class)->states('open');
+        $openTicket = factory(Ticket::class)->states('open')->create(['user_id' => $this->user->id]);
+        $closedTicket = factory(Ticket::class)->states('closed')->create(['user_id' => $this->user->id]);
         $response = $this->actingAs($this->user)->get(route('tickets.index'));
 
         $response->assertStatus(200);
-        $response->assertSeeText($ticket->summary);
+        $response->assertSeeText($openTicket->summary);
+        $response->assertSeeText($closedTicket->summary);
     }
 
     /**
