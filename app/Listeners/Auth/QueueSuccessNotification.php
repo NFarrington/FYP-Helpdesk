@@ -29,6 +29,8 @@ class QueueSuccessNotification
         /** @var User $user */
         $user = $event->user;
 
-        $user->notify(new LoginSuccessful());
+        if (!$user->wasRecentlyCreated) {
+            $user->notify(new LoginSuccessful());
+        }
     }
 }

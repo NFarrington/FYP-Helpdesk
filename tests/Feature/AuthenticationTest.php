@@ -87,6 +87,8 @@ class AuthenticationTest extends TestCase
      */
     public function testRegistrationSucceeds()
     {
+        Notification::fake();
+
         $user = factory(User::class)->make();
 
         $this->get(route('register'));
@@ -98,6 +100,8 @@ class AuthenticationTest extends TestCase
         ]);
 
         $response->assertRedirect(route('home'));
+
+        Notification::assertNotSentTo($user, LoginSuccessful::class, 1);
     }
 
     /**
