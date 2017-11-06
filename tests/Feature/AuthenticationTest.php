@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Faker\Factory as FakerFactory;
+use App\Notifications\LoginFailed;
+use App\Notifications\LoginSuccessful;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -105,10 +107,14 @@ class AuthenticationTest extends TestCase
      */
     public function testAuthenticationSucceeds()
     {
+        Notification::fake();
+
         $this->get(route('login'));
         $response = $this->post(route('login'), ['email' => $this->user->email, 'password' => 'secret']);
 
         $response->assertRedirect(route('home'));
+
+        Notification::assertSentTo($this->user, LoginSuccessful::class, 1);
     }
 
     /**
@@ -118,9 +124,13 @@ class AuthenticationTest extends TestCase
      */
     public function testAuthenticationFails()
     {
+        Notification::fake();
+
         $this->get(route('login'));
         $response = $this->post(route('login'), ['email' => $this->user->email, 'password' => 'wrong-password']);
 
         $response->assertRedirect(route('login'));
+
+        Notification::assertSentTo($this->user, LoginFailed::class, 1);
     }
 }
