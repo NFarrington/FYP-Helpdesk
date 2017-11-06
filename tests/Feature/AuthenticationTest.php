@@ -85,12 +85,12 @@ class AuthenticationTest extends TestCase
      */
     public function testRegistrationSucceeds()
     {
-        $faker = FakerFactory::create(config('app.faker_locale', 'en_US'));
+        $user = factory(User::class)->make();
 
         $this->get(route('register'));
         $response = $this->post(route('register'), [
-            'name' => $faker->name,
-            'email' => $faker->unique()->safeEmail,
+            'name' => $user->name,
+            'email' => $user->email,
             'password' => 'secret',
             'password_confirmation' => 'secret',
         ]);
