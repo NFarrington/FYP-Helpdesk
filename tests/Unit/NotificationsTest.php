@@ -32,7 +32,7 @@ class NotificationsTest extends TestCase
     }
 
     /**
-     * [Summary]
+     * Test the successful login notification.
      *
      * @return void
      */
@@ -47,7 +47,7 @@ class NotificationsTest extends TestCase
     }
 
     /**
-     * [Summary]
+     * Test the failed login notification.
      *
      * @return void
      */
