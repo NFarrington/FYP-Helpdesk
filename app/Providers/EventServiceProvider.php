@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Listeners;
+use Illuminate\Auth\Events as AuthEvents;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -13,8 +14,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        AuthEvents\Login::class => [
+            Listeners\Auth\QueueSuccessNotification::class,
+        ],
+
+        AuthEvents\Failed::class => [
+            Listeners\Auth\QueueFailedNotification::class,
         ],
     ];
 
