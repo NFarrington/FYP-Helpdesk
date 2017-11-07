@@ -73,4 +73,21 @@ class TicketTest extends TestCase
 
         $this->assertEquals($status->id, $ticket->status->id);
     }
+
+    /**
+     * Test a status scopes work correctly.
+     *
+     * @return void
+     */
+    public function testTicketScopesCorrectly()
+    {
+        factory(Ticket::class, 3)->states('agent')->create();
+        factory(Ticket::class, 3)->states('customer')->create();
+        factory(Ticket::class, 3)->states('closed')->create();
+
+        $this->assertEquals(3, Ticket::withAgent()->count());
+        $this->assertEquals(3, Ticket::withCustomer()->count());
+        $this->assertEquals(6, Ticket::open()->count());
+        $this->assertEquals(3, Ticket::closed()->count());
+    }
 }

@@ -7,9 +7,20 @@ use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +31,13 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
+        $openTickets = Auth::user()->tickets()->open()->get();
+        $closedTickets = Auth::user()->tickets()->closed()->get();
+
+        return view('tickets.index')->with([
+            'open' => $openTickets,
+            'closed' => $closedTickets,
+        ]);
     }
 
     /**

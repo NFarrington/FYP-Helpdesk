@@ -23,6 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\TicketStatus $status
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereStatusId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket open()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket withAgent()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket withCustomer()
  */
 class Ticket extends Model
 {
@@ -63,5 +67,57 @@ class Ticket extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Scope a query to only include 'with agent' tickets.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithAgent($query)
+    {
+        return $query->whereHas('status', function ($query) {
+            $query->withAgent();
+        });
+    }
+
+    /**
+     * Scope a query to only include 'with customer' tickets.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithCustomer($query)
+    {
+        return $query->whereHas('status', function ($query) {
+            $query->withCustomer();
+        });
+    }
+
+    /**
+     * Scope a query to only include 'open' tickets.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOpen($query)
+    {
+        return $query->whereHas('status', function ($query) {
+            $query->open();
+        });
+    }
+
+    /**
+     * Scope a query to only include 'closed' tickets.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeClosed($query)
+    {
+        return $query->whereHas('status', function ($query) {
+            $query->closed();
+        });
     }
 }

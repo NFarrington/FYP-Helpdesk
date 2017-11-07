@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Faker\Factory as FakerFactory;
+use App\Notifications\LoginFailed;
+use App\Notifications\LoginSuccessful;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -85,17 +87,21 @@ class AuthenticationTest extends TestCase
      */
     public function testRegistrationSucceeds()
     {
-        $faker = FakerFactory::create(config('app.faker_locale', 'en_US'));
+        Notification::fake();
+
+        $user = factory(User::class)->make();
 
         $this->get(route('register'));
         $response = $this->post(route('register'), [
-            'name' => $faker->name,
-            'email' => $faker->unique()->safeEmail,
+            'name' => $user->name,
+            'email' => $user->email,
             'password' => 'secret',
             'password_confirmation' => 'secret',
         ]);
 
         $response->assertRedirect(route('home'));
+
+        Notification::assertNotSentTo($user, LoginSuccessful::class, 1);
     }
 
     /**
@@ -105,10 +111,14 @@ class AuthenticationTest extends TestCase
      */
     public function testAuthenticationSucceeds()
     {
+        Notification::fake();
+
         $this->get(route('login'));
         $response = $this->post(route('login'), ['email' => $this->user->email, 'password' => 'secret']);
 
         $response->assertRedirect(route('home'));
+
+        Notification::assertSentTo($this->user, LoginSuccessful::class, 1);
     }
 
     /**
@@ -118,9 +128,13 @@ class AuthenticationTest extends TestCase
      */
     public function testAuthenticationFails()
     {
+        Notification::fake();
+
         $this->get(route('login'));
         $response = $this->post(route('login'), ['email' => $this->user->email, 'password' => 'wrong-password']);
 
         $response->assertRedirect(route('login'));
+
+        Notification::assertSentTo($this->user, LoginFailed::class, 1);
     }
 }

@@ -29,23 +29,21 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                 @else
-                        <li class="dropdown">
-                        <li><a href="{{ route('home') }}">Dashboard</a></li>
-                        <!--li><a href="#">Settings</a></li>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Help</a></li-->
+                    <li class="dropdown">
+                    <li><a href="{{ route('home') }}">Dashboard</a></li>
+                    <li><a href="{{ route('users.show', Auth::user()) }}">Profile</a></li>
 
-                        <li>
-                            <a href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
+                    <li>
+                        <a href="{{ route('logout') }}"
+                           onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                {{ csrf_field() }}
-                            </form>
-                        </li>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>
                 @endguest
             </ul>
             <form class="navbar-form navbar-right">
@@ -69,13 +67,14 @@
                 </ul>
                 <ul class="nav nav-sidebar">
                     <nav-sidebar-item name="Create Ticket" route="{{ route('tickets.create') }}"></nav-sidebar-item>
-                    <nav-sidebar-item name="View Tickets" route="{{ route('tickets.index') }}"></nav-sidebar-item>
+                    <nav-sidebar-item name="My Tickets" route="{{ route('tickets.index') }}"></nav-sidebar-item>
                 </ul>
             @endguest
         </div>
 
-        @yield('content')
-
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            @yield('content')
+        </div>
     </div>
 </div>
 
