@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
+class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -54,54 +54,6 @@ class AuthenticationTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('login'));
 
         $response->assertRedirect(route('home'));
-    }
-
-    /**
-     * Test the registration page loads successfully.
-     *
-     * @return void
-     */
-    public function testRegistrationPageLoads()
-    {
-        $response = $this->get(route('register'));
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test the registration page redirects authenticated users.
-     *
-     * @return void
-     */
-    public function testRegistrationPageRedirectsAuthenticatedUsers()
-    {
-        $response = $this->actingAs($this->user)->get(route('register'));
-
-        $response->assertRedirect(route('home'));
-    }
-
-    /**
-     * Test registration succeeds.
-     *
-     * @return void
-     */
-    public function testRegistrationSucceeds()
-    {
-        Notification::fake();
-
-        $user = factory(User::class)->make();
-
-        $this->get(route('register'));
-        $response = $this->post(route('register'), [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'secret',
-            'password_confirmation' => 'secret',
-        ]);
-
-        $response->assertRedirect(route('home'));
-
-        Notification::assertNotSentTo($user, LoginSuccessful::class, 1);
     }
 
     /**
