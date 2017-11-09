@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Ticket;
+use App\Models\TicketDepartment;
 use App\Models\TicketPost;
 use App\Models\User;
+use App\Policies\TicketDepartmentPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\TicketPostPolicy;
 use App\Policies\UserPolicy;
@@ -19,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Ticket::class => TicketPolicy::class,
+        TicketDepartment::class => TicketDepartmentPolicy::class,
         TicketPost::class => TicketPostPolicy::class,
         User::class => UserPolicy::class,
     ];
