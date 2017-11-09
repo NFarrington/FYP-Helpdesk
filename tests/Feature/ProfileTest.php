@@ -67,8 +67,6 @@ class ProfileTest extends TestCase
             'new_password_confirmation' => 'Password1234',
         ]);
 
-        //dd($response);
-
         $response->assertRedirect(route('users.show', $this->user));
         $response->assertSessionHasErrors('password', trans('auth.failed'));
     }
