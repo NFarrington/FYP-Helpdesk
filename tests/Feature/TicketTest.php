@@ -73,6 +73,7 @@ class TicketTest extends TestCase
         $this->actingAs($this->user);
         $this->get(route('tickets.create'));
         $response = $this->post(route('tickets.store'), [
+            'department' => $ticket->department_id,
             'summary' => $ticket->summary,
             'content' => $ticketPost->content,
         ]);

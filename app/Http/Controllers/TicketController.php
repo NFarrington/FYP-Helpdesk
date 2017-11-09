@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketDepartment;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
@@ -49,7 +50,9 @@ class TicketController extends Controller
     {
         $this->authorize('create', Ticket::class);
 
-        return view('tickets.create');
+        $departments = TicketDepartment::external()->get();
+
+        return view('tickets.create')->with('departments', $departments);
     }
 
     /**
@@ -63,21 +66,25 @@ class TicketController extends Controller
         $this->authorize('create', Ticket::class);
 
         $this->validate($request, [
+            'department' => 'required|numeric|exists:ticket_departments,id',
             'summary' => 'required|string|max:250',
             'content' => 'required|string|max:5000',
         ]);
+
+        $department = TicketDepartment::find($request->input('department'));
+        $this->authorize('submit-ticket', $department);
 
         /** @var User $user */
         $user = $request->user();
 
         /** @var Ticket $ticket */
         $ticket = $user->tickets()->make($request->only('summary'));
+        $ticket->department()->associate($department);
         $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
         $ticket->save();
 
         /** @var TicketPost $ticketPost */
         $ticketPost = TicketPost::make($request->only('content'));
-
         $ticketPost->user()->associate($user);
         $ticketPost->ticket()->associate($ticket);
         $ticketPost->save();

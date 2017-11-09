@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket open()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket withAgent()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket withCustomer()
+ * @property-read \App\Models\TicketDepartment $department
+ * @property int $department_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereDepartmentId($value)
  */
 class Ticket extends Model
 {
@@ -38,6 +41,16 @@ class Ticket extends Model
     protected $fillable = [
         'summary',
     ];
+
+    /**
+     * Department the ticket is currently assigned to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function department()
+    {
+        return $this->belongsTo(TicketDepartment::class);
+    }
 
     /**
      * Posts associated with the ticket.

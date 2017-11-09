@@ -5,6 +5,9 @@ use Faker\Generator as Faker;
 
 $factory->define(Ticket::class, function (Faker $faker) {
     return [
+        'department_id' => function () {
+            return \App\Models\TicketDepartment::external()->inRandomOrder()->first()->id;
+        },
         'status_id' => function () {
             return \App\Models\TicketStatus::inRandomOrder()->first()->id;
         },
