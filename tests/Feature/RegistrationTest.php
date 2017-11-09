@@ -70,8 +70,8 @@ class RegistrationTest extends TestCase
         $response = $this->post(route('register'), [
             'name' => $user->name,
             'email' => $user->email,
-            'password' => 'secret',
-            'password_confirmation' => 'secret',
+            'password' => 'Password1234',
+            'password_confirmation' => 'Password1234',
         ]);
 
         $response->assertRedirect(route('home'));
