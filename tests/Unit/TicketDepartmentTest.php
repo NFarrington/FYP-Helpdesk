@@ -43,4 +43,19 @@ class TicketDepartmentTest extends TestCase
 
         $this->assertEquals($ticket->id, $department->tickets->first()->id);
     }
+
+    /**
+     * Test department scopes work correctly.
+     *
+     * @return void
+     */
+    public function testTicketStatusScopesCorrectly()
+    {
+        TicketDepartment::query()->delete();
+        factory(TicketDepartment::class, 3)->states('internal')->create();
+        factory(TicketDepartment::class, 3)->states('external')->create();
+
+        $this->assertEquals(3, TicketDepartment::internal()->count());
+        $this->assertEquals(3, TicketDepartment::external()->count());
+    }
 }
