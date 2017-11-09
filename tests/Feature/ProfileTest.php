@@ -40,4 +40,36 @@ class ProfileTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function testPasswordChangeSucceeds()
+    {
+        $this->actingAs($this->user);
+
+        $this->get(route('users.show', $this->user));
+        $response = $this->put(route('users.update', $this->user), [
+            'password' => 'secret',
+            'new_password' => 'Password1234',
+            'new_password_confirmation' => 'Password1234',
+        ]);
+
+        $response->assertRedirect(route('users.show', $this->user));
+        $response->assertSessionHas('status', trans('passwords.updated'));
+    }
+
+    public function testPasswordChangeWrongPasswordFails()
+    {
+        $this->actingAs($this->user);
+
+        $this->get(route('users.show', $this->user));
+        $response = $this->put(route('users.update', $this->user), [
+            'password' => 'wrong-password',
+            'new_password' => 'Password1234',
+            'new_password_confirmation' => 'Password1234',
+        ]);
+
+        //dd($response);
+
+        $response->assertRedirect(route('users.show', $this->user));
+        $response->assertSessionHasErrors('password', trans('auth.failed'));
+    }
 }
