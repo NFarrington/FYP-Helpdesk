@@ -2,14 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\Models\Permission;
 use App\Models\Role;
-use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class UserTest extends TestCase
+class RoleTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -33,11 +33,11 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test a user has its roles.
+     * Test a role is associated with its users.
      *
      * @return void
      */
-    public function testUserHasRoles()
+    public function testRoleHasUsers()
     {
         $role = factory(Role::class)->create();
         DB::table('role_user')->insert([
@@ -45,18 +45,23 @@ class UserTest extends TestCase
             'user_id' => $this->user->id,
         ]);
 
-        $this->assertEquals($role->id, $this->user->roles()->first()->id);
+        $this->assertEquals($this->user->id, $role->users()->first()->id);
     }
 
     /**
-     * Test a user is linked to the tickets they have submitted.
+     * Test a role has permissions associated with it.
      *
      * @return void
      */
-    public function testUserHasTickets()
+    public function testRoleHasPermissions()
     {
-        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
+        $role = factory(Role::class)->create();
+        $permission = factory(Permission::class)->create();
+        DB::table('permission_role')->insert([
+            'permission_id' => $permission->id,
+            'role_id' => $role->id,
+        ]);
 
-        $this->assertEquals($ticket->id, $this->user->tickets->first()->id);
+        $this->assertEquals($permission->id, $role->permissions()->first()->id);
     }
 }
