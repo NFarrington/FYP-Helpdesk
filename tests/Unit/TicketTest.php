@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Ticket;
+use App\Models\TicketDepartment;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
@@ -30,6 +31,19 @@ class TicketTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+    }
+
+    /**
+     * Test a ticket is linked to the department it is assigned to.
+     *
+     * @return void
+     */
+    public function testTicketHasDepartment()
+    {
+        $department = factory(TicketDepartment::class)->create();
+        $ticket = factory(Ticket::class)->create(['department_id' => $department->id]);
+
+        $this->assertEquals($department->id, $ticket->department->id);
     }
 
     /**
