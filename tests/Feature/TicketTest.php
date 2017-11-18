@@ -7,6 +7,8 @@ use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class TicketTest extends TestCase
@@ -104,7 +106,7 @@ class TicketTest extends TestCase
     }
 
     /**
-     * Test a submitted ticket can be viewed.
+     * Test a submitted ticket can be replied to.
      *
      * @return void
      */
@@ -121,6 +123,63 @@ class TicketTest extends TestCase
 
         $response->assertRedirect(route('tickets.show', $ticket->id));
         $this->assertDatabaseHas($ticketPost->getTable(), ['content' => $ticketPost->content]);
+    }
+
+    /**
+     * Test a ticket can have an attachment uploaded.
+     *
+     * @return void
+     */
+    public function testTicketAttachmentUploads()
+    {
+        Storage::fake();
+
+        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
+        $ticketPost = factory(TicketPost::class)->make();
+        $this->actingAs($this->user);
+
+        $this->get(route('tickets.show', $ticket->id));
+        $this->post(route('posts.store', $ticket->id), [
+            'reply' => $ticketPost->content,
+            'attachment' => UploadedFile::fake()->image('image.png'),
+        ]);
+
+        Storage::assertExists('attachments/'.$ticket->id.'/image.png');
+    }
+
+    /**
+     * Test a user can download a ticket attachment.
+     *
+     * @return void
+     */
+    public function testTicketAttachmentDownloads()
+    {
+        Storage::fake();
+
+        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
+        $ticketPost = factory(TicketPost::class)->create(['attachment' => 'attachments/'.$ticket->id.'/image.jpg']);
+        $this->actingAs($this->user);
+
+        $file = UploadedFile::fake()->image('image.png');
+        Storage::putFileAs('attachments/'.$ticket->id, $file, 'image.jpg');
+
+        $response = $this->get(route('posts.attachment', [$ticket, $ticketPost]));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Test a user can download a ticket attachment.
+     *
+     * @return void
+     */
+    public function testTicketAttachmentNotPresent()
+    {
+        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
+        $ticketPost = factory(TicketPost::class)->create();
+        $this->actingAs($this->user);
+
+        $response = $this->get(route('posts.attachment', [$ticket, $ticketPost]));
+        $response->assertStatus(404);
     }
 
     /**
