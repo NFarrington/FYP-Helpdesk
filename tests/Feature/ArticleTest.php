@@ -87,7 +87,7 @@ class ArticleTest extends TestCase
     {
         $article = factory(Article::class)->create();
 
-        $this->get(route('articles.edit'));
+        $this->get(route('articles.edit', $article));
         $response = $this->delete(route('articles.destroy', $article));
 
         $response->assertRedirect(route('articles.index'));
