@@ -30,9 +30,7 @@ class TicketPost extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'content',
-    ];
+    protected $fillable = ['content', 'attachment'];
 
     /**
      * The user who submitted the post.
