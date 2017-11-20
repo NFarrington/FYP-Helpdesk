@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\TicketPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TicketPostController extends Controller
 {
@@ -31,11 +33,19 @@ class TicketPostController extends Controller
 
         $this->validate($request, [
             'reply' => 'required|string|max:5000',
+            'attachment' => 'file|nullable|max:10240|mimes:jpeg,bmp,png',
         ]);
+
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachment = $request->file('attachment');
+            $attachmentPath = $attachment->storeAs("attachments/{$ticket->id}", $attachment->getClientOriginalName());
+        }
 
         /** @var TicketPost $ticketPost */
         $ticketPost = TicketPost::make([
             'content' => $request->input('reply'),
+            'attachment' => $attachmentPath,
         ]);
 
         $ticketPost->user()->associate($request->user());
@@ -86,5 +96,25 @@ class TicketPostController extends Controller
     public function destroy(TicketPost $ticketPost)
     {
         //
+    }
+
+    /**
+     * Provides the user with the specified resource's attachment.
+     *
+     * @param Ticket $ticket
+     * @param TicketPost $ticketPost
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function viewAttachment(Ticket $ticket, TicketPost $ticketPost)
+    {
+        $this->authorize('view', $ticket);
+
+        if (!$ticketPost->attachment) {
+            throw new NotFoundHttpException();
+        }
+
+        $attachment = Storage::path($ticketPost->attachment);
+
+        return response()->download($attachment);
     }
 }

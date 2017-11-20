@@ -31,4 +31,5 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 // Ticket Routes...
 Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
+Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');
 Route::resource('users', 'UserController');
