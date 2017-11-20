@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $ticket
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $user
+ * @property string|null $attachment
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereAttachment($value)
  */
 class TicketPost extends Model
 {
