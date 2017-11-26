@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon|null $visible_to
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Article published()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Article whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Article whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Article whereId($value)
@@ -34,6 +35,19 @@ class Article extends Model
     protected $fillable = ['title', 'content', 'visible_from', 'visible_to'];
 
     protected $dates = ['visible_from', 'visible_to'];
+
+    /**
+     * Scope a query to only include published articles.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('visible_from', '<=', Carbon::now())->where(function ($query) {
+            $query->whereNull('visible_to')->orWhere('visible_to', '>', Carbon::now());
+        });
+    }
 
     /**
      * Check if an article is currently published (i.e. visible to general users).
