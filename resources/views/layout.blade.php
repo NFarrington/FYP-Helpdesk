@@ -65,9 +65,17 @@
                 <ul class="nav nav-sidebar">
                     <nav-sidebar-item name="Overview" route="{{ route('home') }}"></nav-sidebar-item>
                 </ul>
+
                 <ul class="nav nav-sidebar">
                     <nav-sidebar-item name="Create Ticket" route="{{ route('tickets.create') }}"></nav-sidebar-item>
                     <nav-sidebar-item name="My Tickets" route="{{ route('tickets.index') }}"></nav-sidebar-item>
+                </ul>
+
+                <ul class="nav nav-sidebar">
+                    @can('create', \App\Models\Article::class)
+                        <nav-sidebar-item name="Create Knowledgebase Article" route="{{ route('articles.create') }}"></nav-sidebar-item>
+                    @endcan
+                    <nav-sidebar-item name="View Knowledgebase Articles" route="{{ route('articles.index') }}"></nav-sidebar-item>
                 </ul>
             @endguest
         </div>
