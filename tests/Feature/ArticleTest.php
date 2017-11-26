@@ -21,6 +21,13 @@ class ArticleTest extends TestCase
     protected $user;
 
     /**
+     * A privileged test user.
+     *
+     * @var User
+     */
+    protected $privilegedUser;
+
+    /**
      * Setup the test environment.
      *
      * @return void
@@ -29,10 +36,13 @@ class ArticleTest extends TestCase
     {
         parent::setUp();
 
-        $role = Role::where('name', 'Administrator')->first();
         $this->user = factory(User::class)->create();
-        $this->user->roles()->attach($role);
-        $this->actingAs($this->user);
+
+        $role = Role::where('name', 'Administrator')->first();
+        $this->privilegedUser = factory(User::class)->create();
+        $this->privilegedUser->roles()->attach($role);
+
+        $this->actingAs($this->privilegedUser);
     }
 
     /**
@@ -50,7 +60,6 @@ class ArticleTest extends TestCase
             'title' => $article->title,
             'content' => $article->content,
         ]);
-
 
         $response->assertRedirect(route('articles.show', $nextID));
         $this->assertDatabaseHas($article->getTable(), [
@@ -106,10 +115,9 @@ class ArticleTest extends TestCase
      */
     public function testArticleCanBePublished()
     {
-        $article = factory(Article::class)->states('published')->create();
+        $this->actingAs($this->user);
 
-        $response = $this->get(route('articles.index'));
-        $response->assertSeeText($article->title);
+        $article = factory(Article::class)->states('published')->create();
 
         $response = $this->get(route('articles.index'));
         $response->assertSeeText($article->title);
@@ -122,6 +130,8 @@ class ArticleTest extends TestCase
      */
     public function testArticleCanBeUnpublished()
     {
+        $this->actingAs($this->user);
+
         $article = factory(Article::class)->states('unpublished')->create();
 
         $response = $this->get(route('articles.index'));
