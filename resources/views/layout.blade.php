@@ -72,7 +72,9 @@
                 </ul>
 
                 <ul class="nav nav-sidebar">
-                    <nav-sidebar-item name="Create Knowledgebase Article" route="{{ route('articles.create') }}"></nav-sidebar-item>
+                    @can('create', \App\Models\Article::class)
+                        <nav-sidebar-item name="Create Knowledgebase Article" route="{{ route('articles.create') }}"></nav-sidebar-item>
+                    @endcan
                     <nav-sidebar-item name="View Knowledgebase Articles" route="{{ route('articles.index') }}"></nav-sidebar-item>
                 </ul>
             @endguest
