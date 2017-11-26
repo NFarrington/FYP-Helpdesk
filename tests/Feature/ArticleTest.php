@@ -124,6 +124,30 @@ class ArticleTest extends TestCase
     }
 
     /**
+     * Test articles are listed properly.
+     *
+     * @return void
+     */
+    public function testArticlesCanBeListed()
+    {
+        $this->actingAs($this->user);
+
+        $publishedArticle = factory(Article::class)->states('published')->create();
+        $unpublishedArticle = factory(Article::class)->states('unpublished')->create();
+
+        $response = $this->get(route('articles.index'));
+        $response->assertSeeText($publishedArticle->title);
+        $response->assertDontSeeText($unpublishedArticle->title);
+
+        $this->actingAs($this->privilegedUser);
+
+        $response = $this->get(route('articles.index'));
+        $response->assertSeeText($publishedArticle->title);
+        $response->assertSeeText($unpublishedArticle->title);
+
+    }
+
+    /**
      * Test an article can be published at a specific time.
      *
      * @return void
