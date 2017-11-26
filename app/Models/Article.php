@@ -34,4 +34,21 @@ class Article extends Model
     protected $fillable = ['title', 'content', 'visible_from', 'visible_to'];
 
     protected $dates = ['visible_from', 'visible_to'];
+
+    /**
+     * Check if an article is currently published (i.e. visible to general users).
+     *
+     * An article is considered published if:
+     *      visible_from - is a date in the past
+     *      visible_to   - is a date in the future, or null
+     *
+     * @return bool
+     */
+    public function isPublished()
+    {
+        $fromCheck = $this->visible_from !== null && $this->visible_from->isPast();
+        $toCheck = $this->visible_to === null || $this->visible_to->isFuture();
+
+        return $fromCheck && $toCheck;
+    }
 }
