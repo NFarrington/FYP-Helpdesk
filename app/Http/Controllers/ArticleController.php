@@ -9,6 +9,16 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -25,6 +35,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Article::class);
+
         return view('articles.create');
     }
 
@@ -36,6 +48,8 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Article::class);
+
         $this->validate($request, [
             'title' => 'required|string|max:250',
             'content' => 'required|string|max:60000',
@@ -70,7 +84,9 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        //
+        $this->authorize('view', $article);
+
+        return view('articles.view')->with('article', $article);
     }
 
     /**
