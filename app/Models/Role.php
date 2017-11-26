@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Role
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property int $default
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereDefault($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereName($value)
+ * @mixin \Eloquent
  */
 class Role extends Model
 {
