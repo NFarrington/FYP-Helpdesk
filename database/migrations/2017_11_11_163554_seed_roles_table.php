@@ -6,6 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class SeedRolesTable extends Migration
 {
+    protected $roles = [
+        ['name' => 'Administrator'],
+        ['name' => 'Agent'],
+    ];
+
     /**
      * Run the migrations.
      *
@@ -13,7 +18,7 @@ class SeedRolesTable extends Migration
      */
     public function up()
     {
-        //
+        DB::table('roles')->insert($this->roles);
     }
 
     /**
@@ -23,6 +28,8 @@ class SeedRolesTable extends Migration
      */
     public function down()
     {
-        //
+        $roles = collect($this->roles)->pluck('name');
+
+        DB::table('roles')->whereIn('name', $roles)->delete();
     }
 }
