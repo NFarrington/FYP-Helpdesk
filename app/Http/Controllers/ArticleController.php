@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -23,9 +22,17 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->user()->hasPermission('articles.update')) {
+            $articles = Article::all()->filter(function ($value, $key) use ($request) {
+                return $request->user()->can('update', $value);
+            });
+        } else {
+            $articles = Article::published()->get();
+        }
+
+        return view('articles.index')->with('articles', $articles->sortBy('title'));
     }
 
     /**
