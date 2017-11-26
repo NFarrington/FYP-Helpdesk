@@ -81,7 +81,7 @@ class ArticleTest extends TestCase
         $this->get(route('articles.edit', $existingArticle));
         $response = $this->put(route('articles.update', $existingArticle), [
             'content' => $article->content,
-        ]);
+        ] + $existingArticle->toArray());
 
         $response->assertRedirect(route('articles.show', $existingArticle));
         $this->assertDatabaseHas($article->getTable(), [
