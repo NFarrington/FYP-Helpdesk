@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $key
+ * @property bool $default
  * @property string $name
  * @property string $description
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Permission whereDefault($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Permission whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Permission whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Permission whereKey($value)
