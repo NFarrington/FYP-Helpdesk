@@ -12,12 +12,12 @@ $factory->define(Article::class, function (Faker $faker) {
 
 $factory->state(Article::class, 'published', function (Faker $faker) {
     return [
-        'visible_from' => \Carbon\Carbon::now(),
+        'visible_from' => \Carbon\Carbon::now()->subMinute(),
     ];
 });
 
 $factory->state(Article::class, 'unpublished', function (Faker $faker) {
     return [
-        'visible_to' => \Carbon\Carbon::now(),
+        'visible_to' => \Carbon\Carbon::now()->subMinute(),
     ];
 });
