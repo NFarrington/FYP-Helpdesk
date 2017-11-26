@@ -69,6 +69,21 @@ class ArticleTest extends TestCase
     }
 
     /**
+     * Test an article can be viewed.
+     *
+     * @return void
+     */
+    public function testArticleCanBeViewed()
+    {
+        $article = factory(Article::class)->create();
+
+        $response = $this->get(route('articles.show', $article));
+
+        $response->assertStatus(200);
+        $response->assertSee($article->title);
+    }
+
+    /**
      * Test an article can be updated.
      *
      * @return void
