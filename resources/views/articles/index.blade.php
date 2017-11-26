@@ -14,21 +14,10 @@
                             <th>{{ __('article.key.updated_at') }}</th>
                         </tr>
                         @foreach($articles as $article)
-                                <td>{{ $article->id }}</td>
+                                <td><a href="{{ route('articles.show', $article) }}">#{{ $article->id }}</a></td>
                                 <td>{{ $article->title }}</td>
                                 <td>{{ $article->created_at }}</td>
                                 <td>{{ $article->updated_at }}</td>
-                                <td>
-                                    @can('view', $article)
-                                        <a class="btn btn-xs btn-primary" href="{{ route('articles.show', $article) }}">View</a>
-                                    @endcan
-                                    @can('update', $article)
-                                        <a class="btn btn-xs btn-warning" href="{{ route('articles.edit', $article) }}">Edit</a>
-                                    @endcan
-                                    @can('delete', $article)
-                                        <delete-resource route="{{ route('articles.destroy', $article) }}"></delete-resource>
-                                    @endcan
-                                </td>
                             </tr>
                         @endforeach
                     </table>
