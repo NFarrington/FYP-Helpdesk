@@ -7,22 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\TicketDepartment
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property string $description
- * @property int $internal
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereCreatedAt($value)
+ * @property bool $internal
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment external()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment internal()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereInternal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment external()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment internal()
+ * @mixin \Eloquent
  */
 class TicketDepartment extends Model
 {

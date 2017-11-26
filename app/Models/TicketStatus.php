@@ -11,14 +11,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property int $state
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus open()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus whereState($value)
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus closed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus open()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus withAgent()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketStatus withCustomer()
+ * @mixin \Eloquent
  */
 class TicketStatus extends Model
 {
