@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Article;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,9 @@ class ArticleTest extends TestCase
     {
         parent::setUp();
 
+        $role = Role::where('name', 'Administrator')->first();
         $this->user = factory(User::class)->create();
+        $this->user->roles()->attach($role);
         $this->actingAs($this->user);
     }
 
@@ -40,6 +43,7 @@ class ArticleTest extends TestCase
     public function testArticleCanBeCreated()
     {
         $article = factory(Article::class)->make();
+        $nextID = DB::table('articles')->max('id') + 1;
 
         $this->get(route('articles.create'));
         $response = $this->post(route('articles.store'), [
@@ -47,9 +51,8 @@ class ArticleTest extends TestCase
             'content' => $article->content,
         ]);
 
-        $id = DB::table('articles')->max('id') + 1;
 
-        $response->assertRedirect(route('articles.show', $id));
+        $response->assertRedirect(route('articles.show', $nextID));
         $this->assertDatabaseHas($article->getTable(), [
             'title' => $article->title,
             'content' => $article->content,
