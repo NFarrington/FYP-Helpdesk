@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display: inline-block;">
         <button type="submit" class="btn btn-xs btn-danger" v-on:click="submit()">Delete</button>
         <form class="hidden" method="POST" v-bind:action="route">
             <input type="hidden" name="_token" v-bind:value="csrfToken">
