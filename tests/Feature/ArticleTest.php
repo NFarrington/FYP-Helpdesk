@@ -144,7 +144,6 @@ class ArticleTest extends TestCase
         $response = $this->get(route('articles.index'));
         $response->assertSeeText($publishedArticle->title);
         $response->assertSeeText($unpublishedArticle->title);
-
     }
 
     /**

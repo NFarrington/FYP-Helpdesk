@@ -3,10 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\Article;
-use App\Models\Ticket;
-use App\Models\TicketDepartment;
-use App\Models\TicketPost;
-use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
