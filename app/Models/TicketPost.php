@@ -11,8 +11,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $ticket_id
  * @property int $user_id
  * @property string $content
+ * @property string|null $attachment
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\Ticket $ticket
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereAttachment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereId($value)
@@ -20,8 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketPost whereUserId($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $ticket
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $user
  */
 class TicketPost extends Model
 {
@@ -30,9 +32,7 @@ class TicketPost extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'content',
-    ];
+    protected $fillable = ['content', 'attachment'];
 
     /**
      * The user who submitted the post.

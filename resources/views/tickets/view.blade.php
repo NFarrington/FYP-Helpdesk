@@ -30,21 +30,24 @@
                     <div class="panel-body">
                         <p>Name: {{ $post->user->name }}</p>
                         <p>Content: {{ $post->content }}</p>
+                        @if($post->attachment)
+                            <p>Attachment: {{ $post->attachment }} <a href="{{ route('posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
+                        @endif
                     </div>
                 </div>
             @endforeach
             <div class="panel panel-default">
                 <div class="panel-heading">Add Reply</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('posts.store', $ticket->id) }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('posts.store', $ticket->id) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('reply') ? ' has-error' : '' }}">
-                            <label for="reply" class="col-md-4 control-label">Response</label>
+                            <label for="reply" class="col-md-3 control-label">Response</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <textarea id="reply" class="form-control" name="reply" rows="3" maxlength="5000"
-                                          required></textarea>
+                                          required>{{ old('reply') }}</textarea>
 
                                 @if($errors->has('reply'))
                                     <span class="help-block">
@@ -54,8 +57,22 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('attachment') ? ' has-error' : '' }}">
+                            <label for="attachment" class="col-md-3 control-label">Attach File</label>
+                            <div class="col-md-7">
+                                <input type="file" id="attachment" name="attachment" class="form-control"
+                                       value="{{ old('attachment') }}">
+
+                                @if($errors->has('attachment'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('attachment') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
+                            <div class="col-md-7 col-md-offset-3">
                                 <button type="submit" class="btn btn-primary">
                                     Reply
                                 </button>

@@ -15,5 +15,7 @@
         @endforeach
     </table>
 @else
-    <p style="text-align: center;">Nothing to show.</p>
+    <div class="panel-body text-center">
+        <span>Nothing to show.</span>
+    </div>
 @endif

@@ -14,7 +14,7 @@
                             <label for="department" class="col-md-4 control-label">Department</label>
 
                             <div class="col-md-6">
-                                <select id="department" name="department" class="form-control">
+                                <select id="department" name="department" class="form-control" autofocus>
                                     @foreach($departments as $department)
                                         <option value="{{ $department->id }}"
                                                 {{ old('department') == $department->id ? 'selected' : ''}}>
@@ -36,7 +36,7 @@
 
                             <div class="col-md-6">
                                 <input id="summary" type="text" class="form-control" name="summary"
-                                       value="{{ old('summary') }}" maxlength="250" required autofocus>
+                                       value="{{ old('summary') }}" maxlength="250" required>
 
                                 @if ($errors->has('summary'))
                                     <span class="help-block">

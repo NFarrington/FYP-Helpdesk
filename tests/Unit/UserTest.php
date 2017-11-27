@@ -2,9 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -58,5 +60,21 @@ class UserTest extends TestCase
         $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
 
         $this->assertEquals($ticket->id, $this->user->tickets->first()->id);
+    }
+
+    /**
+     * Test a user has permissions.
+     *
+     * @return void
+     */
+    public function testUserHasPermissions()
+    {
+        $role = Role::where('name', 'Administrator')->get();
+        $this->user->roles()->attach($role);
+
+        $this->assertTrue($this->user->hasPermission(Permission::first()));
+
+        $this->expectException(ModelNotFoundException::class);
+        $this->user->hasPermission(str_random());
     }
 }

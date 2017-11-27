@@ -18,6 +18,7 @@ class CreateTicketPostsTable extends Migration
             $table->unsignedInteger('ticket_id');
             $table->unsignedInteger('user_id');
             $table->text('content');
+            $table->string('attachment')->nullable();
             $table->timestamps();
 
             $table->foreign('ticket_id')->references('id')->on('tickets');
