@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\UserSaved;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,15 +13,18 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property int $email_confirmed
  * @property string $password
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\EmailVerification $emailVerification
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailConfirmed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
@@ -31,6 +35,10 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
+
+    protected $dispatchesEvents = [
+        'saved' => UserSaved::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +57,25 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_confirmed' => 'boolean'
+    ];
+
+    /**
+     * An email verification token model, if present.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function emailVerification()
+    {
+        return $this->hasOne(EmailVerification::class);
+    }
 
     /**
      * Roles this user has.

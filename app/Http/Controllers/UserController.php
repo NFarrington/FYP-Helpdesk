@@ -63,8 +63,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(User $user)
     {
@@ -94,23 +95,29 @@ class UserController extends Controller
      * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      * @throws ValidationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
 
         $this->validate($request, [
+            'email' => 'required|email',
             'password' => 'required|string',
-            'new_password' => 'required|string|confirmed|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
+            'new_password' => 'nullable|string|confirmed|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
         ], ['regex' => trans('passwords.requirements')]);
 
-        if (!Auth::validate($request->only('email', 'password'))) {
+        if (!Auth::validate(['email' => $user->email, 'password' => $request->input('password')])) {
             throw ValidationException::withMessages([
                 'password' => [trans('auth.failed')],
             ]);
         }
 
-        $user->password = Hash::make($request->input('new_password'));
+        $user->email = $request->input('email');
+        if ($newPassword = $request->input('new_password')) {
+            $user->password = Hash::make($newPassword);
+        }
+
         $user->save();
 
         return redirect(route('users.show', $user))
