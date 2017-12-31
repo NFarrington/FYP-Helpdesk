@@ -58,7 +58,7 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertRedirect(route('users.show', $this->user));
-        $response->assertSessionHas('status', trans('user.email_changed'));
+        $response->assertSessionHas('status', trans('user.updated'));
 
         Notification::assertSentTo($this->user, EmailVerification::class, 1);
     }
@@ -76,7 +76,7 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertRedirect(route('users.show', $this->user));
-        $response->assertSessionHas('status', trans('passwords.updated'));
+        $response->assertSessionHas('status', trans('user.updated'));
     }
 
     public function testPasswordChangeWrongPasswordFails()

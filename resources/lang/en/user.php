@@ -10,4 +10,6 @@ return [
         'updated_at' => 'Updated At',
     ],
 
+    'updated' => 'User updated successfully.',
+
 ];

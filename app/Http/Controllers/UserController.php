@@ -121,7 +121,7 @@ class UserController extends Controller
         $user->save();
 
         return redirect(route('users.show', $user))
-            ->with('status', trans('passwords.updated'));
+            ->with('status', trans('user.updated'));
     }
 
     /**
