@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\EmailVerification;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Ticket;
@@ -32,6 +33,19 @@ class UserTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+    }
+
+    /**
+     * Test a user is associated with its email verification.
+     *
+     * @return void
+     */
+    public function testUserHasEmailVerification()
+    {
+        $verification = factory(EmailVerification::class)->make();
+        $this->user->emailVerification()->save($verification);
+
+        $this->assertEquals($verification->id, $this->user->emailVerification->id);
     }
 
     /**
