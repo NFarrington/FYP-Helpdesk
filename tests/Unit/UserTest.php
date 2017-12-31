@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Events\UserEmailChanged;
 use App\Models\EmailVerification;
 use App\Models\Permission;
 use App\Models\Role;
@@ -27,11 +28,13 @@ class UserTest extends TestCase
      * Setup the test environment.
      *
      * @return void
+     * @throws \Exception
      */
     protected function setUp()
     {
         parent::setUp();
 
+        $this->expectsEvents(UserEmailChanged::class);
         $this->user = factory(User::class)->create();
     }
 
@@ -42,10 +45,10 @@ class UserTest extends TestCase
      */
     public function testUserHasEmailVerification()
     {
-        $verification = factory(EmailVerification::class)->make();
-        $this->user->emailVerification()->save($verification);
+        $verification = factory(EmailVerification::class)->make()->user()->associate($this->user);
+        $verification->save();
 
-        $this->assertEquals($verification->id, $this->user->emailVerification->id);
+        $this->assertEquals($verification->id, $this->user->fresh()->emailVerification->id);
     }
 
     /**

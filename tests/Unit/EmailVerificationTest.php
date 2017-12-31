@@ -5,10 +5,9 @@ namespace Tests\Unit;
 use App\Models\EmailVerification;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class UserTest extends TestCase
+class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -38,7 +37,8 @@ class UserTest extends TestCase
      */
     public function testVerificationHasUser()
     {
-        $verification = factory(EmailVerification::class)->user()->associate($this->user)->create();
+        $verification = factory(EmailVerification::class)->make()->user()->associate($this->user);
+        $verification->save();
 
         $this->assertEquals($this->user->id, $verification->user->id);
     }
