@@ -43,7 +43,7 @@ class EmailVerificationTest extends TestCase
     public function testEmailCanBeVerified()
     {
         $token = str_random(40);
-        $verification = factory(EmailVerification::class)->create([
+        factory(EmailVerification::class)->create([
             'token' => Hash::make($token),
             'user_id' => $this->user->id,
         ]);
@@ -54,5 +54,26 @@ class EmailVerificationTest extends TestCase
         $response->assertSessionHas('status', trans('user.email.verified'));
 
         $this->assertDatabaseHas($this->user->getTable(), ['email_confirmed' => 1]);
+    }
+
+    /**
+     * Test an email fails verification if the token is not correct.
+     *
+     * @return void
+     */
+    public function testEmailVerificationFails()
+    {
+        $token = str_random(40);
+        factory(EmailVerification::class)->create([
+            'token' => Hash::make($token),
+            'user_id' => $this->user->id,
+        ]);
+
+        $response = $this->get(route('email.verify', str_random(39)));
+
+        $response->assertRedirect(route('home'));
+        $response->assertSessionHas('error', trans('user.email.invalid_token'));
+
+        $this->assertDatabaseHas($this->user->getTable(), ['email_confirmed' => 0]);
     }
 }

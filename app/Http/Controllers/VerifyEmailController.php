@@ -33,7 +33,7 @@ class VerifyEmailController extends Controller
 
         $verification = $user->emailVerification;
         if (!$verification || !Hash::check($token, $verification->token)) {
-            return redirect(route('home'))->with('error', 'Invalid token.');
+            return redirect(route('home'))->with('error', trans('user.email.invalid_token'));
         }
 
         $user->email_confirmed = true;
