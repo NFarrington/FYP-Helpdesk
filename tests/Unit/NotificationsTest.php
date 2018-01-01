@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\User;
+use App\Notifications\EmailVerification;
 use App\Notifications\LoginFailed;
 use App\Notifications\LoginSuccessful;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,6 +30,22 @@ class NotificationsTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+    }
+
+    /**
+     * Test the email verification notification.
+     *
+     * @return void
+     */
+    public function testEmailVerificationNotification()
+    {
+        $token = str_random(40);
+        $notification = new EmailVerification($token);
+        $mail = $notification->toMail($this->user);
+        $db = $notification->toArray($this->user);
+
+        $this->assertContains('Verify Email Address', $mail->subject);
+        $this->assertArraySubset(['oldEmail', 'newEmail'], array_keys($db));
     }
 
     /**
