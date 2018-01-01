@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $name
  * @property string $email
- * @property int $email_confirmed
+ * @property bool $email_confirmed
  * @property string $password
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
