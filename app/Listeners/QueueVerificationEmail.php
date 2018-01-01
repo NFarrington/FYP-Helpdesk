@@ -36,7 +36,7 @@ class QueueVerificationEmail
     {
         $key = $this->app['config']['app.key'];
         if (starts_with($key, 'base64:')) {
-            $key = base64_decode(substr($key, 7));
+            $key = base64_decode(mb_substr($key, 7));
         }
 
         $user = $event->user;

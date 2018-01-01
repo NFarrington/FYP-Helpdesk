@@ -64,7 +64,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_confirmed' => 'boolean'
+        'email_confirmed' => 'boolean',
     ];
 
     /**
