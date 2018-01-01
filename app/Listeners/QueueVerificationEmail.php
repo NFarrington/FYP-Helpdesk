@@ -2,9 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\UserSaved;
+use App\Events\UserEmailChanged;
 use App\Models\EmailVerification;
 use App\Notifications\EmailVerification as EmailNotification;
+use Illuminate\Support\Facades\Hash;
 
 class QueueVerificationEmail
 {
@@ -31,8 +32,13 @@ class QueueVerificationEmail
      * @return void
      * @throws \Exception
      */
-    public function handle(UserSaved $event)
+    public function handle(UserEmailChanged $event)
     {
+        $key = $this->app['config']['app.key'];
+        if (starts_with($key, 'base64:')) {
+            $key = base64_decode(substr($key, 7));
+        }
+
         $user = $event->user;
 
         $user->email_confirmed = false;
@@ -40,8 +46,9 @@ class QueueVerificationEmail
             $verification->delete();
         }
 
-        $token = hash_hmac('sha256', str_random(40), $this->app['config']['app.key']);
-        $verification = new EmailVerification(['token' => $token]);
+        $token = hash_hmac('sha256', str_random(40), $key);
+        $verification = new EmailVerification();
+        $verification->token = Hash::make($token);
         $verification->user()->associate($user);
         $verification->save();
 
