@@ -10,6 +10,8 @@ return [
         'updated_at' => 'Updated At',
     ],
 
-    'updated' => 'User updated successfully.',
+    'email.verified' => 'Email verified successfully!',
+    'verification_sent' => 'Please check your email to verify your email address.',
+    'updated' => 'User updated.',
 
 ];
