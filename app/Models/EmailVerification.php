@@ -21,6 +21,13 @@ use Illuminate\Database\Eloquent\Model;
 class EmailVerification extends Model
 {
     /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = null;
+
+    /**
      * The user who submitted the ticket.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
