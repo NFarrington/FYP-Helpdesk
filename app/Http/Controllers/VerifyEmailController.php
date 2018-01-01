@@ -30,9 +30,6 @@ class VerifyEmailController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-        if ($user->email_confirmed) {
-            return redirect(route('home'))->with('error', 'Your email has already been verified.');
-        }
 
         $verification = $user->emailVerification;
         if (!$verification || !Hash::check($token, $verification->token)) {
