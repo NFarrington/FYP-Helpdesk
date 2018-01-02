@@ -21,19 +21,30 @@ class AuthenticateStaff
             $isAdmin = $user->hasRole(Role::ROLE_ADMIN);
             $isAgent = $isAdmin || $user->hasRole(Role::ROLE_AGENT);
 
-            if ($isAdmin && !Auth::guard('admin')->check()) {
-                Auth::guard('admin')->login($request->user());
-            } elseif (!$isAdmin && Auth::guard('admin')->check()) {
-                Auth::guard('admin')->logout();
-            }
-
-            if ($isAgent && !Auth::guard('agent')->check()) {
-                Auth::guard('agent')->login($request->user());
-            } elseif (!$isAgent && Auth::guard('agent')->check()) {
-                Auth::guard('agent')->logout();
-            }
+            $this->authenticateUser('admin', $isAdmin, $user);
+            $this->authenticateUser('agent', $isAgent, $user);
         }
 
         return $next($request);
+    }
+
+    /**
+     * Forces a user's authenticated state to comply with its expected state.
+     *
+     * @param string $guard
+     * @param bool $shouldLogin
+     * @param \App\Models\User $user
+     * @return void
+     */
+    protected function authenticateUser($guard, $shouldLogin, $user)
+    {
+        $guard = Auth::guard($guard);
+        $loggedIn = $guard->check();
+
+        if ($shouldLogin && !$loggedIn) {
+            $guard->login($user);
+        } elseif (!$shouldLogin && $loggedIn) {
+            $guard->logout();
+        }
     }
 }
