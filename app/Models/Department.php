@@ -5,22 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\TicketDepartment
+ * App\Models\Department
  *
  * @property int $id
  * @property string $name
  * @property string $description
  * @property bool $internal
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment external()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment internal()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereInternal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TicketDepartment whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department external()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department internal()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereInternal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereName($value)
  * @mixin \Eloquent
  */
-class TicketDepartment extends Model
+class Department extends Model
 {
     /**
      * The attributes that should be cast to native types.

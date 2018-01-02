@@ -3,12 +3,12 @@
 namespace Tests\Unit;
 
 use App\Models\Ticket;
-use App\Models\TicketDepartment;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class TicketDepartmentTest extends TestCase
+class DepartmentTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -36,9 +36,9 @@ class TicketDepartmentTest extends TestCase
      *
      * @return void
      */
-    public function testTicketDepartmentHasTicket()
+    public function testDepartmentHasTicket()
     {
-        $department = factory(TicketDepartment::class)->create();
+        $department = factory(Department::class)->create();
         $ticket = factory(Ticket::class)->create(['department_id' => $department->id]);
 
         $this->assertEquals($ticket->id, $department->tickets->first()->id);
@@ -51,11 +51,11 @@ class TicketDepartmentTest extends TestCase
      */
     public function testTicketStatusScopesCorrectly()
     {
-        TicketDepartment::query()->delete();
-        factory(TicketDepartment::class, 3)->states('internal')->create();
-        factory(TicketDepartment::class, 3)->states('external')->create();
+        Department::query()->delete();
+        factory(Department::class, 3)->states('internal')->create();
+        factory(Department::class, 3)->states('external')->create();
 
-        $this->assertEquals(3, TicketDepartment::internal()->count());
-        $this->assertEquals(3, TicketDepartment::external()->count());
+        $this->assertEquals(3, Department::internal()->count());
+        $this->assertEquals(3, Department::external()->count());
     }
 }

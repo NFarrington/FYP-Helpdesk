@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
-use App\Models\TicketDepartment;
+use App\Models\Department;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
@@ -50,7 +50,7 @@ class TicketController extends Controller
     {
         $this->authorize('create', Ticket::class);
 
-        $departments = TicketDepartment::external()->get();
+        $departments = Department::external()->get();
 
         return view('tickets.create')->with('departments', $departments);
     }
@@ -71,7 +71,7 @@ class TicketController extends Controller
             'content' => 'required|string|max:5000',
         ]);
 
-        $department = TicketDepartment::find($request->input('department'));
+        $department = Department::find($request->input('department'));
         $this->authorize('submit-ticket', $department);
 
         /** @var User $user */

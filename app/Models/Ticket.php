@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $status_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property-read \App\Models\TicketDepartment $department
+ * @property-read \App\Models\Department $department
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TicketPost[] $posts
  * @property-read \App\Models\TicketStatus $status
  * @property-read \App\Models\User $user
@@ -49,7 +49,7 @@ class Ticket extends Model
      */
     public function department()
     {
-        return $this->belongsTo(TicketDepartment::class);
+        return $this->belongsTo(Department::class);
     }
 
     /**
