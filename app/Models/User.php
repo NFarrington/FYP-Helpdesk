@@ -100,12 +100,20 @@ class User extends Authenticatable
     /**
      * Check whether a user has a given role.
      *
-     * @param Role|string $role
+     * @param Role|string|integer $role
      * @return bool
      */
-    public function hasRole(Role $role)
+    public function hasRole($role)
     {
-        return $this->roles->contains('id', $role->id);
+        if (is_numeric($role)) {
+            $role = (int) $role;
+        } elseif ($role instanceof Role) {
+            $role = $role->id;
+        } else {
+            $role = Role::where('name', $role)->firstOrFail()->id;
+        }
+
+        return $this->roles->contains('id', $role);
     }
 
     /**
