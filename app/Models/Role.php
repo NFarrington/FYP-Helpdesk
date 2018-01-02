@@ -18,6 +18,20 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     /**
+     * The name of the administrator role.
+     *
+     * @var string
+     */
+    const ROLE_ADMIN = 'Administrator';
+
+    /**
+     * The name of the agent role.
+     *
+     * @var string
+     */
+    const ROLE_AGENT = 'Agent';
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
