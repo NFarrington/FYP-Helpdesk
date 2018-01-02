@@ -66,7 +66,7 @@ class TicketController extends Controller
         $this->authorize('create', Ticket::class);
 
         $this->validate($request, [
-            'department' => 'required|numeric|exists:ticket_departments,id',
+            'department' => 'required|numeric|exists:departments,id',
             'summary' => 'required|string|max:250',
             'content' => 'required|string|max:5000',
         ]);
