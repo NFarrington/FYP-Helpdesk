@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Models\Ticket
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\TicketStatus $status
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket managedBy(\App\Models\User $user)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket open()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereDepartmentId($value)
@@ -131,6 +133,21 @@ class Ticket extends Model
     {
         return $query->whereHas('status', function ($query) {
             $query->closed();
+        });
+    }
+
+    /**
+     * Scope a query to only include tickets a specific agent can manage.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeManagedBy($query, User $user)
+    {
+        return $query->where(function (Builder $query) use ($user) {
+            $query->whereIn('department_id', $user->departments->pluck('id'))
+                ->orWhere('agent_id', $user->id);
         });
     }
 }
