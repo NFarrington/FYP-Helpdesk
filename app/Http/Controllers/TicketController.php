@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use App\Models\Department;
+use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
