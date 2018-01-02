@@ -37,3 +37,9 @@ Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
 Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');
 Route::resource('users', 'UserController');
+
+// Agent Routes...
+Route::group(['namespace' => 'Staff', 'prefix' => 'staff', 'as' => 'staff.'], function () {
+    Route::get('tickets/closed', 'TicketController@indexClosed')->name('tickets.index.closed');
+    Route::resource('tickets', 'TicketController');
+});
