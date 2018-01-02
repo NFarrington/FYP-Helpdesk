@@ -117,14 +117,14 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         if (is_numeric($role)) {
-            $role = (int) $role;
-        } elseif ($role instanceof Role) {
-            $role = $role->id;
-        } else {
-            $role = Role::where('name', $role)->firstOrFail()->id;
+            return $this->roles->contains('id', (int) $role);
         }
 
-        return $this->roles->contains('id', $role);
+        if ($role instanceof Role) {
+            return $this->roles->contains('id', $role->id);
+        }
+
+        return $this->roles->contains('id', Role::where('name', $role)->firstOrFail()->id);
     }
 
     /**

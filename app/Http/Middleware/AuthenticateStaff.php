@@ -18,8 +18,8 @@ class AuthenticateStaff
     public function handle($request, Closure $next)
     {
         if ($user = $request->user('user')) {
-            $isAdmin = $user->hasRole(Role::ROLE_ADMIN);
-            $isAgent = $isAdmin || $user->hasRole(Role::ROLE_AGENT);
+            $isAdmin = $user->hasRole(Role::admin());
+            $isAgent = $isAdmin || $user->hasRole(Role::agent());
 
             $this->authenticateUser('admin', $isAdmin, $user);
             $this->authenticateUser('agent', $isAgent, $user);
