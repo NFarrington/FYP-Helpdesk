@@ -12,9 +12,11 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int $user_id
  * @property string $summary
  * @property int $department_id
+ * @property int|null $agent_id
  * @property int $status_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $agent
  * @property-read \App\Models\Department $department
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TicketPost[] $posts
  * @property-read \App\Models\TicketStatus $status
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket closed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket managedBy(\App\Models\User $user)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket open()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereAgentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereDepartmentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ticket whereId($value)
@@ -43,6 +46,16 @@ class Ticket extends Model
     protected $fillable = [
         'summary',
     ];
+
+    /**
+     * Agent the ticket is currently assigned to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function agent()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Department the ticket is currently assigned to.
