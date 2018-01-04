@@ -2,15 +2,25 @@
 @if($tickets->isNotEmpty())
     <table class="table table-hover">
         <tr>
-            @foreach($tickets->first()->toArray() as $key => $value)
-                <th>{{ __("ticket.key.$key") }}</th>
-            @endforeach
+            <th>{{ __('ticket.key.id') }}</th>
+            <th>{{ __('ticket.key.user_id') }}</th>
+            <th>{{ __('ticket.key.summary') }}</th>
+            <th>{{ __('ticket.key.department_id') }}</th>
+            <th>{{ __('ticket.key.agent_id') }}</th>
+            <th>{{ __('ticket.key.status_id') }}</th>
+            <th>{{ __('ticket.key.created_at') }}</th>
+            <th>{{ __('ticket.key.updated_at') }}</th>
         </tr>
         @foreach($tickets as $ticket)
             <tr>
-                @foreach($ticket->toArray() as $key => $value)
-                    <td>{{ $value }}</td>
-                @endforeach
+                <td>{{ $ticket->id }}</td>
+                <td>{{ $ticket->user_id }}</td>
+                <td>{{ $ticket->summary }}</td>
+                <td>{{ $ticket->department_id }}</td>
+                <td>{{ $ticket->agent_id }}</td>
+                <td>{{ $ticket->status_id }}</td>
+                <td>{{ $ticket->created_at }}</td>
+                <td>{{ $ticket->updated_at }}</td>
             </tr>
         @endforeach
     </table>
