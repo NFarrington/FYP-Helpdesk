@@ -6,13 +6,13 @@
             @if($assigned->isNotEmpty())
                 <div class="panel panel-default">
                     <div class="panel-heading">Assigned Tickets</div>
-                    @include('tickets.includes.ticket-table', ['tickets' => $assigned])
+                    @include('staff.tickets.includes.ticket-table', ['tickets' => $assigned])
                 </div>
             @endif
 
             <div class="panel panel-default">
                 <div class="panel-heading">Open Tickets</div>
-                @include('tickets.includes.ticket-table', ['tickets' => $open])
+                @include('staff.tickets.includes.ticket-table', ['tickets' => $open])
             </div>
         </div>
     </div>
