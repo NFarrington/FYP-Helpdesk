@@ -109,6 +109,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Tickets the user has assigned to them (as an agent).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'agent_id');
+    }
+
+    /**
      * Check whether a user has a given role.
      *
      * @param Role|string|int $role

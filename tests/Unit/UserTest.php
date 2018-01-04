@@ -96,6 +96,18 @@ class UserTest extends TestCase
     }
 
     /**
+     * Test a user is linked to the tickets they have submitted.
+     *
+     * @return void
+     */
+    public function testUserHasAssignedTickets()
+    {
+        $ticket = factory(Ticket::class)->create(['agent_id' => $this->user->id]);
+
+        $this->assertEquals($ticket->id, $this->user->assignedTickets->first()->id);
+    }
+
+    /**
      * Test hasRole() method.
      *
      * @return void
