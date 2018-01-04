@@ -5,6 +5,7 @@ namespace App\Listeners\Auth;
 use App\Models\User;
 use App\Notifications\LoginSuccessful;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Session;
 
 class QueueSuccessNotification
 {
@@ -29,8 +30,9 @@ class QueueSuccessNotification
         /** @var User $user */
         $user = $event->user;
 
-        if (!$user->wasRecentlyCreated) {
+        if (!Session::exists('login_notification_sent') && !$user->wasRecentlyCreated) {
             $user->notify(new LoginSuccessful());
+            Session::put('login_notification_sent', true);
         }
     }
 }

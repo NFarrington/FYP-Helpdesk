@@ -94,4 +94,40 @@ class UserTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
         $this->user->hasPermission(str_random());
     }
+
+    /**
+     * Test a user is linked to the tickets they have submitted.
+     *
+     * @return void
+     */
+    public function testUserHasAssignedTickets()
+    {
+        $ticket = factory(Ticket::class)->create(['agent_id' => $this->user->id]);
+
+        $this->assertEquals($ticket->id, $this->user->assignedTickets->first()->id);
+    }
+
+    /**
+     * Test hasRole() method.
+     *
+     * @return void
+     */
+    public function testHasRoleMethod()
+    {
+        $role = factory(Role::class)->create();
+        DB::table('role_user')->insert([
+            'role_id' => $role->id,
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->assertTrue($this->user->hasRole($role));
+        $this->assertTrue($this->user->hasRole($role->id));
+        $this->assertTrue($this->user->hasRole($role->name));
+
+        $role = factory(Role::class)->create();
+
+        $this->assertFalse($this->user->hasRole($role));
+        $this->assertFalse($this->user->hasRole($role->id));
+        $this->assertFalse($this->user->hasRole($role->name));
+    }
 }

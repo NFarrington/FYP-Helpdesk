@@ -18,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
  * @property-read \App\Models\EmailVerification $emailVerification
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
@@ -68,6 +69,16 @@ class User extends Authenticatable
     ];
 
     /**
+     * Departments the user belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class);
+    }
+
+    /**
      * An email verification token model, if present.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -98,14 +109,32 @@ class User extends Authenticatable
     }
 
     /**
+     * Tickets the user has assigned to them (as an agent).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'agent_id');
+    }
+
+    /**
      * Check whether a user has a given role.
      *
-     * @param Role|string $role
+     * @param Role|string|int $role
      * @return bool
      */
-    public function hasRole(Role $role)
+    public function hasRole($role)
     {
-        return $this->roles->contains('id', $role->id);
+        if (is_numeric($role)) {
+            return $this->roles->contains('id', (int) $role);
+        }
+
+        if ($role instanceof Role) {
+            return $this->roles->contains('id', $role->id);
+        }
+
+        return $this->roles->contains('id', Role::where('name', $role)->firstOrFail()->id);
     }
 
     /**
