@@ -38,11 +38,13 @@ class TicketTest extends TestCase
      */
     public function testTicketIndexPageLoads()
     {
-        $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
+        $ticket1 = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
+        $ticket2 = factory(Ticket::class)->states('open')->create(['department_id' => 1, 'agent_id' => $this->user->id]);
         $response = $this->actingAs($this->user)->get(route('staff.tickets.index'));
 
         $response->assertStatus(200);
-        $response->assertSeeText($ticket->summary);
+        $response->assertSeeText($ticket1->summary);
+        $response->assertSeeText($ticket2->summary);
     }
 
     /**
