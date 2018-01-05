@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Events\UserEmailChanged;
+use App\Models\Department;
 use App\Models\EmailVerification;
 use App\Models\Permission;
 use App\Models\Role;
@@ -105,6 +106,30 @@ class UserTest extends TestCase
         $ticket = factory(Ticket::class)->create(['agent_id' => $this->user->id]);
 
         $this->assertEquals($ticket->id, $this->user->assignedTickets->first()->id);
+    }
+
+    /**
+     * Test hasDepartment() method.
+     *
+     * @return void
+     */
+    public function testHasDepartmentMethod()
+    {
+        $department = factory(Department::class)->create();
+        DB::table('department_user')->insert([
+            'department_id' => $department->id,
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->assertTrue($this->user->hasDepartment($department));
+        $this->assertTrue($this->user->hasDepartment($department->id));
+        $this->assertTrue($this->user->hasDepartment($department->name));
+
+        $department = factory(Department::class)->create();
+
+        $this->assertFalse($this->user->hasDepartment($department));
+        $this->assertFalse($this->user->hasDepartment($department->id));
+        $this->assertFalse($this->user->hasDepartment($department->name));
     }
 
     /**

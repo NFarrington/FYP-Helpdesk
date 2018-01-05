@@ -98,7 +98,7 @@ class TicketTest extends TestCase
      */
     public function testTicketsCanBeViewed()
     {
-        $ticket = factory(Ticket::class)->create();
+        $ticket = factory(Ticket::class)->create(['user_id' => $this->user->id]);
 
         $response = $this->actingAs($this->user)->get(route('tickets.show', $ticket->id));
 

@@ -10,6 +10,7 @@
             <th>{{ __('ticket.key.status_id') }}</th>
             <th>{{ __('ticket.key.created_at') }}</th>
             <th>{{ __('ticket.key.updated_at') }}</th>
+            <th></th>
         </tr>
         @foreach($tickets as $ticket)
             <tr>
@@ -21,6 +22,7 @@
                 <td>{{ $ticket->status_id }}</td>
                 <td>{{ $ticket->created_at }}</td>
                 <td>{{ $ticket->updated_at }}</td>
+                <td><a href="{{ route('staff.tickets.show', $ticket) }}">View</a></td>
             </tr>
         @endforeach
     </table>
