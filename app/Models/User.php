@@ -119,6 +119,25 @@ class User extends Authenticatable
     }
 
     /**
+     * Check whether a user has a given department.
+     *
+     * @param Department|string|int $department
+     * @return bool
+     */
+    public function hasDepartment($department)
+    {
+        if (is_numeric($department)) {
+            return $this->departments->contains('id', (int) $department);
+        }
+
+        if ($department instanceof Department) {
+            return $this->departments->contains('id', $department->id);
+        }
+
+        return $this->departments->contains('id', Department::where('name', $department)->firstOrFail()->id);
+    }
+
+    /**
      * Check whether a user has a given role.
      *
      * @param Role|string|int $role
