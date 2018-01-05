@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Models\Department;
 use App\Models\Ticket;
-use App\Models\TicketDepartment;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
@@ -40,7 +40,7 @@ class TicketTest extends TestCase
      */
     public function testTicketHasDepartment()
     {
-        $department = factory(TicketDepartment::class)->create();
+        $department = factory(Department::class)->create();
         $ticket = factory(Ticket::class)->create(['department_id' => $department->id]);
 
         $this->assertEquals($department->id, $ticket->department->id);

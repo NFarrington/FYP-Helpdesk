@@ -77,6 +77,13 @@
                     @endcan
                     <nav-sidebar-item name="View Knowledgebase Articles" route="{{ route('articles.index') }}"></nav-sidebar-item>
                 </ul>
+
+                @auth('agent')
+                    <ul class="nav nav-sidebar">
+                        <nav-sidebar-item name="View Tickets" route="{{ route('staff.tickets.index') }}"></nav-sidebar-item>
+                        <nav-sidebar-item name="Closed Tickets" route="{{ route('staff.tickets.index.closed') }}"></nav-sidebar-item>
+                    </ul>
+                @endauth
             @endguest
         </div>
 
@@ -85,6 +92,12 @@
             @if(session('status'))
                 <div class="alert alert-success">
                     {{ session('status') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
                 </div>
             @endif
 

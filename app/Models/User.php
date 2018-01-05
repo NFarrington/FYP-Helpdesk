@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\UserSaved;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,15 +13,19 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property bool $email_confirmed
  * @property string $password
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
+ * @property-read \App\Models\EmailVerification $emailVerification
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailConfirmed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
@@ -31,6 +36,10 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
+
+    protected $dispatchesEvents = [
+        'saved' => UserSaved::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +58,35 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_confirmed' => 'boolean',
+    ];
+
+    /**
+     * Departments the user belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class);
+    }
+
+    /**
+     * An email verification token model, if present.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function emailVerification()
+    {
+        return $this->hasOne(EmailVerification::class);
+    }
 
     /**
      * Roles this user has.
@@ -71,14 +109,51 @@ class User extends Authenticatable
     }
 
     /**
-     * Check whether a user has a given role.
+     * Tickets the user has assigned to them (as an agent).
      *
-     * @param Role|string $role
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'agent_id');
+    }
+
+    /**
+     * Check whether a user has a given department.
+     *
+     * @param Department|string|int $department
      * @return bool
      */
-    public function hasRole(Role $role)
+    public function hasDepartment($department)
     {
-        return $this->roles->contains('id', $role->id);
+        if (is_numeric($department)) {
+            return $this->departments->contains('id', (int) $department);
+        }
+
+        if ($department instanceof Department) {
+            return $this->departments->contains('id', $department->id);
+        }
+
+        return $this->departments->contains('id', Department::where('name', $department)->firstOrFail()->id);
+    }
+
+    /**
+     * Check whether a user has a given role.
+     *
+     * @param Role|string|int $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        if (is_numeric($role)) {
+            return $this->roles->contains('id', (int) $role);
+        }
+
+        if ($role instanceof Role) {
+            return $this->roles->contains('id', $role->id);
+        }
+
+        return $this->roles->contains('id', Role::where('name', $role)->firstOrFail()->id);
     }
 
     /**

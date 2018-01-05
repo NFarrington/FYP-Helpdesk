@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events;
 use App\Listeners;
 use Illuminate\Auth\Events as AuthEvents;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,6 +21,14 @@ class EventServiceProvider extends ServiceProvider
 
         AuthEvents\Failed::class => [
             Listeners\Auth\QueueFailedNotification::class,
+        ],
+
+        Events\UserSaved::class => [
+            Listeners\FireUserChangedEvents::class,
+        ],
+
+        Events\UserEmailChanged::class => [
+            Listeners\QueueVerificationEmail::class,
         ],
     ];
 
