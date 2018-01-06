@@ -78,12 +78,12 @@
                     <nav-sidebar-item name="View Knowledgebase Articles" route="{{ route('articles.index') }}"></nav-sidebar-item>
                 </ul>
 
-                @auth('agent')
+                @if(Auth::user()->hasRole(\App\Models\Role::agent()))
                     <ul class="nav nav-sidebar">
                         <nav-sidebar-item name="View Tickets" route="{{ route('staff.tickets.index') }}"></nav-sidebar-item>
                         <nav-sidebar-item name="Closed Tickets" route="{{ route('staff.tickets.index.closed') }}"></nav-sidebar-item>
                     </ul>
-                @endauth
+                @endif
             @endguest
         </div>
 
