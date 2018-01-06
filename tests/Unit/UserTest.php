@@ -147,12 +147,12 @@ class UserTest extends TestCase
 
         $this->assertTrue($this->user->hasRole($role));
         $this->assertTrue($this->user->hasRole($role->id));
-        $this->assertTrue($this->user->hasRole($role->name));
+        $this->assertTrue($this->user->hasRole($role->key));
 
         $role = factory(Role::class)->create();
 
         $this->assertFalse($this->user->hasRole($role));
         $this->assertFalse($this->user->hasRole($role->id));
-        $this->assertFalse($this->user->hasRole($role->name));
+        $this->assertFalse($this->user->hasRole($role->key));
     }
 }

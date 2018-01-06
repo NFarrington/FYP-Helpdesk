@@ -153,7 +153,7 @@ class User extends Authenticatable
             return $this->roles->contains('id', $role->id);
         }
 
-        return $this->roles->contains('id', Role::where('name', $role)->firstOrFail()->id);
+        return $this->roles->contains('id', Role::where('key', $role)->firstOrFail()->id);
     }
 
     /**
