@@ -8,7 +8,7 @@
                 <div class="panel-body">
                     <p>ID: {{ $ticket->id }}</p>
                     <p>Summary: {{ $ticket->summary }}</p>
-                    <form class="form-horizontal" method="POST" action="{{ route('staff.tickets.update', $ticket) }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('agent.tickets.update', $ticket) }}">
                         {{ csrf_field() }}
                         {{ method_field('PUT') }}
 
