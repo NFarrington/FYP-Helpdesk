@@ -24,14 +24,14 @@ class Role extends Model
      *
      * @var string
      */
-    const ROLE_ADMIN = 'Administrator';
+    const ROLE_ADMIN = 'admin';
 
     /**
      * The name of the agent role.
      *
      * @var string
      */
-    const ROLE_AGENT = 'Agent';
+    const ROLE_AGENT = 'agent';
 
     /**
      * Indicates if the model should be timestamped.
@@ -67,7 +67,7 @@ class Role extends Model
      */
     public function scopeAdmin()
     {
-        return $this->where('name', self::ROLE_ADMIN)->first();
+        return $this->where('key', self::ROLE_ADMIN)->first();
     }
 
     /**
@@ -77,6 +77,6 @@ class Role extends Model
      */
     public function scopeAgent()
     {
-        return $this->where('name', self::ROLE_AGENT)->first();
+        return $this->where('key', self::ROLE_AGENT)->first();
     }
 }
