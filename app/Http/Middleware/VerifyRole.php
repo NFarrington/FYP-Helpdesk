@@ -19,7 +19,7 @@ class VerifyRole
      */
     public function handle($request, Closure $next, ...$roles)
     {
-        if (!$user = $request->user('user')) {
+        if (!$user = $request->user()) {
             throw new AuthenticationException();
         }
 
