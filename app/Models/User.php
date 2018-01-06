@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $name
  * @property string $email
- * @property bool $email_confirmed
+ * @property bool $email_verified
  * @property string $password
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
@@ -25,7 +25,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailConfirmed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerified($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
@@ -65,7 +65,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_confirmed' => 'boolean',
+        'email_verified' => 'boolean',
     ];
 
     /**
