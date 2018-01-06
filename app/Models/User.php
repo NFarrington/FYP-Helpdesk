@@ -18,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $assignedTickets
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
  * @property-read \App\Models\EmailVerification $emailVerification
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -75,7 +76,7 @@ class User extends Authenticatable
      */
     public function departments()
     {
-        return $this->belongsToMany(Department::class);
+        return $this->belongsToMany(Department::class)->orderBy('id');
     }
 
     /**
@@ -95,7 +96,7 @@ class User extends Authenticatable
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class)->orderBy('id');
     }
 
     /**
@@ -105,7 +106,7 @@ class User extends Authenticatable
      */
     public function tickets()
     {
-        return $this->hasMany(Ticket::class);
+        return $this->hasMany(Ticket::class)->orderBy('id');
     }
 
     /**
@@ -115,7 +116,21 @@ class User extends Authenticatable
      */
     public function assignedTickets()
     {
-        return $this->hasMany(Ticket::class, 'agent_id');
+        return $this->hasMany(Ticket::class, 'agent_id')->orderBy('id');
+    }
+
+    /**
+     * Sets the user's email address.
+     *
+     * @param string $email
+     */
+    public function setEmailAttribute($email)
+    {
+        $this->attributes['email'] = $email;
+
+        if ($this->isDirty('email')) {
+            $this->email_verified = false;
+        }
     }
 
     /**
