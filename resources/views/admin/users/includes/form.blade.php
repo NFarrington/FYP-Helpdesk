@@ -51,10 +51,10 @@
 </div>
 
 <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
-    <label for="roles[]" class="col-md-4 control-label">Roles</label>
+    <label for="roles" class="col-md-4 control-label">Roles</label>
 
     <div class="col-md-6">
-        <select multiple id="roles[]" name="roles[]" class="form-control">
+        <select multiple id="roles" name="roles[]" class="form-control">
             @foreach($roles as $role)
                 <option value="{{ $role->id }}"
                         {{ collect(old('roles') ?: $user->roles->pluck('id'))->contains($role->id) ? 'selected' : ''}}>
