@@ -13,7 +13,7 @@
         </tr>
         @foreach($users as $user)
             <tr>
-                <td>{{ $user->id }}</td>
+                <td>#{{ $user->id }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td><span class="glyphicon glyphicon-{{ $user->email_verified ? 'ok-sign' : 'remove-sign' }}"></span></td>
@@ -21,7 +21,7 @@
                     <ul class="list-unstyled">
                         @foreach($user->roles as $role)
                             <li>
-                                <a href="{{ route('admin.roles.show', $role) }}">{{ $role->name }}</a>
+                                <a href="{{ route('admin.roles.edit', $role) }}">{{ $role->name }}</a>
                             </li>
                         @endforeach
                     </ul>
