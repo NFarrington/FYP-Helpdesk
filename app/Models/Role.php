@@ -38,6 +38,15 @@ class Role extends Model
     const ROLE_AGENT = 'agent';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'description',
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
