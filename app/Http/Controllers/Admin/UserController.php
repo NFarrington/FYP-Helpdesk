@@ -49,7 +49,7 @@ class UserController extends AdminController
             'roles' => 'array',
         ]);
 
-        $user->fill($request->only('name', 'email', 'email_verified'));
+        $user->fill($request->only('name', 'email'));
         if ($user->isDirty('email')) {
             $user->email_verified = true;
         }
