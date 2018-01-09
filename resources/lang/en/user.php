@@ -6,8 +6,11 @@ return [
         'id' => 'User ID',
         'name' => 'Name',
         'email' => 'Email',
+        'email_verified' => 'Email Verified',
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
+
+        'roles' => 'Roles',
     ],
 
     'email.invalid_token' => 'Invalid token.',

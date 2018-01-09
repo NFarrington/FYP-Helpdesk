@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Staff;
+namespace Tests\Feature\Agent;
 
 use App\Models\Role;
 use App\Models\Ticket;
@@ -43,7 +43,7 @@ class TicketTest extends TestCase
     {
         $ticket1 = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
         $ticket2 = factory(Ticket::class)->states('open')->create(['department_id' => 1, 'agent_id' => $this->user->id]);
-        $response = $this->actingAs($this->user)->get(route('staff.tickets.index'));
+        $response = $this->actingAs($this->user)->get(route('agent.tickets.index'));
 
         $response->assertStatus(200);
         $response->assertSeeText($ticket1->summary);
@@ -58,7 +58,7 @@ class TicketTest extends TestCase
     public function testTicketIndexPageRestrictsTickets()
     {
         $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 2]);
-        $response = $this->actingAs($this->user)->get(route('staff.tickets.index'));
+        $response = $this->actingAs($this->user)->get(route('agent.tickets.index'));
 
         $response->assertStatus(200);
         $response->assertDontSeeText($ticket->summary);
@@ -72,7 +72,7 @@ class TicketTest extends TestCase
     public function testClosedTicketIndexPageLoads()
     {
         $ticket = factory(Ticket::class)->states('closed')->create(['department_id' => 1]);
-        $response = $this->actingAs($this->user)->get(route('staff.tickets.index.closed'));
+        $response = $this->actingAs($this->user)->get(route('agent.tickets.index.closed'));
 
         $response->assertStatus(200);
         $response->assertSeeText($ticket->summary);
@@ -86,7 +86,7 @@ class TicketTest extends TestCase
     public function testClosedTicketIndexPageRestrictsTickets()
     {
         $ticket = factory(Ticket::class)->states('closed')->create(['department_id' => 2]);
-        $response = $this->actingAs($this->user)->get(route('staff.tickets.index'));
+        $response = $this->actingAs($this->user)->get(route('agent.tickets.index'));
 
         $response->assertStatus(200);
         $response->assertDontSeeText($ticket->summary);
@@ -101,7 +101,7 @@ class TicketTest extends TestCase
     {
         $ticket = factory(Ticket::class)->create(['department_id' => 1]);
 
-        $response = $this->actingAs($this->user)->get(route('staff.tickets.show', $ticket));
+        $response = $this->actingAs($this->user)->get(route('agent.tickets.show', $ticket));
 
         $response->assertStatus(200);
     }
@@ -116,16 +116,16 @@ class TicketTest extends TestCase
         $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
         $this->actingAs($this->user);
 
-        $this->get(route('staff.tickets.show', $ticket));
+        $this->get(route('agent.tickets.show', $ticket));
 
         $department = 2;
         $status = TicketStatus::closed()->first()->id;
-        $response = $this->put(route('staff.tickets.update', $ticket), [
+        $response = $this->put(route('agent.tickets.update', $ticket), [
             'department' => $department,
             'status' => $status,
         ]);
 
-        $response->assertRedirect(route('staff.tickets.index'));
+        $response->assertRedirect(route('agent.tickets.index'));
 
         $ticket = $ticket->fresh();
         $this->assertEquals($department, $ticket->department->id);
@@ -142,12 +142,12 @@ class TicketTest extends TestCase
         $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
         $this->actingAs($this->user);
 
-        $this->get(route('staff.tickets.show', $ticket));
-        $response = $this->put(route('staff.tickets.update', $ticket), [
+        $this->get(route('agent.tickets.show', $ticket));
+        $response = $this->put(route('agent.tickets.update', $ticket), [
             'department' => $ticket->department_id,
             'status' => $ticket->department_id,
         ]);
 
-        $response->assertRedirect(route('staff.tickets.show', $ticket));
+        $response->assertRedirect(route('agent.tickets.show', $ticket));
     }
 }

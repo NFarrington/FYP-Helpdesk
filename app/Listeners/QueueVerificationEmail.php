@@ -41,7 +41,7 @@ class QueueVerificationEmail
 
         $user = $event->user;
 
-        $user->email_confirmed = false;
+        $user->email_verified = false;
         if ($verification = $user->emailVerification) {
             $verification->delete();
         }

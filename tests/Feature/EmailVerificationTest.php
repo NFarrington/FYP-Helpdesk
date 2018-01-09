@@ -53,7 +53,7 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('home'));
         $response->assertSessionHas('status', trans('user.email.verified'));
 
-        $this->assertDatabaseHas($this->user->getTable(), ['email_confirmed' => 1]);
+        $this->assertDatabaseHas($this->user->getTable(), ['email_verified' => 1]);
     }
 
     /**
@@ -74,6 +74,6 @@ class EmailVerificationTest extends TestCase
         $response->assertRedirect(route('home'));
         $response->assertSessionHas('error', trans('user.email.invalid_token'));
 
-        $this->assertDatabaseHas($this->user->getTable(), ['email_confirmed' => 0]);
+        $this->assertDatabaseHas($this->user->getTable(), ['email_verified' => 0]);
     }
 }

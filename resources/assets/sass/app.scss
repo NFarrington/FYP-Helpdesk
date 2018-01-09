@@ -65,3 +65,27 @@ body {
 .main .page-header {
   margin-top: 0;
 }
+
+.table-bordered-bottom {
+  border-bottom: 1px solid $table-border-color;
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        border-bottom: 1px solid $table-border-color;
+      }
+    }
+  }
+  > thead > tr {
+    > th,
+    > td {
+      border-bottom-width: 2px;
+    }
+  }
+}
+
+ul.list-unstyled, ol.list-unstyled {
+  margin-bottom: 0;
+}

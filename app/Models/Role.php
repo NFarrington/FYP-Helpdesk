@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\Role
  *
  * @property int $id
+ * @property string $key
  * @property string $name
+ * @property string|null $description
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role admin()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role agent()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Role whereName($value)
  * @mixin \Eloquent
  */
@@ -34,6 +38,15 @@ class Role extends Model
     const ROLE_AGENT = 'agent';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'description',
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -47,7 +60,7 @@ class Role extends Model
      */
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class);
+        return $this->belongsToMany(Permission::class)->orderBy('key');
     }
 
     /**
@@ -57,7 +70,7 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->orderBy('id');
     }
 
     /**

@@ -13,6 +13,7 @@ class VerifyRole
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
+     * @param string[] ...$roles
      * @return mixed
      * @throws AuthenticationException
      * @throws AuthorizationException
@@ -20,7 +21,7 @@ class VerifyRole
     public function handle($request, Closure $next, ...$roles)
     {
         if (!$user = $request->user()) {
-            throw new AuthenticationException();
+            throw new AuthenticationException(); // @codeCoverageIgnore
         }
 
         foreach ($roles as $role) {
