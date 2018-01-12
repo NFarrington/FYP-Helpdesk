@@ -3,10 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Notifications\LoginFailed;
-use App\Notifications\LoginSuccessful;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
@@ -128,27 +125,27 @@ class FacebookLoginTest extends TestCase
             'auth_type' => 'rerequest',
         ]));
         $mockProvider->method('getResourceOwner')->willReturn(new FacebookUser([
-            "id" => rand(),
-            "name" => "Neil Farrington",
-            "first_name" => "First",
-            "last_name" => "Last",
-            "email" => "email@example.com",
-            "picture" => [
-                "data" => [
-                    "url" => "url_to_jpg",
-                    "is_silhouette" => false,
+            'id' => mt_rand(),
+            'name' => 'Neil Farrington',
+            'first_name' => 'First',
+            'last_name' => 'Last',
+            'email' => 'email@example.com',
+            'picture' => [
+                'data' => [
+                    'url' => 'url_to_jpg',
+                    'is_silhouette' => false,
                 ],
             ],
-            "cover" => [
-                "source" => "url_to_jpg",
-                "id" => rand(),
+            'cover' => [
+                'source' => 'url_to_jpg',
+                'id' => mt_rand(),
             ],
-            "gender" => "male",
-            "locale" => "en_GB",
-            "link" => "https://www.facebook.com/app_scoped_user_id/".rand()."/",
-            "timezone" => 0,
-            "age_range" => [
-                "min" => 21,
+            'gender' => 'male',
+            'locale' => 'en_GB',
+            'link' => 'https://www.facebook.com/app_scoped_user_id/'.mt_rand().'/',
+            'timezone' => 0,
+            'age_range' => [
+                'min' => 21,
             ],
         ]));
 
