@@ -91,8 +91,8 @@ class FacebookController extends Controller
             $token = $this->provider->getAccessToken('authorization_code', [
                 'code' => $request->input('code'),
             ]);
-        } catch (IdentityProviderException $e) {
-            abort(400, 'Bad Request');
+        } catch (IdentityProviderException $e) { // @codeCoverageIgnore
+            abort(400, 'Bad Request'); // @codeCoverageIgnore
         }
 
         /** @var FacebookUser $user */
