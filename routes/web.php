@@ -21,6 +21,9 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::post('login/facebook', 'Auth\FacebookController@login')->name('login.facebook');
 Route::get('login/facebook/callback', 'Auth\FacebookController@callback')->name('login.facebook.callback');
 
+Route::post('login/google', 'Auth\GoogleController@login')->name('login.google');
+Route::get('login/google/callback', 'Auth\GoogleController@callback')->name('login.google.callback');
+
 // Registration Routes...
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
