@@ -72,6 +72,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified' => 'boolean',
         'facebook_data' => 'array',
+        'google_data' => 'array',
     ];
 
     /**
