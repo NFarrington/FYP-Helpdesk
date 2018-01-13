@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
 use League\OAuth2\Client\Provider\Facebook;
@@ -85,11 +87,11 @@ class FacebookLoginTest extends TestCase
     }
 
     /**
-     * Test the login page redirects authenticated users.
+     * Test when the user cancels the login.
      *
      * @return void
      */
-    public function testOAuthErrorHandledSuccessfully()
+    public function testCancelledByUser()
     {
         $this->mockProvider();
 
@@ -103,12 +105,43 @@ class FacebookLoginTest extends TestCase
 
         $response->assertRedirect(route('login'));
         $response->assertSessionHas('error', 'Facebook login cancelled.');
+    }
 
+    /**
+     * Test the login page redirects authenticated users.
+     *
+     * @return void
+     */
+    public function testOAuthErrorHandledSuccessfully()
+    {
+        $this->mockProvider();
+
+        $state = str_random(32);
         Session::put('login_oauth_state', $state);
         $response = $this->get(route('login.facebook.callback', [
             'state' => $state,
             'error' => str_random(),
             'error_reason' => str_random(),
+        ]));
+
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHas('error');
+    }
+
+    /**
+     * Test an exception is handled successfully.
+     *
+     * @return void
+     */
+    public function testOAuthExceptionHandled()
+    {
+        $this->mockProvider(['exception' => true]);
+
+        $state = str_random(32);
+        Session::put('login_oauth_state', $state);
+        $response = $this->get(route('login.facebook.callback', [
+            'code' => str_random(),
+            'state' => $state,
         ]));
 
         $response->assertRedirect(route('login'));
@@ -122,7 +155,7 @@ class FacebookLoginTest extends TestCase
      */
     public function testOAuthMissingEmail()
     {
-        $this->mockProvider(false);
+        $this->mockProvider(['email' => false]);
 
         $state = str_random(32);
         Session::put('login_oauth_state', $state);
@@ -138,20 +171,27 @@ class FacebookLoginTest extends TestCase
     /**
      * Mocks the OAuth provider for the duration of the test.
      *
-     * @param bool $email
+     * @param array $options
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockProvider($email = true)
+    protected function mockProvider($options = [])
     {
-        $mockProvider = $this->createMock(Facebook::class);
-        $mockProvider->method('getAccessToken')->willReturn(new AccessToken([
-            'access_token' => str_random(100),
-            'token_type' => 'bearer',
-            'expires_in' => 5000000,
-            'auth_type' => 'rerequest',
-        ]));
+        $options += ['email' => true, 'exception' => false];
 
-        $facebookUserStates = $email ? [] : ['no email'];
+        $mockProvider = $this->createMock(Facebook::class);
+
+        if ($options['exception']) {
+            $mockProvider->method('getAccessToken')->willThrowException(new Exception());
+        } else {
+            $mockProvider->method('getAccessToken')->willReturn(new AccessToken([
+                'access_token' => str_random(100),
+                'token_type' => 'bearer',
+                'expires_in' => 5000000,
+                'auth_type' => 'rerequest',
+            ]));
+        }
+
+        $facebookUserStates = $options['email'] ? [] : ['no email'];
         $mockProvider->method('getResourceOwner')
             ->willReturn(factory(FacebookUser::class)->states($facebookUserStates)->make());
 

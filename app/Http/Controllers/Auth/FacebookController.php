@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Facebook as FacebookProvider;
 use League\OAuth2\Client\Provider\FacebookUser;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
 /**
  * @link https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
@@ -68,7 +69,6 @@ class FacebookController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\Response
-     * @throws \League\OAuth2\Client\Provider\Exception\FacebookProviderException
      * @throws AuthenticationException
      */
     public function callback(Request $request)
@@ -83,22 +83,32 @@ class FacebookController extends Controller
                 return redirect()->route('login')->with('error', 'Facebook login cancelled.');
             }
 
-            return redirect()->route('login')
-                ->with('error', "{$request->input('error_code')} {$request->input('error_description')}");
+            $this->handleError();
         }
 
-        try {
-            $token = $this->provider->getAccessToken('authorization_code', [
-                'code' => $request->input('code'),
-            ]);
-        } catch (IdentityProviderException $e) { // @codeCoverageIgnore
-            abort(400, 'Bad Request'); // @codeCoverageIgnore
-        }
-
-        /** @var FacebookUser $user */
-        $user = $this->provider->getResourceOwner($token);
+        $user = $this->getFacebookUser($request->input('code'));
 
         return $this->processFacebookUserLogin($request, $user);
+    }
+
+    /**
+     * Retrieve the FacebookUser instance with a given OAuth code.
+     *
+     * @param  string $code
+     * @return FacebookUser|ResourceOwnerInterface
+     * @throws AuthenticationException
+     */
+    protected function getFacebookUser($code)
+    {
+        try {
+            $token = $this->provider->getAccessToken('authorization_code', [
+                'code' => $code,
+            ]);
+
+            return $this->provider->getResourceOwner($token);
+        } catch (Exception $e) {
+            $this->handleError($e);
+        }
     }
 
     /**
@@ -145,5 +155,22 @@ class FacebookController extends Controller
 
             throw new AuthenticationException();
         }
+    }
+
+    /**
+     * Handle a given exception.
+     *
+     * @param $e
+     * @throws AuthenticationException
+     */
+    protected function handleError($e = null)
+    {
+        if ($e) {
+            report($e);
+        }
+
+        Session::flash('error', 'Failed to log in via Facebook - please try again later.');
+
+        throw new AuthenticationException();
     }
 }
