@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
 use League\OAuth2\Client\Provider\Facebook;
@@ -116,40 +115,14 @@ class FacebookLoginTest extends TestCase
         $response->assertSessionHas('error');
     }
 
+    /**
+     * Test a missing email generates the expected error.
+     *
+     * @return void
+     */
     public function testOAuthMissingEmail()
     {
-
-        $mockProvider = $this->createMock(Facebook::class);
-        $mockProvider->method('getAccessToken')->willReturn(new AccessToken([
-            'access_token' => str_random(100),
-            'token_type' => 'bearer',
-            'expires_in' => 5000000,
-            'auth_type' => 'rerequest',
-        ]));
-        $mockProvider->method('getResourceOwner')->willReturn(new FacebookUser([
-            'id' => mt_rand(),
-            'name' => 'Neil Farrington',
-            'first_name' => 'First',
-            'last_name' => 'Last',
-            'picture' => [
-                'data' => [
-                    'url' => 'url_to_jpg',
-                    'is_silhouette' => false,
-                ],
-            ],
-            'cover' => [
-                'source' => 'url_to_jpg',
-                'id' => mt_rand(),
-            ],
-            'gender' => 'male',
-            'locale' => 'en_GB',
-            'link' => 'https://www.facebook.com/app_scoped_user_id/'.mt_rand().'/',
-            'timezone' => 0,
-            'age_range' => [
-                'min' => 21,
-            ],
-        ]));
-        $this->app->instance(Facebook::class, $mockProvider);
+        $this->mockProvider(false);
 
         $state = str_random(32);
         Session::put('login_oauth_state', $state);
@@ -162,7 +135,13 @@ class FacebookLoginTest extends TestCase
         $response->assertSessionHas('error', 'You must allow the email permission to enable login via Facebook.');
     }
 
-    protected function mockProvider()
+    /**
+     * Mocks the OAuth provider for the duration of the test.
+     *
+     * @param bool $email
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockProvider($email = true)
     {
         $mockProvider = $this->createMock(Facebook::class);
         $mockProvider->method('getAccessToken')->willReturn(new AccessToken([
@@ -171,30 +150,10 @@ class FacebookLoginTest extends TestCase
             'expires_in' => 5000000,
             'auth_type' => 'rerequest',
         ]));
-        $mockProvider->method('getResourceOwner')->willReturn(new FacebookUser([
-            'id' => mt_rand(),
-            'name' => 'Neil Farrington',
-            'first_name' => 'First',
-            'last_name' => 'Last',
-            'email' => 'email@example.com',
-            'picture' => [
-                'data' => [
-                    'url' => 'url_to_jpg',
-                    'is_silhouette' => false,
-                ],
-            ],
-            'cover' => [
-                'source' => 'url_to_jpg',
-                'id' => mt_rand(),
-            ],
-            'gender' => 'male',
-            'locale' => 'en_GB',
-            'link' => 'https://www.facebook.com/app_scoped_user_id/'.mt_rand().'/',
-            'timezone' => 0,
-            'age_range' => [
-                'min' => 21,
-            ],
-        ]));
+
+        $facebookUserStates = $email ? [] : ['no email'];
+        $mockProvider->method('getResourceOwner')
+            ->willReturn(factory(FacebookUser::class)->states($facebookUserStates)->make());
 
         $this->app->instance(Facebook::class, $mockProvider);
 
