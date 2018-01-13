@@ -86,7 +86,11 @@ class FacebookController extends Controller
             $this->handleError();
         }
 
-        $user = $this->getFacebookUser($request->input('code'));
+        try {
+            $user = $this->getFacebookUser($request->input('code'));
+        } catch (Exception $e) {
+            $this->handleError($e);
+        }
 
         return $this->processFacebookUserLogin($request, $user);
     }
@@ -96,19 +100,15 @@ class FacebookController extends Controller
      *
      * @param  string $code
      * @return FacebookUser|ResourceOwnerInterface
-     * @throws AuthenticationException
+     * @throws \League\OAuth2\Client\Provider\Exception\FacebookProviderException
      */
     protected function getFacebookUser($code)
     {
-        try {
-            $token = $this->provider->getAccessToken('authorization_code', [
-                'code' => $code,
-            ]);
+        $token = $this->provider->getAccessToken('authorization_code', [
+            'code' => $code,
+        ]);
 
-            return $this->provider->getResourceOwner($token);
-        } catch (Exception $e) {
-            $this->handleError($e);
-        }
+        return $this->provider->getResourceOwner($token);
     }
 
     /**
