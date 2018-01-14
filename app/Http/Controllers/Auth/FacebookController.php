@@ -14,7 +14,7 @@ class FacebookController extends OAuthController
      *
      * @var array
      */
-    protected $authorizationUrlOptions = [
+    protected $authUrlOptions = [
         'scope' => ['public_profile', 'email'],
         'auth_type' => 'rerequest',
     ];

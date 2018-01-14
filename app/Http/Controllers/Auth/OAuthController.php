@@ -38,7 +38,7 @@ abstract class OAuthController extends Controller
      *
      * @var array
      */
-    protected $authorizationUrlOptions = [];
+    protected $authUrlOptions = [];
 
     /**
      * The model fields to store the data in.
@@ -73,7 +73,7 @@ abstract class OAuthController extends Controller
      */
     public function login()
     {
-        $authUrl = $this->provider->getAuthorizationUrl($this->authorizationUrlOptions);
+        $authUrl = $this->provider->getAuthorizationUrl($this->authUrlOptions);
 
         Session::put('login_oauth_state', $this->provider->getState());
 
