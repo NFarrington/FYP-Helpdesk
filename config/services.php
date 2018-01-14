@@ -35,4 +35,16 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'facebook' => [
+        'id' => env('FACEBOOK_ID'),
+        'secret' => env('FACEBOOK_SECRET'),
+        'version' => 'v2.11',
+    ],
+
+    'google' => [
+        'id' => env('GOOGLE_ID'),
+        'secret' => env('GOOGLE_SECRET'),
+        'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 ];

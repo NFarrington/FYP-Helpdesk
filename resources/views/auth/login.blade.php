@@ -62,6 +62,31 @@
                             </div>
                         </div>
                     </form>
+
+                    <div class="form-horizontal text-center" style="margin-top: 40px;">
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-4">
+                                <a href="{{ route('login.facebook') }}" class="btn btn-block btn-social btn-facebook"
+                                   onclick="event.preventDefault(); document.getElementById('facebook-login-form').submit();">
+                                    <span class="fa fa-facebook"></span> Sign in with Facebook
+                                </a>
+                                <form id="facebook-login-form" action="{{ route('login.facebook') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-4">
+                                <a href="{{ route('login.google') }}" class="btn btn-block btn-social btn-google"
+                                   onclick="event.preventDefault(); document.getElementById('google-login-form').submit();">
+                                    <span class="fa fa-google"></span> Sign in with Google
+                                </a>
+                                <form id="google-login-form" action="{{ route('login.google') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
