@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Exception;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
 use League\OAuth2\Client\Provider\Facebook;
@@ -104,7 +103,7 @@ class FacebookLoginTest extends TestCase
         ]));
 
         $response->assertRedirect(route('login'));
-        $response->assertSessionHas('error', 'Facebook login cancelled.');
+        $response->assertSessionHas('error', trans('auth.cancelled'));
     }
 
     /**
@@ -165,7 +164,7 @@ class FacebookLoginTest extends TestCase
         ]));
 
         $response->assertRedirect();
-        $response->assertSessionHas('error', 'You must allow the email permission to enable login via Facebook.');
+        $response->assertSessionHas('error', trans('auth.missing-email'));
     }
 
     /**
