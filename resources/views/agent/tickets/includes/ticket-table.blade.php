@@ -22,7 +22,7 @@
                 <td>{{ $ticket->status_id }}</td>
                 <td>{{ $ticket->created_at }}</td>
                 <td>{{ $ticket->updated_at }}</td>
-                <td><a href="{{ route('staff.tickets.show', $ticket) }}">View</a></td>
+                <td><a href="{{ route('agent.tickets.show', $ticket) }}">View</a></td>
             </tr>
         @endforeach
     </table>

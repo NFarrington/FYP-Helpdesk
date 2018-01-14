@@ -36,7 +36,7 @@ class VerifyEmailController extends Controller
             return redirect(route('home'))->with('error', trans('user.email.invalid_token'));
         }
 
-        $user->email_confirmed = true;
+        $user->email_verified = true;
         $user->save();
 
         $verification->delete();

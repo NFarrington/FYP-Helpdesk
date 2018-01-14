@@ -14,7 +14,7 @@ class AddEmailConfirmedColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('email_confirmed')->default(0)->after('email');
+            $table->boolean('email_verified')->default(0)->after('email');
         });
     }
 
@@ -26,7 +26,7 @@ class AddEmailConfirmedColumn extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('email_confirmed');
+            $table->dropColumn('email_verified');
         });
     }
 }

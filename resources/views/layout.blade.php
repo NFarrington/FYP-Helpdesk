@@ -78,12 +78,20 @@
                     <nav-sidebar-item name="View Knowledgebase Articles" route="{{ route('articles.index') }}"></nav-sidebar-item>
                 </ul>
 
-                @auth('agent')
+                @if(Auth::user()->hasRole(\App\Models\Role::agent()))
                     <ul class="nav nav-sidebar">
-                        <nav-sidebar-item name="View Tickets" route="{{ route('staff.tickets.index') }}"></nav-sidebar-item>
-                        <nav-sidebar-item name="Closed Tickets" route="{{ route('staff.tickets.index.closed') }}"></nav-sidebar-item>
+                        <nav-sidebar-item name="View Tickets" route="{{ route('agent.tickets.index') }}"></nav-sidebar-item>
+                        <nav-sidebar-item name="Closed Tickets" route="{{ route('agent.tickets.index.closed') }}"></nav-sidebar-item>
                     </ul>
-                @endauth
+                @endif
+
+                @if(Auth::user()->hasRole(\App\Models\Role::admin()))
+                    <ul class="nav nav-sidebar">
+                        <nav-sidebar-item name="View Users" route="{{ route('admin.users.index') }}"></nav-sidebar-item>
+                        <nav-sidebar-item name="View Roles" route="{{ route('admin.roles.index') }}"></nav-sidebar-item>
+                        <nav-sidebar-item name="View Permissions" route="{{ route('admin.permissions.index') }}"></nav-sidebar-item>
+                    </ul>
+                @endif
             @endguest
         </div>
 

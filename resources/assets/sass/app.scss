@@ -8,6 +8,12 @@
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
+// Font Awesome
+@import "~font-awesome/scss/font-awesome";
+
+// Bootstrap Social Buttons
+@import "~bootstrap-social/bootstrap-social";
+
 /* https://getbootstrap.com/docs/3.3/examples/dashboard/ */
 
 body {
@@ -64,4 +70,28 @@ body {
 }
 .main .page-header {
   margin-top: 0;
+}
+
+.table-bordered-bottom {
+  border-bottom: 1px solid $table-border-color;
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        border-bottom: 1px solid $table-border-color;
+      }
+    }
+  }
+  > thead > tr {
+    > th,
+    > td {
+      border-bottom-width: 2px;
+    }
+  }
+}
+
+ul.list-unstyled, ol.list-unstyled {
+  margin-bottom: 0;
 }

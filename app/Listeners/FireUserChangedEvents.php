@@ -26,7 +26,7 @@ class FireUserChangedEvents
     {
         $user = $event->user;
 
-        if ($user->isDirty('email')) {
+        if ($user->isDirty('email') && !$user->email_verified) {
             UserEmailChanged::dispatch($user);
         }
     }

@@ -37,6 +37,15 @@ class Permission extends Model
     protected $casts = ['default' => 'bool'];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'description',
+    ];
+
+    /**
      * Roles with this permission.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

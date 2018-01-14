@@ -18,6 +18,12 @@ Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
+Route::post('login/facebook', 'Auth\FacebookController@login')->name('login.facebook');
+Route::get('login/facebook/callback', 'Auth\FacebookController@callback')->name('login.facebook.callback');
+
+Route::post('login/google', 'Auth\GoogleController@login')->name('login.google');
+Route::get('login/google/callback', 'Auth\GoogleController@callback')->name('login.google.callback');
+
 // Registration Routes...
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
@@ -39,7 +45,14 @@ Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostControll
 Route::resource('users', 'UserController');
 
 // Agent Routes...
-Route::group(['namespace' => 'Staff', 'prefix' => 'staff', 'as' => 'staff.'], function () {
+Route::group(['namespace' => 'Agent', 'prefix' => 'agent', 'as' => 'agent.'], function () {
     Route::get('tickets/closed', 'TicketController@indexClosed')->name('tickets.index.closed');
     Route::resource('tickets', 'TicketController');
+});
+
+// Agent Routes...
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::resource('users', 'UserController');
+    Route::resource('roles', 'RoleController');
+    Route::resource('permissions', 'PermissionController');
 });

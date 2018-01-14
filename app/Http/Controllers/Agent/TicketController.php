@@ -1,26 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Staff;
+namespace App\Http\Controllers\Agent;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Agent\Controller as AgentController;
 use App\Models\Department;
 use App\Models\Ticket;
 use App\Models\TicketStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TicketController extends Controller
+class TicketController extends AgentController
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +27,7 @@ class TicketController extends Controller
             return 'open';
         });
 
-        return view('staff.tickets.index')->with([
+        return view('agent.tickets.index')->with([
             'assigned' => $tickets->get('assigned') ?: collect(),
             'open' => $tickets->get('open') ?: collect(),
         ]);
@@ -53,7 +43,7 @@ class TicketController extends Controller
     {
         $closedTickets = Ticket::managedBy($request->user())->closed()->get();
 
-        return view('staff.tickets.index-closed')->with([
+        return view('agent.tickets.index-closed')->with([
             'closed' => $closedTickets,
         ]);
     }
@@ -69,7 +59,7 @@ class TicketController extends Controller
     {
         $this->authorize('view-as-agent', $ticket);
 
-        return view('staff.tickets.view')->with([
+        return view('agent.tickets.view')->with([
             'ticket' => $ticket,
             'departments' => Department::all(),
             'statuses' => TicketStatus::all(),
@@ -99,8 +89,8 @@ class TicketController extends Controller
 
         $ticket = $ticket->fresh();
         $route = $request->user()->can('view-as-agent', $ticket)
-            ? route('staff.tickets.show', $ticket)
-            : route('staff.tickets.index');
+            ? route('agent.tickets.show', $ticket)
+            : route('agent.tickets.index');
 
         return redirect($route)
             ->with('status', "Ticket #{$ticket->id} was updated successfully.");

@@ -14,6 +14,9 @@ return [
     */
 
     'failed' => 'These credentials do not match our records.',
+    'system-failed' => 'Failed to log in - please try again later.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'cancelled' => 'Login cancelled.',
+    'missing-email' => 'You must allow the email permission to log in via social media.',
 
 ];
