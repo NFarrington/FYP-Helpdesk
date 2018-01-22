@@ -16,8 +16,11 @@ use Illuminate\Notifications\Notifiable;
  * @property bool $email_verified
  * @property string|null $password
  * @property string|null $remember_token
+ * @property string|null $google2fa_secret
  * @property int|null $facebook_id
  * @property array $facebook_data
+ * @property string|null $google_id
+ * @property array $google_data
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $assignedTickets
@@ -31,6 +34,9 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerified($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFacebookData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFacebookId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereGoogle2faSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereGoogleData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
