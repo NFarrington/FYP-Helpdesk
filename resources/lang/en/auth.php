@@ -19,4 +19,8 @@ return [
     'cancelled' => 'Login cancelled.',
     'missing-email' => 'You must allow the email permission to log in via social media.',
 
+    '2fa' => [
+        'configured' => 'Two-factor authentication configured successfully.',
+        'failed' => 'Failed to verify code. Please try again.',
+    ],
 ];

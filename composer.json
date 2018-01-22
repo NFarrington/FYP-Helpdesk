@@ -6,12 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "bacon/bacon-qr-code": "^1.0",
         "doctrine/dbal": "^2.5",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "league/oauth2-facebook": "^2.0",
-        "league/oauth2-google": "^2.0"
+        "league/oauth2-google": "^2.0",
+        "pragmarx/google2fa-laravel": "^0.1.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.4",

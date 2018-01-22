@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Google2FA;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -136,5 +137,55 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function show2FAForm(Request $request)
+    {
+        $secret = $request->user()->google2fa_secret;
+
+        if (!$secret) {
+            $secret = $request->session()->get('google2fa-secret');
+        }
+
+        if (!$secret) {
+            $secret = Google2FA::generateSecretKey();
+        }
+
+        $request->session()->put('google2fa-secret', $secret);
+
+        $qrCode = Google2FA::getQRCodeInline(
+            config('app.name'),
+            $request->user()->email,
+            $secret,
+            250
+        );
+
+        return view('settings.2fa')->with([
+            'qrCode' => $qrCode,
+            'secret' => $secret,
+        ]);
+    }
+
+    public function register2FA(Request $request)
+    {
+        $this->validate($request, [
+            'code' => 'required|numeric',
+        ]);
+
+        $code = $request->input('code');
+
+        $valid = Google2FA::verifyKey($request->session()->get('google2fa-secret'), $code);
+
+        if ($valid) {
+            $secret = $request->session()->pull('google2fa-secret');
+            $user = $request->user();
+
+            $user->google2fa_secret = $secret;
+            $user->save();
+
+            return redirect()->route('users.show', $user)->with('status', trans('auth.2fa.configured'));
+        }
+
+        return redirect()->back()->with('error', trans('auth.2fa.failed'));
     }
 }
