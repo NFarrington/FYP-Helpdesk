@@ -53,6 +53,16 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Two-Factor Authentication</label>
+                            <div class="col-md-6">
+                                <p class="form-control-static">
+                                    <span class="glyphicon glyphicon-{{ $user->google2fa_secret ? 'ok-sign' : 'remove-sign' }}"></span>
+                                    <a href="{{ route('settings.2fa') }}">Configure</a>
+                                </p>
+                            </div>
+                        </div>
+
                         <p class="col-md-6 col-md-offset-4 help-block">Leave blank if you do not wish to change your password.</p>
                         <div class="form-group{{ $errors->has('new_password') ? ' has-error' : '' }}">
                             <label for="new-password" class="col-md-4 control-label">New Password</label>
