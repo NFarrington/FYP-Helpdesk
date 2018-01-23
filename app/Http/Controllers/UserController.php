@@ -139,6 +139,12 @@ class UserController extends Controller
         //
     }
 
+    /**
+     * Show the form for configuring 2FA.
+     *
+     * @param Request $request
+     * @return $this
+     */
     public function show2FAForm(Request $request)
     {
         $secret = $request->user()->google2fa_secret;
@@ -166,6 +172,12 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Register the user's 2FA configuration using the code provided.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function register2FA(Request $request)
     {
         $this->validate($request, [

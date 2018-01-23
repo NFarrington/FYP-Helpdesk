@@ -31,6 +31,11 @@ class Google2FATest extends TestCase
         $this->user = factory(User::class)->create();
     }
 
+    /**
+     * Test a user can load the configuration page.
+     *
+     * @return void
+     */
     public function testUserCanLoadConfigurationPage()
     {
         $response = $this->actingAs($this->user)->get(route('settings.2fa'));
@@ -38,6 +43,11 @@ class Google2FATest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * Test a user can configure their 2FA and enable it.
+     *
+     * @return void
+     */
     public function testUserCanConfigure2FA()
     {
         $mock = $this->createMock(Google2FA::class);
@@ -51,6 +61,11 @@ class Google2FATest extends TestCase
         $response->assertRedirect(route('users.show', $this->user));
     }
 
+    /**
+     * Test 2FA configuration fails if user provided the wrong code.
+     *
+     * @return void
+     */
     public function testUserConfigurationFails()
     {
         $mock = $this->createMock(Google2FA::class);
@@ -64,6 +79,11 @@ class Google2FATest extends TestCase
         $response->assertRedirect(route('settings.2fa'));
     }
 
+    /**
+     * Test user can load the verification page.
+     *
+     * @return void
+     */
     public function testUserCanLoadVerificationPage()
     {
         $secret = str_random(16);
@@ -75,6 +95,11 @@ class Google2FATest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * Test user is redirected to the verification page if unauthenticated.
+     *
+     * @return void
+     */
     public function testUserRedirectedToVerificationPage()
     {
         $mock = $this->createMock(Google2FA::class);
@@ -90,6 +115,11 @@ class Google2FATest extends TestCase
         $response->assertRedirect(route('login.2fa'));
     }
 
+    /**
+     * Test user can verify their 2FA code.
+     *
+     * @return void
+     */
     public function testUserCanSubmitVerificationPage()
     {
         $mock = $this->createMock(Google2FA::class);
@@ -106,6 +136,11 @@ class Google2FATest extends TestCase
         $response->assertRedirect(route('home'));
     }
 
+    /**
+     * Test verifying the wrong code fails.
+     *
+     * @return void
+     */
     public function testVerificationFails()
     {
         $mock = $this->createMock(Google2FA::class);
@@ -122,6 +157,11 @@ class Google2FATest extends TestCase
         $response->assertRedirect(route('login.2fa'));
     }
 
+    /**
+     * Test user redirected if already authenticated.
+     *
+     * @return void
+     */
     public function testUserRedirectedFromVerificationPage()
     {
         $mock = $this->createMock(Authenticator::class);

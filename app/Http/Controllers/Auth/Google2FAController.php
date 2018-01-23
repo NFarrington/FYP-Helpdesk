@@ -18,6 +18,12 @@ class Google2FAController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * Show the verification form.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function showForm(Request $request)
     {
         $authenticator = app(Authenticator::class)->boot($request);
@@ -29,6 +35,12 @@ class Google2FAController extends Controller
         return view('auth.2fa.index');
     }
 
+    /**
+     * Log the user in using the code provided.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function login(Request $request)
     {
         $this->validate($request, [
