@@ -24,6 +24,9 @@ Route::get('login/facebook/callback', 'Auth\FacebookController@callback')->name(
 Route::post('login/google', 'Auth\GoogleController@login')->name('login.google');
 Route::get('login/google/callback', 'Auth\GoogleController@callback')->name('login.google.callback');
 
+Route::get('login/two-factor', 'Auth\Google2FAController@showForm')->name('login.2fa');
+Route::post('login/two-factor', 'Auth\Google2FAController@login');
+
 // Registration Routes...
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
@@ -43,6 +46,8 @@ Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
 Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');
 Route::resource('users', 'UserController');
+Route::get('settings/two-factor', 'UserController@show2FAForm')->name('settings.2fa');
+Route::post('settings/two-factor', 'UserController@register2FA');
 
 // Agent Routes...
 Route::group(['namespace' => 'Agent', 'prefix' => 'agent', 'as' => 'agent.'], function () {

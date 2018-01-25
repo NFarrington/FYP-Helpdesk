@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\TicketCreated;
+use App\Events\TicketUpdated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,6 +41,18 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
     /**
+     * The event map for the model.
+     *
+     * Allows for object-based events for native Eloquent events.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => TicketCreated::class,
+        'updated' => TicketUpdated::class,
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -74,7 +88,7 @@ class Ticket extends Model
      */
     public function posts()
     {
-        return $this->hasMany(TicketPost::class);
+        return $this->hasMany(TicketPost::class)->orderByDesc('created_at');
     }
 
     /**

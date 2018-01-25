@@ -1,33 +1,34 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Tickets;
 
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EmailVerification extends Notification implements ShouldQueue
+class WithAgent extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * The token used to verify the email address.
      *
-     * @var string
+     * @var Ticket
      */
-    protected $token;
+    protected $ticket;
 
     /**
      * Create a new notification instance.
      *
-     * @param string $token
+     * @param Ticket $ticket
      * @return void
      */
-    public function __construct(string $token)
+    public function __construct(Ticket $ticket)
     {
-        $this->token = $token;
+        $this->ticket = $ticket;
     }
 
     /**
@@ -52,9 +53,11 @@ class EmailVerification extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->subject("$appName - Verify Email Address")
-            ->line('Please click the button below to verify your email address:')
-            ->action('Verify Email Address', route('email.verify', $this->token));
+            ->subject("$appName - New Reply")
+            ->line("**Subject:** {$this->ticket->summary}")
+            ->line("**Response by:** {$this->ticket->user->name}")
+            ->line("**Response:** {$this->ticket->posts->first()->content}")
+            ->action('View Ticket', route('agent.tickets.show', $this->ticket));
     }
 
     /**
@@ -66,8 +69,7 @@ class EmailVerification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'old_email' => $notifiable->getOriginal('email'),
-            'new_email' => $notifiable->getAttribute('email'),
+            'ticket_id' => $this->ticket->id,
         ];
     }
 }
