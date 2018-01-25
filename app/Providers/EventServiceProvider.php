@@ -27,9 +27,10 @@ class EventServiceProvider extends ServiceProvider
             Listeners\FireUserChangedEvents::class,
         ],
 
-        Events\UserEmailChanged::class => [
+        Events\UserSaved::class => [
             Listeners\QueueVerificationEmail::class,
         ],
+
     ];
 
     /**
