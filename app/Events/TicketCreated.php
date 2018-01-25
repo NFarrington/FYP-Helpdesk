@@ -2,28 +2,28 @@
 
 namespace App\Events;
 
-use App\Models\User;
+use App\Models\Ticket;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserEmailChanged
+class TicketCreated
 {
     use Dispatchable, SerializesModels;
 
     /**
      * The user that has been saved.
      *
-     * @var User
+     * @var Ticket
      */
-    public $user;
+    public $ticket;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct(Ticket $ticket)
     {
-        $this->user = $user;
+        $this->ticket = $ticket;
     }
 }

@@ -25,7 +25,7 @@
                     </form>
                 </div>
             </div>
-            @foreach($ticket->posts->sortByDesc('created_at') as $post)
+            @foreach($ticket->posts as $post)
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <p>Name: {{ $post->user->name }}</p>

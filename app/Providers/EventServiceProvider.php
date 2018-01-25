@@ -23,13 +23,20 @@ class EventServiceProvider extends ServiceProvider
             Listeners\Auth\QueueFailedNotification::class,
         ],
 
-        Events\UserSaved::class => [
-            Listeners\FireUserChangedEvents::class,
+        Events\TicketCreated::class => [
+            Listeners\QueueTicketSubmittedEmail::class,
         ],
 
-        Events\UserEmailChanged::class => [
+        Events\TicketUpdated::class => [
+            Listeners\QueueTicketAssignmentEmail::class,
+            Listeners\QueueDepartmentChangedEmail::class,
+            Listeners\QueueStatusChangedEmail::class,
+        ],
+
+        Events\UserSaved::class => [
             Listeners\QueueVerificationEmail::class,
         ],
+
     ];
 
     /**

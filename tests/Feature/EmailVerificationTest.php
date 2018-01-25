@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Events\UserEmailChanged;
 use App\Models\EmailVerification;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -30,7 +30,7 @@ class EmailVerificationTest extends TestCase
     {
         parent::setUp();
 
-        $this->expectsEvents(UserEmailChanged::class);
+        Event::fake();
         $this->user = factory(User::class)->create();
         $this->actingAs($this->user);
     }
