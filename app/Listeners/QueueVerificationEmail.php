@@ -37,18 +37,12 @@ class QueueVerificationEmail
         $user = $event->user;
 
         if ($user->isDirty('email') && !$user->email_verified) {
-            $key = $this->app['config']['app.key'];
-            if (starts_with($key, 'base64:')) {
-                $key = base64_decode(mb_substr($key, 7));
-            }
+            $key = app_key();
 
             $user->email_verified = false;
-            if ($verification = $user->emailVerification) {
-                $verification->delete();
-            }
 
             $token = hash_hmac('sha256', str_random(40), $key);
-            $verification = new EmailVerification();
+            $verification = $user->emailVerification ?: new EmailVerification();
             $verification->token = Hash::make($token);
             $verification->user()->associate($user);
             $verification->save();
