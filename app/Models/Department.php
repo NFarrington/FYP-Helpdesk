@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property bool $internal
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department external()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department internal()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereDescription($value)
@@ -46,6 +47,16 @@ class Department extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'department_id');
+    }
+
+    /**
+     * Tickets currently assigned to the department.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->orderBy('id');
     }
 
     /**
