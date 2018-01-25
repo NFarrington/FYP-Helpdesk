@@ -66,8 +66,8 @@ class EmailVerification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'oldEmail' => $notifiable->getOriginal('email'),
-            'newEmail' => $notifiable->getAttribute('email'),
+            'old_email' => $notifiable->getOriginal('email'),
+            'new_email' => $notifiable->getAttribute('email'),
         ];
     }
 }
