@@ -48,6 +48,13 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    /**
+     * The event map for the model.
+     *
+     * Allows for object-based events for native Eloquent events.
+     *
+     * @var array
+     */
     protected $dispatchesEvents = [
         'saved' => UserSaved::class,
     ];
