@@ -146,8 +146,8 @@ class ArticleController extends Controller
         $visibleFrom = "{$request->input('visible_from_date')} {$request->input('visible_from_time')}";
         $visibleTo = "{$request->input('visible_to_date')} {$request->input('visible_to_time')}";
         $visibility = [
-            'visible_from' => !ctype_space($visibleFrom) ? $visibleFrom : null,
-            'visible_to' => !ctype_space($visibleTo) ? $visibleTo : null,
+            'visible_from' => !ctype_space($visibleFrom) ? $visibleFrom . ':00' : null,
+            'visible_to' => !ctype_space($visibleTo) ? $visibleTo . ':00' : null,
         ];
 
         return array_merge($request->only('title', 'content') + $visibility);

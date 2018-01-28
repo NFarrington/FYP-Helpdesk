@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Article;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -59,6 +60,8 @@ class ArticleTest extends TestCase
         $response = $this->post(route('articles.store'), [
             'title' => $article->title,
             'content' => $article->content,
+            'visible_from_date' => Carbon::now()->toDateString(),
+            'visible_from_time' => Carbon::now()->format('H:i'),
         ]);
 
         $response->assertRedirect(route('articles.show', $nextID));
