@@ -160,6 +160,26 @@ class TicketTest extends TestCase
     }
 
     /**
+     * Test a ticket's post can be updated.
+     *
+     * @return void
+     */
+    public function testTicketPostCanBeDeleted()
+    {
+        $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
+        $post = factory(TicketPost::class)->create(['ticket_id' => $ticket->id]);
+        $this->actingAs($this->user);
+
+        $this->get(route('agent.tickets.show', $ticket));
+
+        $response = $this->delete(route('posts.update', [$ticket, $post]));
+
+        $response->assertRedirect(route('agent.tickets.show', $ticket));
+
+        $this->assertDatabaseMissing($post->getTable(), ['id' => $post->id]);
+    }
+
+    /**
      * Test updating a ticket redirects to it if permitted.
      *
      * @return void
