@@ -75,8 +75,11 @@
                         @can('update', $post)
                             <button type="button" class="btn btn-primary btn-xs"
                                     data-toggle="modal" data-target="#editPostModal" data-post-id="{{ $post->id }}">
-                                Edit Post
+                                Edit
                             </button>
+                        @endcan
+                        @can('delete', $post)
+                            <delete-resource route="{{ route('posts.destroy', [$ticket, $post]) }}"></delete-resource>
                         @endcan
                     </div>
                 </div>
