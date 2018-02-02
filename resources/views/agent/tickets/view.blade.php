@@ -72,6 +72,15 @@
                         @if($post->attachment)
                             <p>Attachment: {{ $post->attachment }} <a href="{{ route('posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
                         @endif
+                        @can('update', $post)
+                            <button type="button" class="btn btn-primary btn-xs"
+                                    data-toggle="modal" data-target="#editPostModal" data-post-id="{{ $post->id }}">
+                                Edit
+                            </button>
+                        @endcan
+                        @can('delete', $post)
+                            <delete-resource route="{{ route('posts.destroy', [$ticket, $post]) }}"></delete-resource>
+                        @endcan
                     </div>
                 </div>
             @endforeach
@@ -122,4 +131,56 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="editPostModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editPostForm" class="form-horizontal" method="POST" action="">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                        <h4 class="modal-title">Edit Ticket Post</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ csrf_field() }}
+                        {{ method_field('PUT') }}
+                        <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}">
+                            <label for="content" class="col-lg-2 control-label">Content</label>
+
+                            <div class="col-lg-10">
+                                <textarea id="content" class="form-control" name="content" rows="6" maxlength="5000"
+                                          required>{{ old('content') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+<script>
+
+    let posts = [];
+    @foreach($ticket->posts as $post)
+        @php
+            $jsonPost = $post->setAttribute('route', route('posts.update', [$ticket, $post]))->setVisible(['content', 'route']);
+        @endphp
+        posts[{{$post->id}}] = @json($jsonPost);
+    @endforeach
+
+    $('#editPostModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const post = button.data('post-id');
+
+        let modal = $(this);
+        modal.find('#content').val(posts[post].content);
+        modal.find('#editPostForm').attr('action', posts[post].route);
+    });
+
+</script>
+@endpush

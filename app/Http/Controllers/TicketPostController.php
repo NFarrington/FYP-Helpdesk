@@ -24,8 +24,9 @@ class TicketPostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  Ticket   $ticket
+     * @param  Ticket $ticket
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(Request $request, Ticket $ticket)
     {
@@ -52,50 +53,46 @@ class TicketPostController extends Controller
         $ticketPost->ticket()->associate($ticket);
         $ticketPost->save();
 
-        return redirect(route('tickets.show', $ticket));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\TicketPost  $ticketPost
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(TicketPost $ticketPost)
-    {
-        //
+        return redirect()->route('tickets.show', $ticket);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TicketPost  $ticketPost
+     * @param  \Illuminate\Http\Request $request
+     * @param Ticket $ticket
+     * @param  \App\Models\TicketPost $post
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, TicketPost $ticketPost)
+    public function update(Request $request, Ticket $ticket, TicketPost $post)
     {
-        //
+        $this->authorize('update', $post);
+
+        $attributes = $this->validate($request, [
+            'content' => 'required|string|max:5000',
+        ]);
+
+        $post->fill($attributes);
+        $post->save();
+
+        return redirect()->back()->with('status', 'Post updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\TicketPost  $ticketPost
+     * @param  \App\Models\TicketPost $post
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException|\Exception
      */
-    public function destroy(TicketPost $ticketPost)
+    public function destroy(Ticket $ticket, TicketPost $post)
     {
-        //
+        $this->authorize('delete', $post);
+
+        $post->delete();
+
+        return redirect()->back()->with('status', 'Post deleted successfully.');
     }
 
     /**
@@ -104,6 +101,7 @@ class TicketPostController extends Controller
      * @param Ticket $ticket
      * @param TicketPost $ticketPost
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function viewAttachment(Ticket $ticket, TicketPost $ticketPost)
     {
