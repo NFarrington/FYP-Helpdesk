@@ -46,8 +46,8 @@
                     </li>
                 @endguest
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
+            <form class="navbar-form navbar-right" method="GET" action="{{ route('search') }}">
+                <input type="text" class="form-control" name="q" placeholder="Search...">
             </form>
         </div>
     </div>
@@ -116,5 +116,6 @@
 </div>
 
 <script src="{{ mix('js/app.js') }}"></script>
+@stack('scripts')
 </body>
 </html>
