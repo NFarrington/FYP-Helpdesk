@@ -28,15 +28,14 @@ class TicketPostPolicy
     /**
      * Determine whether the user can delete the ticketPost.
      *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
      * @param  \App\Models\User  $user
      * @param  \App\Models\TicketPost  $ticketPost
      * @return mixed
      */
     public function delete(User $user, TicketPost $ticketPost)
     {
-        return true;
+        return $user->hasRole(Role::agent()) &&
+            $user->hasPermission('tickets.posts.delete') &&
+            $user->can('update-as-agent', $ticketPost->ticket);
     }
 }

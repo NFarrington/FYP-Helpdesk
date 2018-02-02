@@ -76,21 +76,23 @@ class TicketPostController extends Controller
         $post->fill($attributes);
         $post->save();
 
-        return redirect()->back()->with('status', 'Ticket updated successfully.');
+        return redirect()->back()->with('status', 'Post updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\TicketPost  $ticketPost
+     * @param  \App\Models\TicketPost $post
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException|\Exception
      */
-    public function destroy(TicketPost $ticketPost)
+    public function destroy(Ticket $ticket, TicketPost $post)
     {
-        //
+        $this->authorize('delete', $post);
+
+        $post->delete();
+
+        return redirect()->back()->with('status', 'Post deleted successfully.');
     }
 
     /**
