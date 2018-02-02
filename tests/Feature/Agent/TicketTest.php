@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Agent;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Ticket;
+use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,6 +34,7 @@ class TicketTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->user->departments()->attach(1);
         $this->user->roles()->attach(Role::agent()->id);
+        Role::agent()->permissions()->sync(Permission::pluck('id'));
     }
 
     /**
@@ -130,6 +133,30 @@ class TicketTest extends TestCase
         $ticket = $ticket->fresh();
         $this->assertEquals($department, $ticket->department->id);
         $this->assertEquals($status, $ticket->status->id);
+    }
+
+    /**
+     * Test a ticket's post can be updated.
+     *
+     * @return void
+     */
+    public function testTicketPostCanBeUpdated()
+    {
+        $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
+        $post = factory(TicketPost::class)->create(['ticket_id' => $ticket->id]);
+        $this->actingAs($this->user);
+
+        $this->get(route('agent.tickets.show', $ticket));
+
+        $content = str_random();
+        $response = $this->put(route('posts.update', [$ticket, $post]), [
+            'content' => $content,
+        ]);
+
+        $response->assertRedirect(route('agent.tickets.show', $ticket));
+
+        $post = $post->fresh();
+        $this->assertEquals($content, $post->content);
     }
 
     /**
