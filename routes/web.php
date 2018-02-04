@@ -45,6 +45,7 @@ Route::get('search', 'SearchController@search')->name('search');
 
 // Resource Routes...
 Route::resource('articles', 'ArticleController');
+Route::resource('articles/{article}/comments', 'ArticleCommentController', ['as' => 'articles']);
 Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
 Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');

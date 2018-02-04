@@ -34,7 +34,22 @@ class Article extends Model
      */
     protected $fillable = ['title', 'content', 'visible_from', 'visible_to'];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = ['visible_from', 'visible_to'];
+
+    /**
+     * Comments associated with the article.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(ArticleComment::class)->orderByDesc('created_at');
+    }
 
     /**
      * Scope a query to only include published articles.
