@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -177,5 +178,25 @@ class ArticleTest extends TestCase
 
         $response = $this->get(route('articles.index'));
         $response->assertDontSeeText($article->title);
+    }
+
+    /**
+     * Test a submitted ticket can be replied to.
+     *
+     * @return void
+     */
+    public function testArticleCanBeCommentedOn()
+    {
+        $article = factory(Article::class)->states('published')->create();
+        $articleComment = factory(ArticleComment::class)->make();
+        $this->actingAs($this->user);
+
+        $this->get(route('articles.show', $article));
+        $response = $this->post(route('articles.comments.store', $article), [
+            'content' => $articleComment->content,
+        ]);
+
+        $response->assertRedirect(route('articles.show', $article));
+        $this->assertDatabaseHas($articleComment->getTable(), ['content' => $articleComment->content]);
     }
 }
