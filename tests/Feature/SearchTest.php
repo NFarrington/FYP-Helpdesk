@@ -56,7 +56,7 @@ class SearchTest extends TestCase
         $this->actingAs($user);
 
         $this->runSearch($regex, $ticket->summary);
-        $this->runSearch($regex, $user->name, false);
+        $this->runSearch($regex, e($user->name), false);
     }
 
     /**
