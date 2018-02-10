@@ -5,12 +5,22 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-interface Repository
+abstract class Repository
 {
+    /**
+     * The instantiated Eloquent model class.
+     *
+     * @var Model
+     */
+    protected $model;
+
     /**
      * Return all announcements.
      *
      * @return Collection|Model[]
      */
-    public function getAll();
+    public function getAll()
+    {
+        return $this->model->all();
+    }
 }
