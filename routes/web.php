@@ -50,7 +50,10 @@ Route::resource('articles/{article}/comments', 'ArticleCommentController', ['as'
 Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
 Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');
-Route::resource('users', 'UserController');
+
+Route::get('profile', 'UserController@show')->name('profile.show');
+Route::put('profile', 'UserController@update')->name('profile.update');
+
 Route::get('settings/two-factor', 'UserController@show2FAForm')->name('settings.2fa');
 Route::post('settings/two-factor', 'UserController@register2FA');
 

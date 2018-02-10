@@ -38,7 +38,7 @@ class ProfileTest extends TestCase
      */
     public function testProfilePageLoads()
     {
-        $response = $this->actingAs($this->user)->get(route('users.show', $this->user));
+        $response = $this->actingAs($this->user)->get(route('profile.show'));
 
         $response->assertStatus(200);
     }
@@ -49,15 +49,15 @@ class ProfileTest extends TestCase
 
         $this->actingAs($this->user);
 
-        $this->get(route('users.show', $this->user));
-        $response = $this->put(route('users.update', $this->user), [
+        $this->get(route('profile.show'));
+        $response = $this->put(route('profile.update'), [
             'email' => factory(User::class)->make()->email,
             'password' => 'secret',
             'new_password' => '',
             'new_password_confirmation' => '',
         ]);
 
-        $response->assertRedirect(route('users.show', $this->user));
+        $response->assertRedirect(route('profile.show'));
         $response->assertSessionHas('status', trans('user.updated'));
 
         Notification::assertSentTo($this->user, EmailVerification::class, 1);
@@ -67,15 +67,15 @@ class ProfileTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $this->get(route('users.show', $this->user));
-        $response = $this->put(route('users.update', $this->user), [
+        $this->get(route('profile.show'));
+        $response = $this->put(route('profile.update'), [
             'email' => $this->user->email,
             'password' => 'secret',
             'new_password' => 'Password1234',
             'new_password_confirmation' => 'Password1234',
         ]);
 
-        $response->assertRedirect(route('users.show', $this->user));
+        $response->assertRedirect(route('profile.show'));
         $response->assertSessionHas('status', trans('user.updated'));
     }
 
@@ -83,15 +83,15 @@ class ProfileTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $this->get(route('users.show', $this->user));
-        $response = $this->put(route('users.update', $this->user), [
+        $this->get(route('profile.show'));
+        $response = $this->put(route('profile.update'), [
             'email' => $this->user->email,
             'password' => 'wrong-password',
             'new_password' => 'Password1234',
             'new_password_confirmation' => 'Password1234',
         ]);
 
-        $response->assertRedirect(route('users.show', $this->user));
+        $response->assertRedirect(route('profile.show'));
         $response->assertSessionHasErrors('password', trans('auth.failed'));
     }
 }

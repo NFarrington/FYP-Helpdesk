@@ -22,46 +22,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Models\User $user
@@ -76,38 +36,21 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      * @throws ValidationException
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
-        $this->authorize('update', $user);
-
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required|string',
             'new_password' => 'nullable|string|confirmed|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
         ], ['regex' => trans('passwords.requirements')]);
 
+        $user = $request->user();
         if (!Auth::validate(['email' => $user->email, 'password' => $request->input('password')])) {
             throw ValidationException::withMessages([
                 'password' => [trans('auth.failed')],
@@ -121,22 +64,8 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect(route('users.show', $user))
+        return redirect()->route('profile.show')
             ->with('status', trans('user.updated'));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 
     /**
@@ -195,7 +124,7 @@ class UserController extends Controller
             $user->google2fa_secret = $secret;
             $user->save();
 
-            return redirect()->route('users.show', $user)->with('status', trans('auth.2fa.configured'));
+            return redirect()->route('profile.show')->with('status', trans('auth.2fa.configured'));
         }
 
         return redirect()->back()->with('error', trans('auth.2fa.failed'));

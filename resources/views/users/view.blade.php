@@ -6,7 +6,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">User Profile - {{ $user->name }}</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('users.update', $user) }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('profile.update') }}">
                         {{ csrf_field() }}
                         {{ method_field('PUT') }}
 
