@@ -59,4 +59,16 @@ class ArticlePolicy
     {
         return $user->hasPermission('articles.delete');
     }
+
+    /**
+     * Determine whether the user can add a comment to the article.
+     *
+     * @param User $user
+     * @param Article $article
+     * @return mixed
+     */
+    public function createComment(User $user, Article $article)
+    {
+        return $this->view($user, $article);
+    }
 }
