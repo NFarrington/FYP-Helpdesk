@@ -24,15 +24,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(User $user)
+    public function show(Request $request)
     {
-        $this->authorize('view', $user);
-
-        return view('users.view')->with('user', $user);
+        return view('users.view')->with('user', $request->user());
     }
 
     /**
