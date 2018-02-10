@@ -3,33 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
+use App\Repositories\AnnouncementRepository;
+use App\Services\AnnouncementService;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
     /**
+     * The announcement service.
+     *
+     * @var AnnouncementService
+     */
+    protected $service;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param AnnouncementService $service
      */
-    public function __construct()
+    public function __construct(AnnouncementService $service)
     {
         $this->middleware('auth');
+
+        $this->service = $service;
     }
 
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $announcements = $request->user()->hasPermission('announcements.update')
-            ? Announcement::all()
-                ->filter(function ($value, $key) use ($request) {
-                    return $request->user()->can('update', $value);
-                })
-            : Announcement::published()->get();
+        $announcements = $this->service->getViewableBy($request->user());
 
         return view('announcements.index')->with('announcements', $announcements->sortByDesc('updated_at'));
     }
