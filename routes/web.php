@@ -44,6 +44,7 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::get('search', 'SearchController@search')->name('search');
 
 // Resource Routes...
+Route::resource('announcements', 'AnnouncementController');
 Route::resource('articles', 'ArticleController');
 Route::resource('articles/{article}/comments', 'ArticleCommentController', ['as' => 'articles']);
 Route::resource('tickets', 'TicketController');
@@ -59,7 +60,7 @@ Route::group(['namespace' => 'Agent', 'prefix' => 'agent', 'as' => 'agent.'], fu
     Route::resource('tickets', 'TicketController');
 });
 
-// Agent Routes...
+// Admin Routes...
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('users', 'UserController');
     Route::resource('roles', 'RoleController');
