@@ -6,7 +6,7 @@ $factory->define(App\Models\Announcement::class, function (Faker $faker) {
     return [
         'title' => $faker->sentence,
         'content' => $faker->paragraph,
-        'status' => rand(0, 2),
+        'status' => mt_rand(0, 2),
     ];
 });
 
