@@ -78,6 +78,13 @@
                     <nav-sidebar-item name="View Knowledgebase Articles" route="{{ route('articles.index') }}"></nav-sidebar-item>
                 </ul>
 
+                <ul class="nav nav-sidebar">
+                    @can('create', \App\Models\Announcement::class)
+                        <nav-sidebar-item name="Create Announcement" route="{{ route('announcements.create') }}"></nav-sidebar-item>
+                    @endcan
+                    <nav-sidebar-item name="View Announcements" route="{{ route('announcements.index') }}"></nav-sidebar-item>
+                </ul>
+
                 @if(Auth::user()->hasRole(\App\Models\Role::agent()))
                     <ul class="nav nav-sidebar">
                         <nav-sidebar-item name="View Tickets" route="{{ route('agent.tickets.index') }}"></nav-sidebar-item>
@@ -96,6 +103,12 @@
         </div>
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            @if($announcement = \App\Models\Announcement::active()->first())
+                <div class="alert alert-info">
+                    <strong>Announcement: </strong><a href="{{ route('announcements.show', $announcement) }}">{{ $announcement->title }}</a>
+                </div>
+            @endif
 
             @if(session('status'))
                 <div class="alert alert-success">
