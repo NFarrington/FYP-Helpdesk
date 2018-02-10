@@ -54,8 +54,8 @@ Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostControll
 Route::get('profile', 'ProfileController@show')->name('profile.show');
 Route::put('profile', 'ProfileController@update')->name('profile.update');
 
-Route::get('settings/two-factor', 'ProfileController@show2FAForm')->name('settings.2fa');
-Route::post('settings/two-factor', 'ProfileController@register2FA');
+Route::get('settings/two-factor', 'SettingsController@show2FAForm')->name('settings.2fa');
+Route::post('settings/two-factor', 'SettingsController@register2FA');
 
 // Agent Routes...
 Route::group(['namespace' => 'Agent', 'prefix' => 'agent', 'as' => 'agent.'], function () {
