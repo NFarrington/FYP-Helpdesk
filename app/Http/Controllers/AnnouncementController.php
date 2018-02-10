@@ -24,13 +24,12 @@ class AnnouncementController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->hasPermission('announcements.update')) {
-            $announcements = Announcement::all()->filter(function ($value, $key) use ($request) {
-                return $request->user()->can('update', $value);
-            });
-        } else {
-            $announcements = Announcement::published()->get();
-        }
+        $announcements = $request->user()->hasPermission('announcements.update')
+            ? Announcement::all()
+                ->filter(function ($value, $key) use ($request) {
+                    return $request->user()->can('update', $value);
+                })
+            : Announcement::published()->get();
 
         return view('announcements.index')->with('announcements', $announcements->sortByDesc('updated_at'));
     }
