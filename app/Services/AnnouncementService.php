@@ -6,10 +6,10 @@ use App\Models\Announcement;
 use App\Models\User;
 use App\Repositories\AnnouncementRepository;
 
-class AnnouncementService
+class AnnouncementService extends Service
 {
     /**
-     * The announcement repository.
+     * The repository.
      *
      * @var AnnouncementRepository
      */
