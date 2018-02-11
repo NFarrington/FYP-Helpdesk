@@ -39,7 +39,7 @@ class AnnouncementServiceTest extends TestCase
     public function testCreate()
     {
         $template = factory(Announcement::class)->make();
-        $this->service->create($template->toArray(), $template->user);
+        $this->service->create($template->attributesToArray(), $template->user);
         $this->assertDatabaseHas($template->getTable(), $template->attributesToArray());
     }
 
@@ -53,11 +53,11 @@ class AnnouncementServiceTest extends TestCase
         $announcement = factory(Announcement::class)->create();
 
         $template = factory(Announcement::class)->make(['user_id' => $announcement->user->id]);
-        $this->service->update($announcement, $template->toArray());
-        $this->assertDatabaseHas($template->getTable(), $template->toArray());
+        $this->service->update($announcement, $template->attributesToArray());
+        $this->assertDatabaseHas($template->getTable(), $template->attributesToArray());
 
         $template = factory(Announcement::class)->make();
-        $this->service->update($announcement, $template->toArray(), $template->user);
+        $this->service->update($announcement, $template->attributesToArray(), $template->user);
         $this->assertDatabaseHas($template->getTable(), $template->attributesToArray());
     }
 
