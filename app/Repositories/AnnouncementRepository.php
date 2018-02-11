@@ -22,7 +22,7 @@ class AnnouncementRepository extends Repository
     protected $model;
 
     /**
-     * EloquentRepository constructor.
+     * Initialise the repository.
      *
      * @param Announcement $model
      */

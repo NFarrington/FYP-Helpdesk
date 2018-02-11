@@ -13,8 +13,8 @@ class AnnouncementPolicy
     /**
      * Determine whether the user can view the announcement.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Announcement  $announcement
+     * @param User $user
+     * @param Announcement|null $announcement
      * @return mixed
      */
     public function view(User $user, Announcement $announcement = null)

@@ -73,7 +73,7 @@ class AnnouncementService extends Service
     }
 
     /**
-     * Get all the announcements the user can view.
+     * Get all model instances the user can view.
      *
      * @param User $user
      * @return \App\Models\Announcement[]|\Illuminate\Database\Eloquent\Collection
