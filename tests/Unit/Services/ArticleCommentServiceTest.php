@@ -33,12 +33,12 @@ class ArticleCommentServiceTest extends TestCase
     /**
      * Test the create method.
      *
-     * @covers \App\Services\AnnouncementService::create()
+     * @covers \App\Services\ArticleCommentService::create()
      */
     public function testCreate()
     {
         $template = factory(ArticleComment::class)->make();
-        $this->service->create($template->toArray(), $template->article, $template->user);
+        $this->service->create($template->attributesToArray(), $template->article, $template->user);
         $this->assertDatabaseHas($template->getTable(), $template->attributesToArray());
     }
 }
