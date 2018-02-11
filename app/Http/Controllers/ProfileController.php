@@ -2,21 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
     /**
+     * The service.
+     *
+     * @var UserService
+     */
+    protected $service;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param UserService $service
      */
-    public function __construct()
+    public function __construct(UserService $service)
     {
         $this->middleware('auth');
+
+        $this->service = $service;
     }
 
     /**
@@ -38,27 +46,35 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required|string',
-            'new_password' => 'nullable|string|confirmed|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
-        ], ['regex' => trans('passwords.requirements')]);
+        $attributes = $this->validate($request, $this->rules(), $this->messages());
 
-        $user = $request->user();
-        if (!Auth::validate(['email' => $user->email, 'password' => $request->input('password')])) {
-            throw ValidationException::withMessages([
-                'password' => [trans('auth.failed')],
-            ]);
-        }
-
-        $user->email = $request->input('email');
-        if ($newPassword = $request->input('new_password')) {
-            $user->password = Hash::make($newPassword);
-        }
-
-        $user->save();
+        $this->service->selfUpdate($request->user(), $attributes);
 
         return redirect()->route('profile.show')
             ->with('status', trans('user.updated'));
+    }
+
+    /**
+     * Get the validation rules.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'email' => 'required|email',
+            'password' => 'required|string',
+            'new_password' => 'nullable|string|confirmed|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
+        ];
+    }
+
+    /**
+     * Get the validation messages.
+     *
+     * @return array
+     */
+    protected function messages()
+    {
+        return ['regex' => trans('passwords.requirements')];
     }
 }
