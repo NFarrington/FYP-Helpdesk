@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 abstract class Repository
 {
     /**
+     * The order to sort the results by.
+     *
+     * @var string
+     */
+    protected $sortOrder = ['id', 'ASC'];
+
+    /**
      * The instantiated Eloquent model class.
      *
-     * @var Model
+     * @var \Eloquent|Model
      */
     protected $model;
 
@@ -21,6 +28,6 @@ abstract class Repository
      */
     public function getAll()
     {
-        return $this->model->all();
+        return $this->model->orderBy(...$this->sortOrder)->get();
     }
 }
