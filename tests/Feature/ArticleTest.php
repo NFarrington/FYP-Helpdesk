@@ -57,7 +57,7 @@ class ArticleTest extends TestCase
         $article = factory(Article::class)->make();
         $nextID = DB::table('articles')->max('id') + 1;
 
-        $this->get(route('articles.create'));
+        $this->get(route('articles.create'))->assertSuccessful();
         $response = $this->post(route('articles.store'), [
             'title' => $article->title,
             'content' => $article->content,
@@ -97,7 +97,7 @@ class ArticleTest extends TestCase
         $existingArticle = factory(Article::class)->create();
         $article = factory(Article::class)->make();
 
-        $this->get(route('articles.edit', $existingArticle));
+        $this->get(route('articles.edit', $existingArticle))->assertSuccessful();
         $response = $this->put(route('articles.update', $existingArticle), [
             'content' => $article->content,
         ] + $existingArticle->toArray());
@@ -118,7 +118,7 @@ class ArticleTest extends TestCase
     {
         $article = factory(Article::class)->create();
 
-        $this->get(route('articles.edit', $article));
+        $this->get(route('articles.edit', $article))->assertSuccessful();
         $response = $this->delete(route('articles.destroy', $article));
 
         $response->assertRedirect(route('articles.index'));
@@ -191,7 +191,7 @@ class ArticleTest extends TestCase
         $articleComment = factory(ArticleComment::class)->make();
         $this->actingAs($this->user);
 
-        $this->get(route('articles.show', $article));
+        $this->get(route('articles.show', $article))->assertSuccessful();
         $response = $this->post(route('articles.comments.store', $article), [
             'content' => $articleComment->content,
         ]);
