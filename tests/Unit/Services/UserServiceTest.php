@@ -33,7 +33,7 @@ class UserServiceTest extends TestCase
     /**
      * Test the selfUpdate method.
      *
-     * @covers \App\Services\UserService::create()
+     * @covers \App\Services\UserService::selfUpdate()
      * @throws \Illuminate\Validation\ValidationException
      */
     public function testSelfUpdate()
