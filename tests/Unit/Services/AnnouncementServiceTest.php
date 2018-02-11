@@ -13,7 +13,7 @@ class AnnouncementServiceTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * The announcement service.
+     * The service.
      *
      * @var AnnouncementService
      */

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AnnouncementController extends Controller
 {
     /**
-     * The announcement service.
+     * The service.
      *
      * @var AnnouncementService
      */

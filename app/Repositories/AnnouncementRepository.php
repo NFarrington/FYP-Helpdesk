@@ -15,7 +15,7 @@ class AnnouncementRepository extends Repository
     protected $sortOrder = ['updated_at', 'DESC'];
 
     /**
-     * The instantiated model class.
+     * The model.
      *
      * @var Announcement
      */

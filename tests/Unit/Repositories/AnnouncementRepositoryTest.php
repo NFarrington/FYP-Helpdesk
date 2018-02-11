@@ -12,7 +12,7 @@ class AnnouncementRepositoryTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * The announcement repository.
+     * The repository.
      *
      * @var AnnouncementRepository
      */
