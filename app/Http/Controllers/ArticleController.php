@@ -51,7 +51,7 @@ class ArticleController extends Controller
     {
         $this->authorize('create', Article::class);
 
-        return view('articles.create');
+        return view('articles.create')->with('article', new Article());
     }
 
     /**
