@@ -34,7 +34,7 @@ class AnnouncementRepositoryTest extends TestCase
     /**
      * Test the getPublished() method.
      *
-     * @covers AnnouncementRepository::getPublished
+     * @covers \App\Repositories\AnnouncementRepository::getPublished()
      */
     public function testGetPublished()
     {

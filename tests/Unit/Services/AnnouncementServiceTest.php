@@ -36,7 +36,7 @@ class AnnouncementServiceTest extends TestCase
     /**
      * Test the create method.
      *
-     * @covers AnnouncementService::create
+     * @covers \App\Services\AnnouncementService::create()
      */
     public function testCreate()
     {
@@ -49,7 +49,7 @@ class AnnouncementServiceTest extends TestCase
     /**
      * Test the update method.
      *
-     * @covers AnnouncementService::update
+     * @covers \App\Services\AnnouncementService::update()
      */
     public function testUpdate()
     {
@@ -67,7 +67,7 @@ class AnnouncementServiceTest extends TestCase
     /**
      * Test the delete method.
      *
-     * @covers AnnouncementService::delete
+     * @covers \App\Services\AnnouncementService::delete()
      * @throws \Exception
      */
     public function testDelete()
@@ -82,7 +82,7 @@ class AnnouncementServiceTest extends TestCase
     /**
      * Test the getViewableBy method.
      *
-     * @covers AnnouncementService::getViewableBy
+     * @covers \App\Services\AnnouncementService::getViewableBy()
      */
     public function testGetViewableBy()
     {
