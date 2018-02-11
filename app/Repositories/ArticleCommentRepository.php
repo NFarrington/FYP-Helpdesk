@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-
 use App\Models\ArticleComment;
 
 class ArticleCommentRepository extends Repository
