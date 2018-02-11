@@ -4,10 +4,8 @@ namespace Tests\Unit\Services;
 
 use App\Models\Announcement;
 use App\Models\User;
-use App\Repositories\AnnouncementRepository;
 use App\Services\AnnouncementService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
 use Tests\TestCase;
 
 class AnnouncementServiceTest extends TestCase
@@ -45,7 +43,6 @@ class AnnouncementServiceTest extends TestCase
         $this->assertDatabaseHas($template->getTable(), $template->attributesToArray());
     }
 
-
     /**
      * Test the update method.
      *
@@ -76,7 +73,6 @@ class AnnouncementServiceTest extends TestCase
 
         $this->service->delete($announcement);
         $this->assertDatabaseMissing($announcement->getTable(), $announcement->attributesToArray());
-
     }
 
     /**

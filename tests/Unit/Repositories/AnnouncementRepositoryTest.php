@@ -3,7 +3,6 @@
 namespace Tests\Unit\Repositories;
 
 use App\Models\Announcement;
-use App\Models\User;
 use App\Repositories\AnnouncementRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

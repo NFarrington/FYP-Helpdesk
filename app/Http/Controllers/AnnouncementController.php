@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
-use App\Repositories\AnnouncementRepository;
 use App\Services\AnnouncementService;
 use Illuminate\Http\Request;
 

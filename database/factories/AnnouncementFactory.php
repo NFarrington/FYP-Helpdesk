@@ -9,7 +9,7 @@ $factory->define(App\Models\Announcement::class, function (Faker $faker) {
         'status' => mt_rand(0, 2),
         'user_id' => function () {
             return factory(App\Models\User::class)->create()->id;
-        }
+        },
     ];
 });
 
