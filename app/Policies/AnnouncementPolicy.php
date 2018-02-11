@@ -17,10 +17,14 @@ class AnnouncementPolicy
      * @param  \App\Models\Announcement  $announcement
      * @return mixed
      */
-    public function view(User $user, Announcement $announcement)
+    public function view(User $user, Announcement $announcement = null)
     {
+        if ($announcement === null) {
+            return $user->hasPermission('announcements.view');
+        }
+
         $standardUser = $announcement->isPublished();
-        $elevatedUser = $this->update($user, $announcement);
+        $elevatedUser = $user->hasPermission('announcements.view');
 
         return $standardUser || $elevatedUser;
     }

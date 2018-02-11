@@ -38,7 +38,7 @@ class AnnouncementController extends Controller
     {
         $announcements = $this->service->getViewableBy($request->user());
 
-        return view('announcements.index')->with('announcements', $announcements->sortByDesc('updated_at'));
+        return view('announcements.index')->with('announcements', $announcements);
     }
 
     /**
@@ -64,11 +64,10 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Announcement::class);
+
         $attributes = $this->validate($request, $this->rules());
 
-        $announcement = new Announcement($attributes);
-        $announcement->user()->associate($request->user());
-        $announcement->save();
+        $announcement = $this->service->create($attributes, $request->user());
 
         return redirect()->route('announcements.show', $announcement)
             ->with('status', 'Announcement created successfully.');
@@ -113,9 +112,10 @@ class AnnouncementController extends Controller
     public function update(Request $request, Announcement $announcement)
     {
         $this->authorize('update', $announcement);
+
         $attributes = $this->validate($request, $this->rules());
 
-        $announcement->update($attributes);
+        $this->service->update($announcement, $attributes);
 
         return redirect()->route('announcements.show', $announcement)
             ->with('status', 'Announcement updated successfully.');
@@ -133,7 +133,7 @@ class AnnouncementController extends Controller
     {
         $this->authorize('delete', $announcement);
 
-        $announcement->delete();
+        $this->service->delete($announcement);
 
         return redirect()->route('announcements.index')
             ->with('status', 'Announcement deleted successfully.');

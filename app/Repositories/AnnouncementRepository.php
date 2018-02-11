@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Collection;
 class AnnouncementRepository extends Repository
 {
     /**
+     * The order to sort the results by.
+     *
+     * @var string
+     */
+    protected $sortOrder = ['updated_at', 'DESC'];
+
+    /**
+     * The instantiated model class.
+     *
+     * @var Announcement
+     */
+    protected $model;
+
+    /**
      * EloquentRepository constructor.
      *
      * @param Announcement $model
@@ -24,6 +38,6 @@ class AnnouncementRepository extends Repository
      */
     public function getPublished()
     {
-        return $this->model->published()->get();
+        return $this->model->published()->orderBy(...$this->sortOrder)->get();
     }
 }
