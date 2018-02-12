@@ -103,4 +103,24 @@ class TicketStatus extends Model
     {
         return $query->where('state', self::STATUS_CLOSED);
     }
+
+    /**
+     * Determine whether the state is an open state.
+     *
+     * @return bool
+     */
+    public function isOpen()
+    {
+        return $this->state !== self::STATUS_CLOSED;
+    }
+
+    /**
+     * Determine whether the state is a closed state.
+     *
+     * @return bool
+     */
+    public function isClosed()
+    {
+        return $this->state === self::STATUS_CLOSED;
+    }
 }
