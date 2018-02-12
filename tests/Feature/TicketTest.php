@@ -194,7 +194,7 @@ class TicketTest extends TestCase
 
         $this->get(route('tickets.show', $ticket->id));
         $response = $this->put(route('tickets.update', $ticket->id), [
-            'close' => 'true',
+            'close' => '1',
         ]);
 
         $response->assertRedirect(route('tickets.index'));
