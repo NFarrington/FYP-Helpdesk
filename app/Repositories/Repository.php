@@ -30,4 +30,15 @@ abstract class Repository
     {
         return $this->model->orderBy(...$this->sortOrder)->get();
     }
+
+    /**
+     * Get a specific model by its ID.
+     *
+     * @param int $id
+     * @return \Eloquent|Model|null
+     */
+    public function getById(int $id)
+    {
+        return $this->model->find($id);
+    }
 }
