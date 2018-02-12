@@ -37,6 +37,7 @@ class DepartmentRepositoryTest extends TestCase
      */
     public function testGetExternal()
     {
+        Department::query()->delete();
         factory(Department::class)->states('external')->create();
 
         $publishedDepartments = $this->repository->getExternal();
