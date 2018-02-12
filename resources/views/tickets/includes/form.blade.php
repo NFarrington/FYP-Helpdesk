@@ -1,9 +1,9 @@
 
-<div class="form-group{{ $errors->has('department') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('department_id') ? ' has-error' : '' }}">
     <label for="department" class="col-md-4 control-label">Department</label>
 
     <div class="col-md-6">
-        <select id="department" name="department" class="form-control" autofocus>
+        <select id="department" name="department_id" class="form-control" autofocus>
             @foreach($departments as $department)
                 <option value="{{ $department->id }}"
                         {{ old('department') == $department->id ? 'selected' : ''}}>
@@ -12,9 +12,9 @@
             @endforeach
         </select>
 
-        @if ($errors->has('department'))
+        @if ($errors->has('department_id'))
             <span class="help-block">
-                <strong>{{ $errors->first('department') }}</strong>
+                <strong>{{ $errors->first('department_id') }}</strong>
             </span>
         @endif
     </div>
