@@ -27,7 +27,7 @@ class ArticleCommentService extends Service
     }
 
     /**
-     * Create a new announcement.
+     * Create a new article comment.
      *
      * @param array $attributes
      * @param Article $article
