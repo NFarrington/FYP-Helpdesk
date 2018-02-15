@@ -65,4 +65,32 @@ class TicketStatusTest extends TestCase
         $this->assertEquals(6, TicketStatus::open()->count());
         $this->assertEquals(3, TicketStatus::closed()->count());
     }
+
+    /**
+     * Test the isOpen() method.
+     *
+     * @return void
+     * @covers \App\Models\TicketStatus::isOpen()
+     */
+    public function testIsOpen()
+    {
+        $open = factory(TicketStatus::class)->states('open')->make();
+
+        $this->assertTrue($open->isOpen());
+        $this->assertFalse($open->isClosed());
+    }
+
+    /**
+     * Test the isClosed() method.
+     *
+     * @return void
+     * @covers \App\Models\TicketStatus::isClosed()
+     */
+    public function testIsClosed()
+    {
+        $closed = factory(TicketStatus::class)->states('closed')->make();
+
+        $this->assertTrue($closed->isClosed());
+        $this->assertFalse($closed->isOpen());
+    }
 }
