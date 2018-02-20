@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\DB;
+use Mockery;
 
 trait CreatesApplication
 {
@@ -23,6 +24,8 @@ trait CreatesApplication
             $connection = DB::getDefaultConnection();
             config(["database.connections.$connection.database" => $testingDb]);
         }
+
+        Mockery::globalHelpers();
 
         return $app;
     }

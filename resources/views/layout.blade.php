@@ -31,7 +31,7 @@
                 @else
                     <li class="dropdown">
                     <li><a href="{{ route('home') }}">Dashboard</a></li>
-                    <li><a href="{{ route('users.show', Auth::user()) }}">Profile</a></li>
+                    <li><a href="{{ route('profile.show') }}">Profile</a></li>
 
                     <li>
                         <a href="{{ route('logout') }}"

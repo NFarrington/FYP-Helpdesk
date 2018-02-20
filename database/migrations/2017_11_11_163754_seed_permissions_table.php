@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 class SeedPermissionsTable extends Migration
 {
     private $permissions = [
-        ['key' => 'articles.view', 'name' => 'Articles | View', 'description' => 'Allows users to view knowledgebase articles.', 'default' => 1],
+        ['key' => 'articles.view', 'name' => 'Articles | View', 'description' => 'Allows users to view knowledgebase articles.', 'default' => 0],
         ['key' => 'articles.create', 'name' => 'Articles | Create', 'description' => 'Allows users to create knowledgebase articles.', 'default' => 0],
         ['key' => 'articles.update', 'name' => 'Articles | Update', 'description' => 'Allows users to update knowledgebase articles.', 'default' => 0],
         ['key' => 'articles.delete', 'name' => 'Articles | Delete', 'description' => 'Allows users to delete knowledgebase articles.', 'default' => 0],

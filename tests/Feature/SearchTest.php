@@ -48,7 +48,7 @@ class SearchTest extends TestCase
         $ticket = factory(Ticket::class)->create(['user_id' => $user->id]);
         $article = factory(Article::class)->create();
 
-        $regex = '/[A-Z0-9_]*/i';
+        $regex = '/[A-Z0-9_]+/i';
         $this->runSearch($regex, $ticket->summary);
         $this->runSearch($regex, $article->title);
         $this->runSearch($regex, $user->name);
@@ -56,7 +56,7 @@ class SearchTest extends TestCase
         $this->actingAs($user);
 
         $this->runSearch($regex, $ticket->summary);
-        $this->runSearch($regex, $user->name, false);
+        $this->runSearch($regex, e($user->name), false);
     }
 
     /**

@@ -13,7 +13,7 @@
                         {{ csrf_field() }}
                         {{ method_field('PUT') }}
 
-                        <input type="hidden" name="close" value="true">
+                        <input type="hidden" name="close" value="1">
 
                         <div class="form-group">
                             <div class="col-md-8">

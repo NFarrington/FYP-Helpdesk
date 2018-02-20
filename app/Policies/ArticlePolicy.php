@@ -13,14 +13,18 @@ class ArticlePolicy
     /**
      * Determine whether the user can view the article.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Article  $article
+     * @param User $user
+     * @param Article|null $article
      * @return mixed
      */
-    public function view(User $user, Article $article)
+    public function view(User $user, Article $article = null)
     {
-        $standardUser = $user->hasPermission('articles.view') && $article->isPublished();
-        $elevatedUser = $this->update($user, $article);
+        if ($article === null) {
+            return $user->hasPermission('articles.view');
+        }
+
+        $standardUser = $article->isPublished();
+        $elevatedUser = $user->hasPermission('articles.view');
 
         return $standardUser || $elevatedUser;
     }

@@ -7,13 +7,11 @@ use App\Models\Article;
 use App\Models\Department;
 use App\Models\Ticket;
 use App\Models\TicketPost;
-use App\Models\User;
 use App\Policies\AnnouncementPolicy;
 use App\Policies\ArticlePolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\TicketPostPolicy;
-use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -29,7 +27,6 @@ class AuthServiceProvider extends ServiceProvider
         Department::class => DepartmentPolicy::class,
         Ticket::class => TicketPolicy::class,
         TicketPost::class => TicketPostPolicy::class,
-        User::class => UserPolicy::class,
     ];
 
     /**

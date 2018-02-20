@@ -75,7 +75,7 @@ class TicketTest extends TestCase
         $this->actingAs($this->user);
         $this->get(route('tickets.create'));
         $response = $this->post(route('tickets.store'), [
-            'department' => $ticket->department_id,
+            'department_id' => $ticket->department_id,
             'summary' => $ticket->summary,
             'content' => $ticketPost->content,
         ]);
@@ -194,7 +194,7 @@ class TicketTest extends TestCase
 
         $this->get(route('tickets.show', $ticket->id));
         $response = $this->put(route('tickets.update', $ticket->id), [
-            'close' => 'true',
+            'close' => '1',
         ]);
 
         $response->assertRedirect(route('tickets.index'));

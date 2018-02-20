@@ -2,55 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
 use App\Models\Ticket;
-use App\Models\TicketPost;
-use App\Models\TicketStatus;
-use App\Models\User;
+use App\Services\TicketService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     /**
+     * The service.
+     *
+     * @var TicketService
+     */
+    protected $service;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param TicketService $service
      */
-    public function __construct()
+    public function __construct(TicketService $service)
     {
         $this->middleware('auth');
+
+        $this->service = $service;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $openTickets = Auth::user()->tickets()->open()->get();
-        $closedTickets = Auth::user()->tickets()->closed()->get();
+        $tickets = $this->service->getTicketsByStatus($request->user());
 
         return view('tickets.index')->with([
-            'open' => $openTickets,
-            'closed' => $closedTickets,
+            'open' => $tickets['open'],
+            'closed' => $tickets['closed'],
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->authorize('create', Ticket::class);
 
-        $departments = Department::external()->get();
+        $departments = $this->service->getSubmittableDepartments($request->user());
 
         return view('tickets.create')->with('departments', $departments);
     }
@@ -58,45 +62,31 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(Request $request)
     {
         $this->authorize('create', Ticket::class);
 
-        $this->validate($request, [
-            'department' => 'required|numeric|exists:departments,id',
+        $attributes = $this->validate($request, [
+            'department_id' => 'required|integer|exists:departments,id',
             'summary' => 'required|string|max:250',
             'content' => 'required|string|max:5000',
         ]);
 
-        $department = Department::find($request->input('department'));
-        $this->authorize('submit-ticket', $department);
+        $ticket = $this->service->create($attributes, $request->user());
 
-        /** @var User $user */
-        $user = $request->user();
-
-        /** @var Ticket $ticket */
-        $ticket = $user->tickets()->make($request->only('summary'));
-        $ticket->department()->associate($department);
-        $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
-        $ticket->save();
-
-        /** @var TicketPost $ticketPost */
-        $ticketPost = TicketPost::make($request->only('content'));
-        $ticketPost->user()->associate($user);
-        $ticketPost->ticket()->associate($ticket);
-        $ticketPost->save();
-
-        return redirect(route('tickets.show', $ticket->id));
+        return redirect()->route('tickets.show', $ticket);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Ticket   $ticket
+     * @param  \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Ticket $ticket)
     {
@@ -106,49 +96,24 @@ class TicketController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\Ticket   $ticket
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Ticket $ticket)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Ticket   $ticket
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Models\Ticket $ticket
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Ticket $ticket)
     {
         $this->authorize('update', $ticket);
 
-        if ($request->input('close') === 'true') {
-            $ticket->status()->associate(TicketStatus::closed()->orderBy('id')->first());
-            $ticket->save();
-        }
+        $attributes = $this->validate($request, [
+            'close' => 'required|boolean',
+        ]);
 
-        return redirect(route('tickets.index'))->with('status', "Ticket {$ticket->id} closed successfully.");
-    }
+        $this->service->close($ticket, $attributes);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @codeCoverageIgnore
-     * @todo    implement
-     *
-     * @param  \App\Models\Ticket   $ticket
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Ticket $ticket)
-    {
-        //
+        return redirect()->route('tickets.index')
+            ->with('status', "Ticket {$ticket->id} closed successfully.");
     }
 }
