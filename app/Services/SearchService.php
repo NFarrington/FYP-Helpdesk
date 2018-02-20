@@ -49,6 +49,29 @@ class SearchService extends Service
     }
 
     /**
+     * Search for articles matching the given query.
+     *
+     * @param User $user
+     * @param string[] $searchQuery
+     * @return \Illuminate\Database\Eloquent\Collection|Article[]
+     */
+    public function searchArticles($user, $searchQuery)
+    {
+        $articles = Article::query();
+
+        foreach ($searchQuery as $keyword) {
+            $articles->where(function ($query) use ($keyword) {
+                $query->where('title', 'REGEXP', "[[:<:]]{$keyword}[[:>:]]")
+                    ->orWhere('content', 'REGEXP', "[[:<:]]{$keyword}[[:>:]]");
+            });
+        }
+
+        return $articles->get()->filter(function ($article) use ($user) {
+            return $user->can('view', $article);
+        });
+    }
+
+    /**
      * Search for tickets matching the given query.
      *
      * @param User $user
@@ -79,29 +102,6 @@ class SearchService extends Service
             : $tickets->filter(function ($ticket) use ($user) {
                 return $user->can('view', $ticket);
             });
-    }
-
-    /**
-     * Search for articles matching the given query.
-     *
-     * @param User $user
-     * @param string[] $searchQuery
-     * @return \Illuminate\Database\Eloquent\Collection|Article[]
-     */
-    public function searchArticles($user, $searchQuery)
-    {
-        $articles = Article::query();
-
-        foreach ($searchQuery as $keyword) {
-            $articles->where(function ($query) use ($keyword) {
-                $query->where('title', 'REGEXP', "[[:<:]]{$keyword}[[:>:]]")
-                    ->orWhere('content', 'REGEXP', "[[:<:]]{$keyword}[[:>:]]");
-            });
-        }
-
-        return $articles->get()->filter(function ($article) use ($user) {
-            return $user->can('view', $article);
-        });
     }
 
     /**
