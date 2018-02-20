@@ -13,14 +13,18 @@ class AnnouncementPolicy
     /**
      * Determine whether the user can view the announcement.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Announcement  $announcement
+     * @param User $user
+     * @param Announcement|null $announcement
      * @return mixed
      */
-    public function view(User $user, Announcement $announcement)
+    public function view(User $user, Announcement $announcement = null)
     {
+        if ($announcement === null) {
+            return $user->hasPermission('announcements.view');
+        }
+
         $standardUser = $announcement->isPublished();
-        $elevatedUser = $this->update($user, $announcement);
+        $elevatedUser = $user->hasPermission('announcements.view');
 
         return $standardUser || $elevatedUser;
     }

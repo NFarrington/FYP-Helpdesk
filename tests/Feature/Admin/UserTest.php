@@ -42,7 +42,7 @@ class UserTest extends TestCase
         $response = $this->get(route('admin.users.index'));
 
         $response->assertStatus(200);
-        $response->assertSeeText($this->user->name);
+        $response->assertSeeText(e($this->user->name));
     }
 
     /**
@@ -55,7 +55,7 @@ class UserTest extends TestCase
         $response = $this->get(route('admin.users.edit', $this->user));
 
         $response->assertStatus(200);
-        $response->assertSee($this->user->name);
+        $response->assertSee(e($this->user->name));
     }
 
     /**

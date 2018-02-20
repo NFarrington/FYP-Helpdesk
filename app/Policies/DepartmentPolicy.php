@@ -14,11 +14,11 @@ class DepartmentPolicy
      * Determine whether the user can submit a ticket to the department.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Department  $ticketDepartment
+     * @param  \App\Models\Department  $department
      * @return mixed
      */
-    public function submitTicket(User $user, Department $ticketDepartment)
+    public function submitTicket(User $user, Department $department)
     {
-        return $ticketDepartment->internal === false;
+        return $department->internal === false;
     }
 }

@@ -7,9 +7,10 @@ use Illuminate\Database\Migrations\Migration;
 class SeedAnnouncementPermissions extends Migration
 {
     private $permissions = [
+        ['key' => 'announcements.view', 'name' => 'Announcements | View', 'description' => 'Allows users to view all announcements.', 'default' => 0],
         ['key' => 'announcements.create', 'name' => 'Announcements | Create', 'description' => 'Allows users to create announcements.', 'default' => 0],
-        ['key' => 'announcements.update', 'name' => 'Announcements | Update', 'description' => 'Allows users to update announcements.', 'default' => 0],
-        ['key' => 'announcements.delete', 'name' => 'Announcements | Delete', 'description' => 'Allows users to delete announcements.', 'default' => 0],
+        ['key' => 'announcements.update', 'name' => 'Announcements | Update', 'description' => 'Allows users to update all announcements.', 'default' => 0],
+        ['key' => 'announcements.delete', 'name' => 'Announcements | Delete', 'description' => 'Allows users to delete all announcements.', 'default' => 0],
     ];
 
     /**

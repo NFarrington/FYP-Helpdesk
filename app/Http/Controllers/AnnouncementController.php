@@ -3,35 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
+use App\Services\AnnouncementService;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
     /**
+     * The service.
+     *
+     * @var AnnouncementService
+     */
+    protected $service;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param AnnouncementService $service
      */
-    public function __construct()
+    public function __construct(AnnouncementService $service)
     {
         $this->middleware('auth');
+
+        $this->service = $service;
     }
 
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $announcements = $request->user()->hasPermission('announcements.update')
-            ? Announcement::all()
-                ->filter(function ($value, $key) use ($request) {
-                    return $request->user()->can('update', $value);
-                })
-            : Announcement::published()->get();
+        $announcements = $this->service->getViewableBy($request->user());
 
-        return view('announcements.index')->with('announcements', $announcements->sortByDesc('updated_at'));
+        return view('announcements.index')->with('announcements', $announcements);
     }
 
     /**
@@ -57,11 +63,10 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Announcement::class);
+
         $attributes = $this->validate($request, $this->rules());
 
-        $announcement = new Announcement($attributes);
-        $announcement->user()->associate($request->user());
-        $announcement->save();
+        $announcement = $this->service->create($attributes, $request->user());
 
         return redirect()->route('announcements.show', $announcement)
             ->with('status', 'Announcement created successfully.');
@@ -106,9 +111,10 @@ class AnnouncementController extends Controller
     public function update(Request $request, Announcement $announcement)
     {
         $this->authorize('update', $announcement);
+
         $attributes = $this->validate($request, $this->rules());
 
-        $announcement->update($attributes);
+        $this->service->update($announcement, $attributes);
 
         return redirect()->route('announcements.show', $announcement)
             ->with('status', 'Announcement updated successfully.');
@@ -126,7 +132,7 @@ class AnnouncementController extends Controller
     {
         $this->authorize('delete', $announcement);
 
-        $announcement->delete();
+        $this->service->delete($announcement);
 
         return redirect()->route('announcements.index')
             ->with('status', 'Announcement deleted successfully.');

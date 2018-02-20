@@ -50,9 +50,12 @@ Route::resource('articles/{article}/comments', 'ArticleCommentController', ['as'
 Route::resource('tickets', 'TicketController');
 Route::resource('tickets/{ticket}/posts', 'TicketPostController');
 Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');
-Route::resource('users', 'UserController');
-Route::get('settings/two-factor', 'UserController@show2FAForm')->name('settings.2fa');
-Route::post('settings/two-factor', 'UserController@register2FA');
+
+Route::get('profile', 'ProfileController@show')->name('profile.show');
+Route::put('profile', 'ProfileController@update')->name('profile.update');
+
+Route::get('settings/two-factor', 'SettingsController@show2FAForm')->name('settings.2fa');
+Route::post('settings/two-factor', 'SettingsController@register2FA');
 
 // Agent Routes...
 Route::group(['namespace' => 'Agent', 'prefix' => 'agent', 'as' => 'agent.'], function () {
