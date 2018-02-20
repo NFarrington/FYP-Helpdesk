@@ -30,6 +30,7 @@ class ProfileController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
@@ -47,6 +48,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $attributes = $this->validate($request, $this->rules(), $this->messages());
+        $this->reauthenticate($request->user()->email, $attributes['password']);
 
         $this->service->update($request->user(), $attributes);
 

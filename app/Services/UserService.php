@@ -30,12 +30,9 @@ class UserService extends Service
      * @param User $user
      * @param array $attributes
      * @return void
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(User $user, array $attributes)
     {
-        $this->reauthenticate($user->email, $attributes['password']);
-
         $user->email = $attributes['email'];
         if ($newPassword = array_get($attributes, 'new_password')) {
             $user->password = app('hash')->make($newPassword);
