@@ -31,9 +31,9 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * Test the selfUpdate method.
+     * Test the update method.
      *
-     * @covers \App\Services\UserService::selfUpdate()
+     * @covers \App\Services\UserService::update()
      * @throws \Illuminate\Validation\ValidationException
      */
     public function testSelfUpdate()
@@ -45,7 +45,7 @@ class UserServiceTest extends TestCase
         ];
 
         $user = factory(User::class)->create();
-        $this->service->selfUpdate($user, $template);
+        $this->service->update($user, $template);
         $this->assertDatabaseHas($user->getTable(), array_only($template, 'email'));
     }
 }

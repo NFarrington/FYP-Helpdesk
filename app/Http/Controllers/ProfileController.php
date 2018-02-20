@@ -48,7 +48,7 @@ class ProfileController extends Controller
     {
         $attributes = $this->validate($request, $this->rules(), $this->messages());
 
-        $this->service->selfUpdate($request->user(), $attributes);
+        $this->service->update($request->user(), $attributes);
 
         return redirect()->route('profile.show')
             ->with('status', trans('user.updated'));

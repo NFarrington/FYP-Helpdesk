@@ -67,12 +67,12 @@ class TicketService extends Service
         $department = $this->departmentRepo->getById($attributes['department_id']);
         $this->authorize('submit-ticket', $department);
 
-        $ticket = $user->tickets()->make(array_only($attributes, 'summary')); /** @var Ticket $ticket */
+        $ticket = $user->tickets()->make(array_only($attributes, 'summary')); /* @var Ticket $ticket */
         $ticket->department()->associate($department);
         $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
         $ticket->save();
 
-        $ticketPost = TicketPost::make(array_only($attributes, 'content')); /** @var TicketPost $ticketPost */
+        $ticketPost = TicketPost::make(array_only($attributes, 'content')); /* @var TicketPost $ticketPost */
         $ticketPost->user()->associate($user);
         $ticketPost->ticket()->associate($ticket);
         $ticketPost->save();

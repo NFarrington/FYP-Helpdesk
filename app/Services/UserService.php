@@ -25,14 +25,14 @@ class UserService extends Service
     }
 
     /**
-     * Create a new announcement.
+     * Update the user given user.
      *
      * @param User $user
      * @param array $attributes
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function selfUpdate(User $user, array $attributes)
+    public function update(User $user, array $attributes)
     {
         $this->reauthenticate($user->email, $attributes['password']);
 
