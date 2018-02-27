@@ -5,19 +5,42 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Controller as AdminController;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends AdminController
 {
     /**
+     * The service.
+     *
+     * @var UserService
+     */
+    protected $service;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param UserService $service
+     */
+    public function __construct(UserService $service)
+    {
+        parent::__construct();
+
+        $this->service = $service;
+    }
+
+    /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.users.index')->with('users', User::orderBy('id')->paginate(20));
+        $users = $this->service->getViewableBy($request->user());
+
+        return view('admin.users.index')->with('users', $users);
     }
 
     /**
@@ -59,6 +82,6 @@ class UserController extends AdminController
         $user->roles()->sync($request->input('roles'));
         $user->save();
 
-        return redirect(route('admin.users.index'))->with('status', trans('user.updated'));
+        return redirect()->route('admin.users.index')->with('status', trans('user.updated'));
     }
 }

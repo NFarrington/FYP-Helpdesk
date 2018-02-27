@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService extends Service
 {
@@ -22,6 +24,19 @@ class UserService extends Service
     public function __construct(UserRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    /**
+     * Get all model instances the user can view.
+     *
+     * @param User $user
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getViewableBy(User $user)
+    {
+        return $user->can('view', User::class)
+            ? User::orderBy('id')->paginate(20)
+            : new LengthAwarePaginator(collect([$user]), 1, 20);
     }
 
     /**
