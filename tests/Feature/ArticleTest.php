@@ -55,7 +55,7 @@ class ArticleTest extends TestCase
     public function testArticleCanBeCreated()
     {
         $article = factory(Article::class)->make();
-        $nextID = DB::table('articles')->max('id') + 1;
+        $nextID = DB::select("SHOW TABLE STATUS LIKE 'articles'")[0]->Auto_increment;
 
         $this->get(route('articles.create'))->assertSuccessful();
         $response = $this->post(route('articles.store'), [
