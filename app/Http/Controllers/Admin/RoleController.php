@@ -4,18 +4,41 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     /**
+     * The service.
+     *
+     * @var RoleService
+     */
+    protected $service;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param RoleService $service
+     */
+    public function __construct(RoleService $service)
+    {
+        parent::__construct();
+
+        $this->service = $service;
+    }
+
+    /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.roles.index')->with('roles', Role::orderBy('id')->paginate(20));
+        $roles = $this->service->getViewableBy($request->user());
+
+        return view('admin.roles.index')->with('roles', $roles);
     }
 
     /**
@@ -41,16 +64,14 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $this->validate($request, [
+        $attributes = $this->validate($request, [
             'name' => 'required|string|max:250',
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);
 
-        $role->fill($request->only('name', 'description'));
-        $role->permissions()->sync($request->input('permissions'));
-        $role->save();
+        $this->service->update($role, $attributes);
 
-        return redirect(route('admin.roles.index'))->with('status', trans('role.updated'));
+        return redirect()->route('admin.roles.index')->with('status', trans('role.updated'));
     }
 }
