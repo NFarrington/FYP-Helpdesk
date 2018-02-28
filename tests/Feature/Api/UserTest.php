@@ -4,9 +4,9 @@ namespace Tests\Feature\Api;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {

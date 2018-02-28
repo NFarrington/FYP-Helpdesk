@@ -5,9 +5,9 @@ namespace Tests\Feature\Api;
 use App\Models\Article;
 use App\Models\ArticleComment;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ArticleCommentTest extends TestCase
 {

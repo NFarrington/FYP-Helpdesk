@@ -3,12 +3,10 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Article;
-use App\Models\ArticleComment;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\TicketPost;
 use App\Models\Ticket;
+use App\Models\TicketPost;
 use Illuminate\Http\Request;
 
 class TicketPostController extends Controller

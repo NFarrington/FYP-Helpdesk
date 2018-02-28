@@ -6,9 +6,9 @@ use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TicketTest extends TestCase
 {

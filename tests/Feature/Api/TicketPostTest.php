@@ -7,9 +7,9 @@ use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TicketPostTest extends TestCase
 {

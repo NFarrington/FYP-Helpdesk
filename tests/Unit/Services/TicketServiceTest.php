@@ -121,7 +121,7 @@ class TicketServiceTest extends TestCase
 
         $mockUser = mock(User::class);
         $mockUser->allows()->can('view', Ticket::class)->andReturns(true);
-        $mockUser->allows()->getAttribute('id')->andReturns(rand(100000, 999999));
+        $mockUser->allows()->getAttribute('id')->andReturns(mt_rand(100000, 999999));
         $mockUser->allows()->getAttribute('departments')->andReturns(Department::all());
         $viewable = $this->service->getViewableBy($mockUser);
         $this->assertEquals(2, count($viewable->items()));

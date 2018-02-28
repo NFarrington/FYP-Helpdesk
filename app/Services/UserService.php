@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Role;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Pagination\LengthAwarePaginator;

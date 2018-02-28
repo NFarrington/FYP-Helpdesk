@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\ArticleComment;
 use App\Models\Article;
 use App\Services\ArticleCommentService;
 use Illuminate\Http\Request;
