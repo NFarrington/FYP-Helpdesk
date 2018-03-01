@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading">#{{ $ticket->id }} - {{ $ticket->summary }}
                     <span class="pull-right">
                         @can('update', $ticket)
@@ -16,11 +16,12 @@
                 </div>
                 <div class="panel-body">
                     <ul class="list-inline list-unstyled">
-                        <li class="col-md-2"><label>{{ __('ticket.key.user') }}</label><br>{{ $ticket->user->name }}</li>
-                        <li class="col-md-2"><label>{{ __('ticket.key.department') }}</label><br>{{ $ticket->department->name }}</li>
-                        <li class="col-md-2"><label>{{ __('ticket.key.status') }}</label><br>{{ $ticket->status->name }}</li>
-                        <li class="col-md-2"><label>{{ __('ticket.key.created_at') }}</label><br>{{ $ticket->created_at }}</li>
-                        <li class="col-md-2"><label>{{ __('ticket.key.updated_at') }}</label><br>{{ $ticket->updated_at }}</li>
+                        <li class="col-md-2" style="margin-bottom: 10px;"><label>{{ __('ticket.key.user') }}</label><br>{{ $ticket->user->name }}</li>
+                        <li class="col-md-2" style="margin-bottom: 10px;"><label>{{ __('ticket.key.department') }}</label><br>{{ $ticket->department->name }}</li>
+                        <li class="col-md-2" style="margin-bottom: 10px;"><label>{{ __('ticket.key.agent') }}</label><br>{{ $ticket->agent->name ?? 'None' }}</li>
+                        <li class="col-md-2" style="margin-bottom: 10px;"><label>{{ __('ticket.key.status') }}</label><br>{{ $ticket->status->name }}</li>
+                        <li class="col-md-2" style="margin-bottom: 10px;"><label>{{ __('ticket.key.created_at') }}</label><br>{{ $ticket->created_at }}</li>
+                        <li class="col-md-2" style="margin-bottom: 10px;"><label>{{ __('ticket.key.updated_at') }}</label><br>{{ $ticket->updated_at }}</li>
                     </ul>
                 </div>
             </div>
