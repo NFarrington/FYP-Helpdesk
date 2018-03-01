@@ -4,10 +4,10 @@
 
 <script>
     export default {
-        props: ['route', 'name'],
+        props: ['route', 'name', 'active'],
         computed: {
             isActive: function () {
-                return window.location.href.replace(/\/$/, '') === this.route;
+                return this.active || window.location.href.replace(/\/$/, '') === this.route;
             }
         }
     }
