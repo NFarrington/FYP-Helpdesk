@@ -1,3 +1,4 @@
+
 <template>
     <li v-bind:class="{ active: isActive }"><a v-bind:href="route">{{ name }}</a></li>
 </template>

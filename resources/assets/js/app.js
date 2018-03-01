@@ -17,7 +17,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('delete-resource', require('./components/ResourceDeleteForm.vue'));
-Vue.component('nav-sidebar-item', require('./components/NavSidebarItem.vue'));
+Vue.component('nav-item', require('./components/NavItem.vue'));
 Vue.component('reveal-text', require('./components/RevealText.vue'));
 
 const app = new Vue({
