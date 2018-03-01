@@ -65,7 +65,7 @@ class TicketService extends Service
     public function create(array $attributes, User $user)
     {
         $department = $this->departmentRepo->getById($attributes['department_id']);
-        $this->authorize('submit-ticket', $department);
+        $this->authorizeForUser($user, 'submit-ticket', $department);
 
         $ticket = $user->tickets()->make(array_only($attributes, 'summary')); /* @var Ticket $ticket */
         $ticket->department()->associate($department);
@@ -92,6 +92,17 @@ class TicketService extends Service
             $ticket->status()->associate(TicketStatus::closed()->orderBy('id')->first());
             $ticket->save();
         }
+    }
+
+    /**
+     * Get all model instances the user can view.
+     *
+     * @param User $user
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getViewableBy(User $user)
+    {
+        return Ticket::query()->managedBy($user)->orWhere('user_id', $user->id)->paginate(20);
     }
 
     /**

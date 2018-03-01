@@ -70,7 +70,7 @@
                         <p>Name: {{ $post->user->name }}</p>
                         <p>Content: {{ $post->content }}</p>
                         @if($post->attachment)
-                            <p>Attachment: {{ $post->attachment }} <a href="{{ route('posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
+                            <p>Attachment: {{ $post->attachment }} <a href="{{ route('tickets.posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
                         @endif
                         @can('update', $post)
                             <button type="button" class="btn btn-primary btn-xs"
@@ -79,7 +79,7 @@
                             </button>
                         @endcan
                         @can('delete', $post)
-                            <delete-resource route="{{ route('posts.destroy', [$ticket, $post]) }}"></delete-resource>
+                            <delete-resource route="{{ route('tickets.posts.destroy', [$ticket, $post]) }}"></delete-resource>
                         @endcan
                     </div>
                 </div>
@@ -87,7 +87,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Add Reply</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('posts.store', $ticket->id) }}" enctype="multipart/form-data">
+                    <form class="form-horizontal" method="POST" action="{{ route('tickets.posts.store', $ticket->id) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('reply') ? ' has-error' : '' }}">
@@ -168,7 +168,7 @@
     let posts = [];
     @foreach($ticket->posts as $post)
         @php
-            $jsonPost = $post->setAttribute('route', route('posts.update', [$ticket, $post]))->setVisible(['content', 'route']);
+            $jsonPost = $post->setAttribute('route', route('tickets.posts.update', [$ticket, $post]))->setVisible(['content', 'route']);
         @endphp
         posts[{{$post->id}}] = @json($jsonPost);
     @endforeach

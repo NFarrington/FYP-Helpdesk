@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Permission;
 use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\Resource;
 
 class RoleController extends Controller
 {
@@ -33,37 +33,43 @@ class RoleController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('view', Role::class);
+
         $roles = $this->service->getViewableBy($request->user());
 
-        return view('admin.roles.index')->with('roles', $roles);
+        return Resource::collection($roles);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
      * @param  \App\Models\Role $role
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Role $role)
+    public function show(Role $role)
     {
-        return view('admin.roles.edit')->with([
-            'role' => $role,
-            'permissions' => Permission::orderBy('key')->get(),
-        ]);
+        $this->authorize('view', $role);
+
+        return response()->json($role->attributesToArray());
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Role   $role
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Models\Role $role
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Role $role)
     {
+        $this->authorize('update', $role);
+
         $attributes = $this->validate($request, [
             'name' => 'required|string|max:250',
             'description' => 'required|string|max:250',
@@ -72,6 +78,6 @@ class RoleController extends Controller
 
         $this->service->update($role, $attributes);
 
-        return redirect()->route('admin.roles.index')->with('status', trans('role.updated'));
+        return response()->json($role->attributesToArray());
     }
 }

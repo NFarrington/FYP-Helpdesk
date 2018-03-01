@@ -99,19 +99,19 @@ class TicketPostController extends Controller
      * Provides the user with the specified resource's attachment.
      *
      * @param Ticket $ticket
-     * @param TicketPost $ticketPost
+     * @param TicketPost $post
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function viewAttachment(Ticket $ticket, TicketPost $ticketPost)
+    public function viewAttachment(Ticket $ticket, TicketPost $post)
     {
         $this->authorize('view', $ticket);
 
-        if (!$ticketPost->attachment) {
+        if (!$post->attachment) {
             throw new NotFoundHttpException();
         }
 
-        $attachment = Storage::path($ticketPost->attachment);
+        $attachment = Storage::path($post->attachment);
 
         return response()->download($attachment);
     }

@@ -46,10 +46,10 @@ Route::get('search', 'SearchController@search')->name('search');
 // Resource Routes...
 Route::resource('announcements', 'AnnouncementController');
 Route::resource('articles', 'ArticleController');
-Route::resource('articles/{article}/comments', 'ArticleCommentController', ['as' => 'articles']);
+Route::resource('articles.comments', 'ArticleCommentController');
 Route::resource('tickets', 'TicketController');
-Route::resource('tickets/{ticket}/posts', 'TicketPostController');
-Route::get('tickets/{ticket}/posts/{ticketPost}/attachment', 'TicketPostController@viewAttachment')->name('posts.attachment');
+Route::resource('tickets.posts', 'TicketPostController');
+Route::get('tickets/{ticket}/posts/{post}/attachment', 'TicketPostController@viewAttachment')->name('tickets.posts.attachment');
 
 Route::get('profile', 'ProfileController@show')->name('profile.show');
 Route::put('profile', 'ProfileController@update')->name('profile.update');

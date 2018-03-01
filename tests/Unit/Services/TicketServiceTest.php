@@ -104,4 +104,26 @@ class TicketServiceTest extends TestCase
         $viewable = $this->service->getSubmittableDepartments($user);
         $this->assertEquals(1, $viewable->count());
     }
+
+    /**
+     * Test the getViewableBy method.
+     *
+     * @covers \App\Services\TicketService::getViewableBy()
+     */
+    public function testGetViewableBy()
+    {
+        $user = factory(User::class)->create();
+        factory(Ticket::class)->create(['user_id' => $user->id]);
+        factory(Ticket::class)->create();
+
+        $viewable = $this->service->getViewableBy($user);
+        $this->assertEquals(1, count($viewable->items()));
+
+        $mockUser = mock(User::class);
+        $mockUser->allows()->can('view', Ticket::class)->andReturns(true);
+        $mockUser->allows()->getAttribute('id')->andReturns(mt_rand(100000, 999999));
+        $mockUser->allows()->getAttribute('departments')->andReturns(Department::all());
+        $viewable = $this->service->getViewableBy($mockUser);
+        $this->assertEquals(2, count($viewable->items()));
+    }
 }

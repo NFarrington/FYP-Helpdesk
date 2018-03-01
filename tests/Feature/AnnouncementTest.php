@@ -55,7 +55,7 @@ class AnnouncementTest extends TestCase
     public function testAnnouncementCanBeCreated()
     {
         $announcement = factory(Announcement::class)->make();
-        $nextID = DB::table('announcements')->max('id') + 1;
+        $nextID = DB::select("SHOW TABLE STATUS LIKE 'announcements'")[0]->Auto_increment;
 
         $this->get(route('announcements.create'));
         $response = $this->post(route('announcements.store'), [
