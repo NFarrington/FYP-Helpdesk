@@ -12,56 +12,22 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ route('home') }}">{{ config('app.name') }}</a>
-        </div>
-
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                @guest
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                @else
-                    <li class="dropdown">
-                    <li><a href="{{ route('home') }}">Dashboard</a></li>
-                    <li><a href="{{ route('profile.show') }}">Profile</a></li>
-
-                    <li>
-                        <a href="{{ route('logout') }}"
-                           onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();">
-                            Logout
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-                @endguest
-            </ul>
-            <form class="navbar-form navbar-right" method="GET" action="{{ route('search') }}">
-                <input type="text" class="form-control" name="q" placeholder="Search...">
-            </form>
-        </div>
-    </div>
-</nav>
 
 <div id="app" class="container-fluid">
+    @include('layout-navbar')
+
     <div class="row">
-        @include('layout-sidebar')
+
+        <div class="col-sm-3 col-md-2 sidebar">
+            @include('layout-sidebar', ['sidebar' => true])
+        </div>
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
             @if($announcement = \App\Models\Announcement::active()->first())
                 <div class="alert alert-info">
-                    <strong>Announcement: </strong><a href="{{ route('announcements.show', $announcement) }}">{{ $announcement->title }}</a>
+                    <strong>Announcement:</strong>
+                    <a href="{{ route('announcements.show', $announcement) }}">{{ $announcement->title }}</a>
                 </div>
             @endif
 
