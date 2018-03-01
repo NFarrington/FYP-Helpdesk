@@ -14,7 +14,7 @@
                     </span>
         </div>
         <div class="panel-body">
-            <p>{{ $announcement->content }}</p>
+            {!! markdown(e($announcement->content)) !!}
         </div>
     </div>
 @endsection
