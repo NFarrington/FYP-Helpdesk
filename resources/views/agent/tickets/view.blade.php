@@ -4,7 +4,8 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-info">
-                <div class="panel-heading">#{{ $ticket->id }} - {{ $ticket->summary }}
+                <div class="panel-heading">
+                    #{{ $ticket->id }} - {{ $ticket->summary }}
                     <span class="pull-right">
                         @can('update', $ticket)
                             <button type="button" class="btn btn-primary btn-xs"

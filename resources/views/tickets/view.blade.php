@@ -3,37 +3,43 @@
 @section('content')
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Ticket Details</div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    #{{ $ticket->id }} - {{ $ticket->summary }}
+                    <span class="pull-right">
+                        <a href="{{ route('tickets.update', $ticket) }}" class="btn btn-danger btn-xs"
+                            onclick="event.preventDefault(); document.getElementById('close-form').submit();">
+                            Close
+                        </a>
+
+                        <form id="close-form" action="{{ route('tickets.update', $ticket) }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+                            <input type="hidden" name="close" value="1">
+                        </form>
+                    </span>
+                </div>
                 <div class="panel-body">
-                    <p>ID: {{ $ticket->id }}</p>
-                    <p>Summary: {{ $ticket->summary }}</p>
-                    <p>Actions:</p>
-                    <form class="form-horizontal" method="POST" action="{{ route('tickets.update', $ticket->id) }}">
-                        {{ csrf_field() }}
-                        {{ method_field('PUT') }}
-
-                        <input type="hidden" name="close" value="1">
-
-                        <div class="form-group">
-                            <div class="col-md-8">
-                                <button type="submit" class="btn btn-danger">
-                                    Close Ticket
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    <ul class="list-inline list-unstyled">
+                        <li class="col-md-3" style="margin-bottom: 10px;"><label>{{ __('ticket.key.department') }}</label><br>{{ $ticket->department->name }}</li>
+                        <li class="col-md-3" style="margin-bottom: 10px;"><label>{{ __('ticket.key.status') }}</label><br>{{ $ticket->status->name }}</li>
+                        <li class="col-md-3" style="margin-bottom: 10px;"><label>{{ __('ticket.key.created_at') }}</label><br>{{ $ticket->created_at }}</li>
+                        <li class="col-md-3" style="margin-bottom: 10px;"><label>{{ __('ticket.key.updated_at') }}</label><br>{{ $ticket->updated_at }}</li>
+                    </ul>
                 </div>
             </div>
             @foreach($ticket->posts as $post)
                 <div class="panel panel-default">
+                    <div class="panel-heading">{{ $post->user->name }} at {{ $post->created_at }}</div>
                     <div class="panel-body">
-                        <p>Name: {{ $post->user->name }}</p>
-                        <p>Content: {{ $post->content }}</p>
-                        @if($post->attachment)
-                            <p>Attachment: {{ $post->attachment }} <a href="{{ route('tickets.posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
-                        @endif
+                        {!! nl2br(e($post->content)) !!}
                     </div>
+                    @if($post->attachment)
+                        <div class="panel-footer small">
+                            Attachment: <a
+                                    href="{{ route('tickets.posts.attachment', [$ticket, $post]) }}">{{ $post->attachment }}</a>
+                        </div>
+                    @endif
                 </div>
             @endforeach
             <div class="panel panel-default">
