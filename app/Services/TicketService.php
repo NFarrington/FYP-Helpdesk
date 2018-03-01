@@ -81,14 +81,17 @@ class TicketService extends Service
     }
 
     /**
-     * Close the ticket.
+     * Update the ticket.
      *
      * @param Ticket $ticket
      * @param array $attributes
      */
-    public function close(Ticket $ticket, array $attributes)
+    public function update(Ticket $ticket, array $attributes)
     {
-        if ($attributes['close']) {
+        if (array_get($attributes, 'open', false)) {
+            $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
+            $ticket->save();
+        } elseif (array_get($attributes, 'close', false)) {
             $ticket->status()->associate(TicketStatus::closed()->orderBy('id')->first());
             $ticket->save();
         }

@@ -9,13 +9,17 @@
                     <span class="pull-right">
                         <a href="{{ route('tickets.update', $ticket) }}" class="btn btn-danger btn-xs"
                             onclick="event.preventDefault(); document.getElementById('close-form').submit();">
-                            Close
+                            {{ $ticket->status->isOpen() ? 'Close' : 'Reopen' }}
                         </a>
 
                         <form id="close-form" action="{{ route('tickets.update', $ticket) }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
                             {{ method_field('PUT') }}
-                            <input type="hidden" name="close" value="1">
+                            @if($ticket->status->isOpen())
+                                <input type="hidden" name="close" value="1">
+                            @else
+                                <input type="hidden" name="open" value="1">
+                            @endif
                         </form>
                     </span>
                 </div>

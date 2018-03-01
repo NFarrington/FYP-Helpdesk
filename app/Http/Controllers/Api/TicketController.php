@@ -95,7 +95,7 @@ class TicketController extends Controller
             'close' => 'required|boolean',
         ]);
 
-        $this->service->close($ticket, $attributes);
+        $this->service->update($ticket, $attributes);
 
         return response()->json($ticket->attributesToArray());
     }
