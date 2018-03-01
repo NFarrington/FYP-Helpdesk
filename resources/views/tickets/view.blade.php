@@ -31,7 +31,7 @@
                         <p>Name: {{ $post->user->name }}</p>
                         <p>Content: {{ $post->content }}</p>
                         @if($post->attachment)
-                            <p>Attachment: {{ $post->attachment }} <a href="{{ route('posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
+                            <p>Attachment: {{ $post->attachment }} <a href="{{ route('tickets.posts.attachment', [$ticket, $post]) }}" class="btn btn-primary">Download</a></p>
                         @endif
                     </div>
                 </div>
@@ -39,7 +39,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Add Reply</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('posts.store', $ticket->id) }}" enctype="multipart/form-data">
+                    <form class="form-horizontal" method="POST" action="{{ route('tickets.posts.store', $ticket->id) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('reply') ? ' has-error' : '' }}">

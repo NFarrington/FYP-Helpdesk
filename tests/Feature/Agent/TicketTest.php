@@ -149,7 +149,7 @@ class TicketTest extends TestCase
         $this->get(route('agent.tickets.show', $ticket));
 
         $content = str_random();
-        $response = $this->put(route('posts.update', [$ticket, $post]), [
+        $response = $this->put(route('tickets.posts.update', [$ticket, $post]), [
             'content' => $content,
         ]);
 
@@ -172,7 +172,7 @@ class TicketTest extends TestCase
 
         $this->get(route('agent.tickets.show', $ticket));
 
-        $response = $this->delete(route('posts.update', [$ticket, $post]));
+        $response = $this->delete(route('tickets.posts.update', [$ticket, $post]));
 
         $response->assertRedirect(route('agent.tickets.show', $ticket));
 

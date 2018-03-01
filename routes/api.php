@@ -1,7 +1,5 @@
 <?php
 
-//use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +11,13 @@
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::resource('announcements', 'AnnouncementController');
+Route::resource('articles', 'ArticleController');
+Route::resource('articles.comments', 'ArticleCommentController');
+Route::resource('permissions', 'PermissionController');
+Route::resource('roles', 'RoleController');
+Route::resource('tickets', 'TicketController');
+Route::resource('tickets.posts', 'TicketPostController');
+Route::resource('users', 'UserController');

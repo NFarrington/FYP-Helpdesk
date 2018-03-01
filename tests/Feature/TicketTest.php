@@ -117,7 +117,7 @@ class TicketTest extends TestCase
         $this->actingAs($this->user);
 
         $this->get(route('tickets.show', $ticket->id));
-        $response = $this->post(route('posts.store', $ticket->id), [
+        $response = $this->post(route('tickets.posts.store', $ticket->id), [
             'reply' => $ticketPost->content,
         ]);
 
@@ -139,7 +139,7 @@ class TicketTest extends TestCase
         $this->actingAs($this->user);
 
         $this->get(route('tickets.show', $ticket->id));
-        $this->post(route('posts.store', $ticket->id), [
+        $this->post(route('tickets.posts.store', $ticket->id), [
             'reply' => $ticketPost->content,
             'attachment' => UploadedFile::fake()->image('image.png'),
         ]);
@@ -163,7 +163,7 @@ class TicketTest extends TestCase
         $file = UploadedFile::fake()->image('image.png');
         Storage::putFileAs('attachments/'.$ticket->id, $file, 'image.jpg');
 
-        $response = $this->get(route('posts.attachment', [$ticket, $ticketPost]));
+        $response = $this->get(route('tickets.posts.attachment', [$ticket, $ticketPost]));
         $response->assertStatus(200);
     }
 
@@ -178,7 +178,7 @@ class TicketTest extends TestCase
         $ticketPost = factory(TicketPost::class)->create();
         $this->actingAs($this->user);
 
-        $response = $this->get(route('posts.attachment', [$ticket, $ticketPost]));
+        $response = $this->get(route('tickets.posts.attachment', [$ticket, $ticketPost]));
         $response->assertStatus(404);
     }
 

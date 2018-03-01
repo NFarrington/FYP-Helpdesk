@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Permission;
-use App\Models\Role;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\Resource;
 
 class PermissionController extends Controller
 {
@@ -31,38 +31,45 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('view', Permission::class);
+
         $permissions = $this->service->getViewableBy($request->user());
 
-        return view('admin.permissions.index')->with('permissions', $permissions);
+        return Resource::collection($permissions);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
      * @param  \App\Models\Permission $permission
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Permission $permission)
+    public function show(Permission $permission)
     {
-        return view('admin.permissions.edit')->with([
-            'permission' => $permission,
-            'roles' => Role::orderBy('id')->get(),
-        ]);
+        $this->authorize('view', $permission);
+
+        return response()->json($permission->attributesToArray());
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @param  \App\Models\Permission $permission
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Permission $permission)
     {
+        $this->authorize('update', $permission);
+
         $attributes = $this->validate($request, [
             'name' => 'required|string|max:250',
             'description' => 'required|string|max:250',
@@ -71,7 +78,6 @@ class PermissionController extends Controller
 
         $this->service->update($permission, $attributes);
 
-        return redirect()->route('admin.permissions.index')
-            ->with('status', trans('permission.updated'));
+        return response()->json($permission);
     }
 }
