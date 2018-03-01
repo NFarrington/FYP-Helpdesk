@@ -9,7 +9,7 @@
     @endcomponent
 @else
     @component('layout-sidebar-group', ['sidebar' => $sidebar])
-        <nav-item name="Overview"
+        <nav-item name="Dashboard"
                   class="{{ !$sidebar ? 'visible-xs' : '' }}"
                   route="{{ route('home') }}"></nav-item>
     @endcomponent
