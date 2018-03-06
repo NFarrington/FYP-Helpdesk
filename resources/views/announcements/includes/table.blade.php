@@ -2,9 +2,9 @@
 @if($announcements->isNotEmpty())
     <table class="table table-hover">
         <tr>
-            <th>{{ __('announcement.key.title') }}</th>
-            <th>{{ __('announcement.key.created_at') }}</th>
-            <th>{{ __('announcement.key.updated_at') }}</th>
+            <th>{{ __('models/announcement.key.title') }}</th>
+            <th>{{ __('models/announcement.key.created_at') }}</th>
+            <th>{{ __('models/announcement.key.updated_at') }}</th>
             <th></th>
         </tr>
         @foreach($announcements as $announcement)

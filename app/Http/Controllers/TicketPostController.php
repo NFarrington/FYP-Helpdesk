@@ -53,7 +53,7 @@ class TicketPostController extends Controller
         $ticketPost->ticket()->associate($ticket);
         $ticketPost->save();
 
-        return redirect()->route('tickets.show', $ticket);
+        return redirect()->back();
     }
 
     /**

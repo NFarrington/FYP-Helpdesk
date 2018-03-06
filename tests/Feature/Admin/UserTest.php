@@ -46,6 +46,18 @@ class UserTest extends TestCase
     }
 
     /**
+     * Test the user show page redirects successfully.
+     *
+     * @return void
+     */
+    public function testUserShowPageRedirects()
+    {
+        $response = $this->get(route('admin.users.show', $this->user));
+
+        $response->assertRedirect(route('admin.users.edit', $this->user));
+    }
+
+    /**
      * Test the user edit page loads successfully.
      *
      * @return void

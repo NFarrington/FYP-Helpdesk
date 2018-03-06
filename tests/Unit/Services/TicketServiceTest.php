@@ -54,15 +54,19 @@ class TicketServiceTest extends TestCase
     }
 
     /**
-     * Test the close method.
+     * Test the update method.
      *
-     * @covers \App\Services\TicketService::close()
+     * @covers \App\Services\TicketService::update()
      */
-    public function testClose()
+    public function testUpdate()
     {
         $ticket = factory(Ticket::class)->make();
-        $this->service->close($ticket, ['close' => '1']);
+
+        $this->service->update($ticket, ['close' => '1']);
         $this->assertEquals(TicketStatus::STATUS_CLOSED, $ticket->status->state);
+
+        $this->service->update($ticket, ['open' => '1']);
+        $this->assertEquals(TicketStatus::STATUS_AGENT, $ticket->status->state);
     }
 
     /**

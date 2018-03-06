@@ -14,3 +14,15 @@ function app_key()
 
     return $key;
 }
+
+/**
+ * Convert markdown text to HTML.
+ *
+ * @param $text
+ * @return null|string|string[]
+ * @throws Exception
+ */
+function markdown($text)
+{
+    return (new ParsedownExtra)->text($text);
+}
