@@ -108,10 +108,11 @@ class TicketController extends Controller
         $this->authorize('update', $ticket);
 
         $attributes = $this->validate($request, [
-            'close' => 'required|boolean',
+            'open' => 'boolean',
+            'close' => 'boolean',
         ]);
 
-        $this->service->close($ticket, $attributes);
+        $this->service->update($ticket, $attributes);
 
         return redirect()->route('tickets.index')
             ->with('status', "Ticket {$ticket->id} closed successfully.");
