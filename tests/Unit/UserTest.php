@@ -167,7 +167,7 @@ class UserTest extends TestCase
         $this->assertEquals(null, $route);
 
         $notification = new \App\Notifications\Tickets\Assigned(new Ticket());
-        $this->user->notification_settings = [$notification->key.'_email' => true];
+        $this->user->notification_settings = [$notification->getKey().'_email' => true];
         $route = $this->user->routeNotificationForMail(new \App\Notifications\Tickets\Assigned(new Ticket()));
         $this->assertEquals($this->user->email, $route);
     }
@@ -186,7 +186,7 @@ class UserTest extends TestCase
 
         $notification = new \App\Notifications\Tickets\Assigned(new Ticket());
         $webhook = factory(SlackWebhook::class)->create(['user_id' => $this->user->id]);
-        $this->user->notification_settings = [$notification->key.'_slack' => $webhook->id];
+        $this->user->notification_settings = [$notification->getKey().'_slack' => $webhook->id];
         $route = $this->user->routeNotificationForSlack(new \App\Notifications\Tickets\Assigned(new Ticket()));
         $this->assertEquals($webhook->uri, $route);
     }
