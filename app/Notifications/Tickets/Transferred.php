@@ -27,7 +27,7 @@ class Transferred extends Notification implements ShouldQueue
      *
      * @var string
      */
-    public $key = 'agent_ticket_transferred';
+    public $key = 'agent_ticket_department-changed';
 
     /**
      * Create a new notification instance.
