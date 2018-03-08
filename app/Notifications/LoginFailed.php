@@ -2,14 +2,23 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Concerns\RoutesViaSlack;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class LoginFailed extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RoutesViaSlack;
+
+    /**
+     * The notification key.
+     *
+     * @var string
+     */
+    public $key = 'user_login_failed';
 
     /**
      * Create a new notification instance.
@@ -29,7 +38,7 @@ class LoginFailed extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', 'slack'];
     }
 
     /**
@@ -46,6 +55,20 @@ class LoginFailed extends Notification implements ShouldQueue
                     ->error()
                     ->subject("$appName - Failed Login Attempt")
                     ->line("A unsuccessful login attempt has just been made against your $appName account.");
+    }
+
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param  mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage)
+            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
+            ->to($this->webhook->recipient)
+            ->content('An unsuccessful login attempt has just been made.');
     }
 
     /**

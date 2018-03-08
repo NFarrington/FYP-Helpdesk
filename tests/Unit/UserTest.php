@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\EmailVerification;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\SlackWebhook;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -154,5 +155,46 @@ class UserTest extends TestCase
         $this->assertFalse($this->user->hasRole($role));
         $this->assertFalse($this->user->hasRole($role->id));
         $this->assertFalse($this->user->hasRole($role->key));
+    }
+
+    /** @covers \App\Models\User::routeNotificationForMail() */
+    public function testRouteNotificationForMail()
+    {
+        $route = $this->user->routeNotificationForMail(new \App\Notifications\EmailVerification(str_random()));
+        $this->assertEquals($this->user->email, $route);
+
+        $route = $this->user->routeNotificationForMail(new \App\Notifications\Tickets\Assigned(new Ticket()));
+        $this->assertEquals(null, $route);
+
+        $notification = new \App\Notifications\Tickets\Assigned(new Ticket());
+        $this->user->notification_settings = [$notification->key.'_email' => true];
+        $route = $this->user->routeNotificationForMail(new \App\Notifications\Tickets\Assigned(new Ticket()));
+        $this->assertEquals($this->user->email, $route);
+    }
+
+    /**
+     * @covers \App\Models\User::routeNotificationForSlack()
+     * @covers \App\Policies\SlackWebhookPolicy::use()
+     */
+    public function testRouteNotificationForSlack()
+    {
+        $route = $this->user->routeNotificationForSlack(new \App\Notifications\EmailVerification(str_random()));
+        $this->assertEquals(null, $route);
+
+        $route = $this->user->routeNotificationForSlack(new \App\Notifications\Tickets\Assigned(new Ticket()));
+        $this->assertEquals(null, $route);
+
+        $notification = new \App\Notifications\Tickets\Assigned(new Ticket());
+        $webhook = factory(SlackWebhook::class)->create(['user_id' => $this->user->id]);
+        $this->user->notification_settings = [$notification->key.'_slack' => $webhook->id];
+        $route = $this->user->routeNotificationForSlack(new \App\Notifications\Tickets\Assigned(new Ticket()));
+        $this->assertEquals($webhook->uri, $route);
+    }
+
+    /** @covers \App\Models\User::slackWebhooks() */
+    public function testSlackWebhooks()
+    {
+        $webhook = factory(SlackWebhook::class)->create(['user_id' => $this->user->id]);
+        $this->assertEquals($webhook->id, $this->user->slackWebhooks->first()->id);
     }
 }

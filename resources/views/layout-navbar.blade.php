@@ -21,6 +21,7 @@
                     <nav-item name="Dashboard" class="hidden-xs" route="{{ route('home') }}"></nav-item>
                     @include('layout-sidebar', ['sidebar' => false])
                     <nav-item name="Profile" route="{{ route('profile.show') }}"></nav-item>
+                    <nav-item name="Notification Settings" route="{{ route('profile.notifications.show') }}"></nav-item>
                     <li>
                         <a href="{{ route('logout') }}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

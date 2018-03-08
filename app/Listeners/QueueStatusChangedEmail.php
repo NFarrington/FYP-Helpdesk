@@ -8,6 +8,7 @@ use App\Models\TicketStatus;
 use App\Notifications\Tickets\Closed;
 use App\Notifications\Tickets\WithAgent;
 use App\Notifications\Tickets\WithCustomer;
+use Illuminate\Foundation\Application;
 
 class QueueStatusChangedEmail
 {
@@ -21,9 +22,9 @@ class QueueStatusChangedEmail
     /**
      * Create the event listener.
      *
-     * @return void
+     * @param \Illuminate\Foundation\Application $app
      */
-    public function __construct(\Illuminate\Foundation\Application $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
@@ -31,8 +32,8 @@ class QueueStatusChangedEmail
     /**
      * Handle the event.
      *
+     * @param \App\Events\TicketUpdated $event
      * @return void
-     * @throws \Exception
      */
     public function handle(TicketUpdated $event)
     {
@@ -47,8 +48,8 @@ class QueueStatusChangedEmail
                     $this->notifyCustomer($ticket, new WithCustomer($ticket));
                     break;
                 case TicketStatus::STATUS_CLOSED:
-                    $this->notifyCustomer($ticket, new Closed($ticket));
-                    $this->notifyAssignedAgent($ticket, new Closed($ticket));
+                    $this->notifyCustomer($ticket, new Closed($ticket, 'user'));
+                    $this->notifyAssignedAgent($ticket, new Closed($ticket, 'agent'));
                     break;
             }
         }
