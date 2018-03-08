@@ -5,6 +5,7 @@ namespace App\Listeners\Auth;
 use App\Models\User;
 use App\Notifications\LoginSuccessful;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class QueueSuccessNotification
@@ -22,7 +23,7 @@ class QueueSuccessNotification
     /**
      * Handle the event.
      *
-     * @param  Login  $event
+     * @param \Illuminate\Auth\Events\Login $event
      * @return void
      */
     public function handle(Login $event)
@@ -30,9 +31,8 @@ class QueueSuccessNotification
         /** @var User $user */
         $user = $event->user;
 
-        if (!Session::exists('login_notification_sent') && !$user->wasRecentlyCreated) {
+        if (!Auth::viaRemember() && !$user->wasRecentlyCreated) {
             $user->notify(new LoginSuccessful());
-            Session::put('login_notification_sent', true);
         }
     }
 }
