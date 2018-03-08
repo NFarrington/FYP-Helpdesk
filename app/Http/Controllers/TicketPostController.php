@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\TicketPost;
+use App\Models\TicketStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -52,6 +53,13 @@ class TicketPostController extends Controller
         $ticketPost->user()->associate($request->user());
         $ticketPost->ticket()->associate($ticket);
         $ticketPost->save();
+
+        if ($request->user()->id === $ticket->user->id) {
+            $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
+        } else {
+            $ticket->status()->associate(TicketStatus::withCustomer()->orderBy('id')->first());
+        }
+        $ticket->save();
 
         return redirect()->back();
     }
