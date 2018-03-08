@@ -43,9 +43,9 @@ class NotificationService extends Service
      */
     public function update(User $user, array $attributes)
     {
-        foreach($attributes as $key => &$value) {
+        foreach ($attributes as $key => &$value) {
             if (ends_with($key, '_email')) {
-                $value = (boolean) $value;
+                $value = (bool) $value;
             } elseif (ends_with($key, '_slack')) {
                 $value = (int) $value;
             }

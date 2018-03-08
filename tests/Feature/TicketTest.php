@@ -126,7 +126,6 @@ class TicketTest extends TestCase
         $this->assertDatabaseHas($ticketPost->getTable(), ['content' => $ticketPost->content]);
         $this->assertEquals(TicketStatus::STATUS_AGENT, $ticket->fresh()->status->state);
 
-
         $ticketPost = factory(TicketPost::class)->make();
         $agent = factory(User::class)->create();
         $agent->roles()->sync(Role::agent()->id);

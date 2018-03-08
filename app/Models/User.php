@@ -105,7 +105,7 @@ class User extends Authenticatable
     {
         $key = $notification->key ?? null;
         if ($key && !array_get($this->notification_settings, $key.'_email', false)) {
-            return null;
+            return;
         }
 
         return $this->email;
@@ -123,7 +123,7 @@ class User extends Authenticatable
         $webhook = SlackWebhook::find(array_get($this->notification_settings, $key.'_slack', 0));
 
         if (!$webhook || !$this->can('use', $webhook)) {
-            return null;
+            return;
         }
 
         $notification->setSlackWebhook($webhook);
@@ -260,7 +260,7 @@ class User extends Authenticatable
         }
 
         return $permission->default || $permission->roles->filter(function ($role) {
-                return $this->hasRole($role);
-            })->isNotEmpty();
+            return $this->hasRole($role);
+        })->isNotEmpty();
     }
 }

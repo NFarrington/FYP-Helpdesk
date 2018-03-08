@@ -63,12 +63,12 @@ class NotificationSettingsTest extends TestCase
 
         $notifications = [];
         foreach (NotificationService::USER_NOTIFICATIONS as $index => $notification) {
-            $notifications["{$notification}_email"] = ["0", "1"][mt_rand(0, 1)];
-            $notifications["{$notification}_slack"] = ["", "$webhook->id"][mt_rand(0, 1)];
+            $notifications["{$notification}_email"] = ['0', '1'][mt_rand(0, 1)];
+            $notifications["{$notification}_slack"] = ['', "$webhook->id"][mt_rand(0, 1)];
         }
         foreach (NotificationService::AGENT_NOTIFICATIONS as $index => $notification) {
-            $notifications["{$notification}_email"] = ["0", "1"][mt_rand(0, 1)];
-            $notifications["{$notification}_slack"] = ["", "$webhook->id"][mt_rand(0, 1)];
+            $notifications["{$notification}_email"] = ['0', '1'][mt_rand(0, 1)];
+            $notifications["{$notification}_slack"] = ['', "$webhook->id"][mt_rand(0, 1)];
         }
 
         $this->get(route('profile.notifications.show'));
