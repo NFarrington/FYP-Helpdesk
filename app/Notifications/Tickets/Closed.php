@@ -4,16 +4,23 @@ namespace App\Notifications\Tickets;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
+use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
 
 class Closed extends Notification implements ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
+
+    /**
+     * The notification key.
+     *
+     * @var string
+     */
+    protected static $key = 'ticket_closed';
 
     /**
      * The token used to verify the email address.
@@ -21,13 +28,6 @@ class Closed extends Notification implements ShouldQueue
      * @var Ticket
      */
     protected $ticket;
-
-    /**
-     * The notification key.
-     *
-     * @var string
-     */
-    public $key = 'ticket_closed';
 
     /**
      * Create a new notification instance.

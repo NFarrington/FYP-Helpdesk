@@ -4,16 +4,23 @@ namespace App\Notifications\Tickets;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
+use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
 
 class Submitted extends Notification implements ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
+
+    /**
+     * The notification key.
+     *
+     * @var string
+     */
+    protected static $key = 'agent_ticket_submitted';
 
     /**
      * The token used to verify the email address.
@@ -21,13 +28,6 @@ class Submitted extends Notification implements ShouldQueue
      * @var Ticket
      */
     protected $ticket;
-
-    /**
-     * The notification key.
-     *
-     * @var string
-     */
-    public $key = 'agent_ticket_submitted';
 
     /**
      * Create a new notification instance.
@@ -43,7 +43,7 @@ class Submitted extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -54,7 +54,7 @@ class Submitted extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -94,7 +94,7 @@ class Submitted extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      *
-     * @param  User  $notifiable
+     * @param  User $notifiable
      * @return array
      */
     public function toArray($notifiable)

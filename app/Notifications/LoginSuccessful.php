@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
 
 class LoginSuccessful extends Notification implements ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
 
     /**
      * The notification key.

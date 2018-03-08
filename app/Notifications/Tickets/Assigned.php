@@ -4,7 +4,7 @@ namespace App\Notifications\Tickets;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
 use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,14 +13,14 @@ use Illuminate\Notifications\Messages\SlackMessage;
 
 class Assigned extends Notification implements ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
 
     /**
      * The notification key.
      *
      * @var string
      */
-    public $key = 'agent_ticket_assigned';
+    protected static $key = 'agent_ticket_assigned';
 
     /**
      * The token used to verify the email address.
