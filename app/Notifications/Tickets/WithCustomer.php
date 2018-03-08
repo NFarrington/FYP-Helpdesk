@@ -76,9 +76,7 @@ class WithCustomer extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
+        return parent::toSlack($notifiable)
             ->content('The following ticket has received a new response.')
             ->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */

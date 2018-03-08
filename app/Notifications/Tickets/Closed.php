@@ -86,9 +86,7 @@ class Closed extends Notification implements ShouldQueue
             ? route('agent.tickets.show', $this->ticket)
             : route('tickets.show', $this->ticket);
 
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
+        return parent::toSlack($notifiable)
             ->content('The following ticket has been closed.')
             ->attachment(function ($attachment) use ($route) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */

@@ -77,9 +77,7 @@ class Assigned extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
+        return parent::toSlack($notifiable)
             ->content(sprintf(
                 'The following ticket has been assigned to %s.', $this->ticket->agent->name
             ))

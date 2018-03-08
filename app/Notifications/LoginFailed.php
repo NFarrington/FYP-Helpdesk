@@ -20,16 +20,6 @@ class LoginFailed extends Notification implements ShouldQueue
     protected $key = 'user_login_failed';
 
     /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Get the notification's delivery channels.
      *
      * @param  mixed $notifiable
@@ -64,9 +54,7 @@ class LoginFailed extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
+        return parent::toSlack($notifiable)
             ->content('An unsuccessful login attempt has just been made.');
     }
 

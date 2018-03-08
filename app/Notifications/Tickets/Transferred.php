@@ -77,9 +77,7 @@ class Transferred extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
+        return parent::toSlack($notifiable)
             ->content("A new ticket has been transferred to the {$this->ticket->department->name} department.")
             ->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
