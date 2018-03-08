@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Department;
 use App\Models\Role;
+use App\Models\SlackWebhook;
 use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\User;
@@ -31,6 +32,13 @@ class NotificationsTest extends TestCase
     protected $user;
 
     /**
+     * A Slack webhook.
+     *
+     * @var \App\Models\SlackWebhook
+     */
+    protected $webhook;
+
+    /**
      * Setup the test environment.
      *
      * @return void
@@ -40,6 +48,7 @@ class NotificationsTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+        $this->webhook = factory(SlackWebhook::class)->create(['user_id' => $this->user]);
     }
 
     /**
@@ -66,11 +75,14 @@ class NotificationsTest extends TestCase
     public function testLoginSuccessfulNotification()
     {
         $notification = new LoginSuccessful();
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('Successful Login Attempt', $mail->subject);
         $this->assertEmpty($db);
+        $this->assertContains('Your account has just been accessed from a new device.', $slack->content);
     }
 
     /**
@@ -81,11 +93,14 @@ class NotificationsTest extends TestCase
     public function testLoginFailedNotification()
     {
         $notification = new LoginFailed();
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('Failed Login Attempt', $mail->subject);
         $this->assertEmpty($db);
+        $this->assertContains('An unsuccessful login attempt has just been made.', $slack->content);
     }
 
     /**
@@ -98,13 +113,17 @@ class NotificationsTest extends TestCase
         /** @var Ticket $ticket */
         $ticket = factory(Ticket::class)->create();
         $ticket->posts()->save(factory(TicketPost::class)->make());
+        factory(User::class)->create()->assignedTickets()->save($ticket);
 
         $notification = new Assigned($ticket);
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('Ticket Assigned', $mail->subject);
         $this->assertArraySubset(['ticket_id', 'agent_id'], array_keys($db));
+        $this->assertContains('The following ticket has been assigned to', $slack->content);
     }
 
     /**
@@ -120,12 +139,15 @@ class NotificationsTest extends TestCase
         $ticket = factory(Ticket::class)->create(['department_id' => $department->id]);
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
-        $notification = new Closed($ticket);
+        $notification = new Closed($ticket, 'user');
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('Ticket Closed', $mail->subject);
         $this->assertArraySubset(['ticket_id'], array_keys($db));
+        $this->assertContains('The following ticket has been closed.', $slack->content);
 
         /** @var User $agent */
         $agent = factory(User::class)->create();
@@ -134,9 +156,11 @@ class NotificationsTest extends TestCase
 
         $mail = $notification->toMail($agent);
         $db = $notification->toArray($agent);
+        $slack = $notification->toSlack($agent);
 
         $this->assertContains('Ticket Closed', $mail->subject);
         $this->assertArraySubset(['ticket_id'], array_keys($db));
+        $this->assertContains('The following ticket has been closed.', $slack->content);
     }
 
     /**
@@ -151,11 +175,14 @@ class NotificationsTest extends TestCase
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
         $notification = new Submitted($ticket);
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('New Ticket Submitted', $mail->subject);
         $this->assertArraySubset(['ticket_id'], array_keys($db));
+        $this->assertRegExp('/A new ticket has been submitted to the .* department./', $slack->content);
     }
 
     /**
@@ -170,11 +197,14 @@ class NotificationsTest extends TestCase
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
         $notification = new Transferred($ticket);
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('Ticket Transferred', $mail->subject);
         $this->assertArraySubset(['ticket_id', 'old_department', 'new_department'], array_keys($db));
+        $this->assertRegExp('/A new ticket has been transferred to the .* department./', $slack->content);
     }
 
     /**
@@ -189,11 +219,14 @@ class NotificationsTest extends TestCase
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
         $notification = new WithAgent($ticket);
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('New Reply', $mail->subject);
         $this->assertArraySubset(['ticket_id'], array_keys($db));
+        $this->assertContains('The following ticket has received a new response.', $slack->content);
     }
 
     /**
@@ -208,10 +241,13 @@ class NotificationsTest extends TestCase
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
         $notification = new WithCustomer($ticket);
+        $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('New Reply', $mail->subject);
         $this->assertArraySubset(['ticket_id'], array_keys($db));
+        $this->assertContains('The following ticket has received a new response.', $slack->content);
     }
 }
