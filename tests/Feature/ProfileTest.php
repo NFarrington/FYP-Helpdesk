@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Notifications\EmailVerification;
+use App\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -60,7 +60,7 @@ class ProfileTest extends TestCase
         $response->assertRedirect(route('profile.show'));
         $response->assertSessionHas('status', trans('user.updated'));
 
-        Notification::assertSentTo($this->user, EmailVerification::class, 1);
+        Notification::assertSentTo($this->user, VerifyEmail::class, 1);
     }
 
     public function testPasswordChangeSucceeds()

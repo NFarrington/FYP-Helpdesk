@@ -8,10 +8,8 @@ use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
-use App\Notifications\Tickets\Assigned;
-use App\Notifications\Tickets\Closed;
-use App\Notifications\Tickets\WithAgent;
-use App\Notifications\Tickets\WithCustomer;
+use App\Notifications\Agent\TicketAssigned;
+use App\Notifications\User\NewTicketPost;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -111,7 +109,7 @@ class TicketTest extends TestCase
         $this->assertEquals(3, Ticket::closed()->count());
     }
 
-    public function testTicketStatusChangeNotification()
+    public function testNewTicketPostNotification()
     {
         $department = Department::first();
 
@@ -121,35 +119,20 @@ class TicketTest extends TestCase
         $agent->departments()->save($department);
 
         /** @var Ticket $ticket */
-        $ticket = factory(Ticket::class)->states('customer')->create([
+        $ticket = factory(Ticket::class)->make([
             'user_id' => $this->user->id,
             'department_id' => $department->id,
-        ]);
-        $ticket->status()->associate(TicketStatus::withAgent()->first());
-        $ticket->save();
-        Notification::assertSentTo($agent, WithAgent::class);
-
-        /** @var Ticket $ticket */
-        $ticket = factory(Ticket::class)->states('agent')->create(['user_id' => $this->user->id]);
-        $ticket->status()->associate(TicketStatus::withCustomer()->first());
-        $ticket->save();
-        Notification::assertSentTo($this->user, WithCustomer::class);
-
-        /** @var Ticket $ticket */
-        $ticket = factory(Ticket::class)->states('agent')->create([
-            'user_id' => $this->user->id,
             'agent_id' => $agent->id,
-            'department_id' => $department->id,
         ]);
-        $ticket->status()->associate(TicketStatus::closed()->first());
-        $ticket->save();
-        Notification::assertSentTo($this->user, Closed::class);
-        Notification::assertSentTo($agent, Closed::class);
 
-        /** @var Ticket $ticket */
-        $ticket = factory(Ticket::class)->states('agent')->create(['user_id' => $this->user->id]);
-        $ticket->agent()->associate($agent);
+        $ticket->status_id = TicketStatus::withCustomer()->first()->id;
         $ticket->save();
-        Notification::assertSentTo($agent, Assigned::class);
+        $ticketPost = factory(TicketPost::class)->create(['ticket_id' => $ticket->id]);
+        Notification::assertSentTo($this->user, NewTicketPost::class);
+
+        $ticket->status_id = TicketStatus::withAgent()->first()->id;
+        $ticket->save();
+        $ticketPost = factory(TicketPost::class)->create(['user_id' => $this->user->id, 'ticket_id' => $ticket->id]);
+        Notification::assertSentTo($agent, \App\Notifications\Agent\NewTicketPost::class);
     }
 }
