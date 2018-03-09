@@ -26,3 +26,20 @@ function markdown($text)
 {
     return (new ParsedownExtra)->text($text);
 }
+
+/**
+ * Call the given Closure with the given value then return the value.
+ *
+ * @param  mixed $condition
+ * @param  mixed $value
+ * @param  callable $callback
+ * @return mixed
+ */
+function tap_if($condition, $value, $callback)
+{
+    if ($condition) {
+        $callback($value);
+    }
+
+    return $value;
+}
