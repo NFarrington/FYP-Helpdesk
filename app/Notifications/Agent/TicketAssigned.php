@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\Agent;
 
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class Assigned extends Notification implements ShouldQueue
+class TicketAssigned extends Notification implements Optional, ShouldQueue
 {
     use Configurable, Queueable;
 
@@ -80,8 +81,7 @@ class Assigned extends Notification implements ShouldQueue
         return parent::toSlack($notifiable)
             ->content(sprintf(
                 'The following ticket has been assigned to %s.', $this->ticket->agent->name
-            ))
-            ->attachment(function ($attachment) {
+            ))->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
                 $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
                     ->fields([

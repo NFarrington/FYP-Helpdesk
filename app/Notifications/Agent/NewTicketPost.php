@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\Agent;
 
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class Submitted extends Notification implements ShouldQueue
+class NewTicketPost extends Notification implements Optional, ShouldQueue
 {
     use Configurable, Queueable;
 
@@ -20,7 +21,7 @@ class Submitted extends Notification implements ShouldQueue
      *
      * @var string
      */
-    protected static $key = 'agent_ticket_submitted';
+    protected static $key = 'agent_ticket_with-agent';
 
     /**
      * The token used to verify the email address.
@@ -62,10 +63,10 @@ class Submitted extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->subject("$appName - New Ticket Submitted")
-            ->line("A new ticket has been submitted to the {$this->ticket->department->name} department.")
-            ->line("**Submitted by:** {$this->ticket->user->name}")
+            ->subject("$appName - New Reply")
             ->line("**Subject:** {$this->ticket->summary}")
+            ->line("**Response by:** {$this->ticket->user->name}")
+            ->line("**Response:** {$this->ticket->posts->first()->content}")
             ->action('View Ticket', route('agent.tickets.show', $this->ticket));
     }
 
@@ -78,13 +79,15 @@ class Submitted extends Notification implements ShouldQueue
     public function toSlack($notifiable)
     {
         return parent::toSlack($notifiable)
-            ->content("A new ticket has been submitted to the {$this->ticket->department->name} department.")
+            ->content('The following ticket has received a new response.')
             ->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
                 $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
                     ->fields([
                         'Submitted By' => $this->ticket->user->name,
                         'Subject' => $this->ticket->summary,
+                        'Response by' => $this->ticket->user->name,
+                        'Response' => $this->ticket->posts->first()->content,
                     ]);
             });
     }

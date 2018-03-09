@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\User;
 
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class WithCustomer extends Notification implements ShouldQueue
+class NewTicketPost extends Notification implements Optional, ShouldQueue
 {
     use Configurable, Queueable;
 

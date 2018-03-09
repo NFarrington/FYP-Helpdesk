@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class LoginFailed extends Notification implements ShouldQueue
+class LoginFailed extends Notification implements Optional, ShouldQueue
 {
     use Configurable, Queueable;
 
@@ -17,7 +18,7 @@ class LoginFailed extends Notification implements ShouldQueue
      *
      * @var string
      */
-    protected $key = 'user_login_failed';
+    protected static $key = 'user_login_failed';
 
     /**
      * Get the notification's delivery channels.

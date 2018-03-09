@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\Agent;
 
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\Concerns\Configurable;
-use App\Notifications\Concerns\SlackRoutable;
+use App\Notifications\Contracts\Optional;
 use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class WithAgent extends Notification implements ShouldQueue
+class TicketTransferred extends Notification implements Optional, ShouldQueue
 {
     use Configurable, Queueable;
 
@@ -21,7 +21,7 @@ class WithAgent extends Notification implements ShouldQueue
      *
      * @var string
      */
-    protected static $key = 'agent_ticket_with-agent';
+    protected static $key = 'agent_ticket_department-changed';
 
     /**
      * The token used to verify the email address.
@@ -63,10 +63,10 @@ class WithAgent extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->subject("$appName - New Reply")
+            ->subject("$appName - Ticket Transferred")
+            ->line("A ticket has been transferred to the {$this->ticket->department->name} department.")
+            ->line("**Submitted by:** {$this->ticket->user->name}")
             ->line("**Subject:** {$this->ticket->summary}")
-            ->line("**Response by:** {$this->ticket->user->name}")
-            ->line("**Response:** {$this->ticket->posts->first()->content}")
             ->action('View Ticket', route('agent.tickets.show', $this->ticket));
     }
 
@@ -79,14 +79,13 @@ class WithAgent extends Notification implements ShouldQueue
     public function toSlack($notifiable)
     {
         return parent::toSlack($notifiable)
-            ->content('The following ticket has received a new response.')
+            ->content("A new ticket has been transferred to the {$this->ticket->department->name} department.")
             ->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
                 $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
                     ->fields([
                         'Submitted By' => $this->ticket->user->name,
                         'Subject' => $this->ticket->summary,
-                        'Response by' => $this->ticket->user->name,
                     ]);
             });
     }
@@ -101,6 +100,8 @@ class WithAgent extends Notification implements ShouldQueue
     {
         return [
             'ticket_id' => $this->ticket->id,
+            'old_department' => $this->ticket->getOriginal('department_id'),
+            'new_department' => $this->ticket->getAttribute('department_id'),
         ];
     }
 }
