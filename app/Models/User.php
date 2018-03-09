@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\UserSaved;
 use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -105,7 +106,7 @@ class User extends Authenticatable
      */
     public function routeNotificationForMail($notification)
     {
-        if ($notification instanceof Configurable) {
+        if ($notification instanceof Optional) {
             $key = $notification->getKey();
             if ($key && !array_get($this->notification_settings, $key.'_email', false)) {
                 return null;
@@ -123,7 +124,7 @@ class User extends Authenticatable
      */
     public function routeNotificationForSlack($notification)
     {
-        if (!$notification instanceof Configurable) {
+        if (!$notification instanceof Optional) {
             return null;
         }
 
