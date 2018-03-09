@@ -11,7 +11,7 @@ class TicketUpdated
     use Dispatchable, SerializesModels;
 
     /**
-     * The user that has been saved.
+     * The ticket that has been updated.
      *
      * @var Ticket
      */
@@ -20,6 +20,7 @@ class TicketUpdated
     /**
      * Create a new event instance.
      *
+     * @param \App\Models\Ticket $ticket
      * @return void
      */
     public function __construct(Ticket $ticket)

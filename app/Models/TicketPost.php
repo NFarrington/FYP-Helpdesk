@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\TicketPostCreated;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,6 +28,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TicketPost extends Model
 {
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => TicketPostCreated::class,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
