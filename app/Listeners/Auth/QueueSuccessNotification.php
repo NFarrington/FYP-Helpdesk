@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Notifications\LoginSuccessful;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class QueueSuccessNotification
 {

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Events\UserSaved;
-use App\Notifications\Concerns\Configurable;
 use App\Notifications\Contracts\Optional;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -109,7 +108,7 @@ class User extends Authenticatable
         if ($notification instanceof Optional) {
             $key = $notification->getKey();
             if ($key && !array_get($this->notification_settings, $key.'_email', false)) {
-                return null;
+                return;
             }
         }
 
@@ -125,7 +124,7 @@ class User extends Authenticatable
     public function routeNotificationForSlack($notification)
     {
         if (!$notification instanceof Optional) {
-            return null;
+            return;
         }
 
         $key = $notification->getKey();
@@ -133,7 +132,7 @@ class User extends Authenticatable
         $webhook = SlackWebhook::find(array_get($this->notification_settings, $key.'_slack', 0));
 
         if (!$this->can('use', $webhook)) {
-            return null;
+            return;
         }
 
         $notification->setSlackWebhook($webhook);
@@ -270,7 +269,7 @@ class User extends Authenticatable
         }
 
         return $permission->default || $permission->roles->filter(function ($role) {
-                return $this->hasRole($role);
-            })->isNotEmpty();
+            return $this->hasRole($role);
+        })->isNotEmpty();
     }
 }
