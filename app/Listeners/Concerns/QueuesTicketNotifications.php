@@ -35,6 +35,10 @@ trait QueuesTicketNotifications
      */
     protected function notifyAgent(Ticket $ticket, Notification $notification)
     {
+        if (!$ticket->agent) {
+            return null;
+        }
+
         $shouldNotify = !match(Auth::user(), $ticket->agent);
 
         return tap_if($shouldNotify, $ticket->agent, function (User $agent) use ($notification) {
@@ -67,7 +71,7 @@ trait QueuesTicketNotifications
      */
     protected function notifyCustomer(Ticket $ticket, Notification $notification)
     {
-        if (match(Auth::user(), $ticket->user)) {
+        if (match(Auth::user(), $ticket->user) === true) {
             return null;
         }
 

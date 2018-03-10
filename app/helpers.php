@@ -35,7 +35,7 @@ function markdown($text)
 function match($model1, $model2)
 {
     if (!$model1 || !$model2) {
-        return false;
+        return null;
     }
 
     return $model1->getKey() === $model2->getKey();
