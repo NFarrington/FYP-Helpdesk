@@ -36,7 +36,13 @@ class QueueNewTicketPostEmail
      */
     public function handle(TicketPostCreated $event)
     {
-        $ticket = $event->ticketPost->ticket;
+        $ticketPost = $event->ticketPost->load(['ticket', 'ticket.posts']);
+        $ticket = $ticketPost->ticket;
+
+        // ignore newly created tickets
+        if ($ticket->posts->count() === 1) {
+            return;
+        }
 
         switch ($ticket->status->state) {
             case TicketStatus::STATUS_AGENT:
