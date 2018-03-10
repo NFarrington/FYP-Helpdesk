@@ -5,6 +5,7 @@ namespace App\Listeners\Concerns;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 trait QueuesTicketNotifications
 {
@@ -17,9 +18,12 @@ trait QueuesTicketNotifications
      */
     protected function notifyDepartment(Ticket $ticket, Notification $notification)
     {
-        return $ticket->department->users->map(function (User $user) use ($notification) {
-            return tap($user)->notify($notification);
-        });
+        return $ticket->department->users
+            ->filter(function (User $user) {
+                return !match(Auth::user(), $user);
+            })->map(function (User $user) use ($notification) {
+                return tap($user)->notify($notification);
+            });
     }
 
     /**
@@ -31,7 +35,9 @@ trait QueuesTicketNotifications
      */
     protected function notifyAgent(Ticket $ticket, Notification $notification)
     {
-        return tap_if($ticket->agent, $ticket->agent, function (User $agent) use ($notification) {
+        $shouldNotify = !match(Auth::user(), $ticket->agent);
+
+        return tap_if($shouldNotify, $ticket->agent, function (User $agent) use ($notification) {
             $agent->notify($notification);
         });
     }
@@ -57,10 +63,14 @@ trait QueuesTicketNotifications
      *
      * @param \App\Models\Ticket $ticket
      * @param \App\Notifications\Notification $notification
-     * @return \App\Models\User
+     * @return \App\Models\User|null
      */
     protected function notifyCustomer(Ticket $ticket, Notification $notification)
     {
+        if (match(Auth::user(), $ticket->user)) {
+            return null;
+        }
+
         return tap($ticket->user)->notify($notification);
     }
 }
