@@ -29,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
 
         Events\TicketUpdated::class => [
             Listeners\QueueTicketAssignmentEmail::class,
+            Listeners\QueueTicketStatusChangedEmail::class,
             Listeners\QueueDepartmentChangedEmail::class,
         ],
 
