@@ -1,19 +1,27 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\Agent;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
+use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
 
-class Submitted extends Notification implements ShouldQueue
+class TicketAssigned extends Notification implements Optional, ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
+
+    /**
+     * The notification key.
+     *
+     * @var string
+     */
+    protected static $key = 'agent_ticket_assigned';
 
     /**
      * The token used to verify the email address.
@@ -21,13 +29,6 @@ class Submitted extends Notification implements ShouldQueue
      * @var Ticket
      */
     protected $ticket;
-
-    /**
-     * The notification key.
-     *
-     * @var string
-     */
-    public $key = 'agent_ticket_submitted';
 
     /**
      * Create a new notification instance.
@@ -43,7 +44,7 @@ class Submitted extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -54,7 +55,7 @@ class Submitted extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -62,8 +63,8 @@ class Submitted extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->subject("$appName - New Ticket Submitted")
-            ->line("A new ticket has been submitted to the {$this->ticket->department->name} department.")
+            ->subject("$appName - Ticket Assigned")
+            ->line('The following ticket has been assigned to you.')
             ->line("**Submitted by:** {$this->ticket->user->name}")
             ->line("**Subject:** {$this->ticket->summary}")
             ->action('View Ticket', route('agent.tickets.show', $this->ticket));
@@ -77,11 +78,10 @@ class Submitted extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
-            ->content("A new ticket has been submitted to the {$this->ticket->department->name} department.")
-            ->attachment(function ($attachment) {
+        return parent::toSlack($notifiable)
+            ->content(sprintf(
+                'The following ticket has been assigned to %s.', $this->ticket->agent->name
+            ))->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
                 $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
                     ->fields([
@@ -94,13 +94,14 @@ class Submitted extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      *
-     * @param  User  $notifiable
+     * @param  User $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
             'ticket_id' => $this->ticket->id,
+            'agent_id' => $this->ticket->agent_id,
         ];
     }
 }

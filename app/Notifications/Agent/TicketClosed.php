@@ -1,15 +1,18 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Agent;
 
+use App\Models\Ticket;
+use App\Models\User;
 use App\Notifications\Concerns\Configurable;
 use App\Notifications\Contracts\Optional;
+use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class LoginSuccessful extends Notification implements Optional, ShouldQueue
+class TicketClosed extends Notification implements Optional, ShouldQueue
 {
     use Configurable, Queueable;
 
@@ -18,16 +21,24 @@ class LoginSuccessful extends Notification implements Optional, ShouldQueue
      *
      * @var string
      */
-    protected static $key = 'user_login_success';
+    protected static $key = 'agent_ticket_closed';
+
+    /**
+     * The token used to verify the email address.
+     *
+     * @var Ticket
+     */
+    protected $ticket;
 
     /**
      * Create a new notification instance.
      *
+     * @param Ticket $ticket
      * @return void
      */
-    public function __construct()
+    public function __construct(Ticket $ticket)
     {
-        //
+        $this->ticket = $ticket;
     }
 
     /**
@@ -52,9 +63,10 @@ class LoginSuccessful extends Notification implements Optional, ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->success()
-            ->subject("$appName - Successful Login Attempt")
-            ->line('Your account has just been accessed from a new device.');
+            ->subject("$appName - Ticket Closed")
+            ->line('The following ticket has now been closed.')
+            ->line("**Subject:** {$this->ticket->summary}")
+            ->action('View Ticket', route('agent.tickets.show', $this->ticket));
     }
 
     /**
@@ -66,19 +78,27 @@ class LoginSuccessful extends Notification implements Optional, ShouldQueue
     public function toSlack($notifiable)
     {
         return parent::toSlack($notifiable)
-            ->content('Your account has just been accessed from a new device.');
+            ->content('The following ticket has been closed.')
+            ->attachment(function ($attachment) {
+                /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
+                $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
+                    ->fields([
+                        'Submitted By' => $this->ticket->user->name,
+                        'Subject' => $this->ticket->summary,
+                    ]);
+            });
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed $notifiable
+     * @param  User $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            //
+            'ticket_id' => $this->ticket->id,
         ];
     }
 }

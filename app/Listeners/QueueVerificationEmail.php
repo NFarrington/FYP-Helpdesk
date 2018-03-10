@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Events\UserSaved;
 use App\Models\EmailVerification;
-use App\Notifications\EmailVerification as EmailNotification;
+use App\Notifications\VerifyEmail as EmailNotification;
 use Illuminate\Support\Facades\Hash;
 
 class QueueVerificationEmail
@@ -29,8 +29,8 @@ class QueueVerificationEmail
     /**
      * Handle the event.
      *
+     * @param \App\Events\UserSaved $event
      * @return void
-     * @throws \Exception
      */
     public function handle(UserSaved $event)
     {

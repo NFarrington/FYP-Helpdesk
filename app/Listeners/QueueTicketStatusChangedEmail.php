@@ -4,9 +4,10 @@ namespace App\Listeners;
 
 use App\Events\TicketUpdated;
 use App\Listeners\Concerns\QueuesTicketNotifications;
-use App\Notifications\Agent\TicketTransferred;
+use App\Models\TicketStatus;
+use Illuminate\Foundation\Application;
 
-class QueueDepartmentChangedEmail
+class QueueTicketStatusChangedEmail
 {
     use QueuesTicketNotifications;
 
@@ -20,9 +21,9 @@ class QueueDepartmentChangedEmail
     /**
      * Create the event listener.
      *
-     * @return void
+     * @param \Illuminate\Foundation\Application $app
      */
-    public function __construct(\Illuminate\Foundation\Application $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
@@ -37,8 +38,12 @@ class QueueDepartmentChangedEmail
     {
         $ticket = $event->ticket;
 
-        if ($ticket->isDirty('department_id')) {
-            $this->notifyAgentOrDepartment($ticket, new TicketTransferred($ticket));
+        if ($ticket->isDirty('status_id')) {
+            switch ($ticket->status->state) {
+                case TicketStatus::STATUS_CLOSED:
+                    $this->notifyAgentOrDepartment($ticket, new \App\Notifications\Agent\TicketClosed($ticket));
+                    $this->notifyCustomer($ticket, new \App\Notifications\User\TicketClosed($ticket));
+            }
         }
     }
 }

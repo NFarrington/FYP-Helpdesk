@@ -1,19 +1,27 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\Agent;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
+use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
 
-class Closed extends Notification implements ShouldQueue
+class TicketTransferred extends Notification implements Optional, ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
+
+    /**
+     * The notification key.
+     *
+     * @var string
+     */
+    protected static $key = 'agent_ticket_department-changed';
 
     /**
      * The token used to verify the email address.
@@ -23,23 +31,14 @@ class Closed extends Notification implements ShouldQueue
     protected $ticket;
 
     /**
-     * The notification key.
-     *
-     * @var string
-     */
-    public $key = 'ticket_closed';
-
-    /**
      * Create a new notification instance.
      *
      * @param Ticket $ticket
-     * @param string $type
      * @return void
      */
-    public function __construct(Ticket $ticket, string $type = 'user')
+    public function __construct(Ticket $ticket)
     {
         $this->ticket = $ticket;
-        $this->key = "{$type}_{$this->key}";
     }
 
     /**
@@ -63,15 +62,12 @@ class Closed extends Notification implements ShouldQueue
     {
         $appName = config('app.name');
 
-        $route = $notifiable->can('viewAsAgent', $this->ticket)
-            ? route('agent.tickets.show', $this->ticket)
-            : route('tickets.show', $this->ticket);
-
         return (new MailMessage)
-            ->subject("$appName - Ticket Closed")
-            ->line('The following ticket has now been closed.')
+            ->subject("$appName - Ticket Transferred")
+            ->line("A ticket has been transferred to the {$this->ticket->department->name} department.")
+            ->line("**Submitted by:** {$this->ticket->user->name}")
             ->line("**Subject:** {$this->ticket->summary}")
-            ->action('View Ticket', $route);
+            ->action('View Ticket', route('agent.tickets.show', $this->ticket));
     }
 
     /**
@@ -82,17 +78,11 @@ class Closed extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        $route = $notifiable->can('viewAsAgent', $this->ticket)
-            ? route('agent.tickets.show', $this->ticket)
-            : route('tickets.show', $this->ticket);
-
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
-            ->content('The following ticket has been closed.')
-            ->attachment(function ($attachment) use ($route) {
+        return parent::toSlack($notifiable)
+            ->content("A new ticket has been transferred to the {$this->ticket->department->name} department.")
+            ->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
-                $attachment->title('Ticket #'.$this->ticket->id, $route)
+                $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
                     ->fields([
                         'Submitted By' => $this->ticket->user->name,
                         'Subject' => $this->ticket->summary,
@@ -110,6 +100,8 @@ class Closed extends Notification implements ShouldQueue
     {
         return [
             'ticket_id' => $this->ticket->id,
+            'old_department' => $this->ticket->getOriginal('department_id'),
+            'new_department' => $this->ticket->getAttribute('department_id'),
         ];
     }
 }

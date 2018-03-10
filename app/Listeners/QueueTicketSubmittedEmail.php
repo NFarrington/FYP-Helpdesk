@@ -3,10 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\TicketCreated;
-use App\Notifications\Tickets\Submitted;
+use App\Listeners\Concerns\QueuesTicketNotifications;
+use App\Notifications\Agent\TicketSubmitted;
 
 class QueueTicketSubmittedEmail
 {
+    use QueuesTicketNotifications;
+
     /**
      * The application instance.
      *
@@ -27,15 +30,13 @@ class QueueTicketSubmittedEmail
     /**
      * Handle the event.
      *
+     * @param \App\Events\TicketCreated $event
      * @return void
-     * @throws \Exception
      */
     public function handle(TicketCreated $event)
     {
         $ticket = $event->ticket;
 
-        foreach ($ticket->department->users as $user) {
-            $user->notify(new Submitted($ticket));
-        }
+        $this->notifyAgentOrDepartment($ticket, new TicketSubmitted($ticket));
     }
 }

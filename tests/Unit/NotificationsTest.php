@@ -8,15 +8,12 @@ use App\Models\SlackWebhook;
 use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\User;
-use App\Notifications\EmailVerification;
+use App\Notifications\Agent\TicketAssigned;
+use App\Notifications\Agent\TicketSubmitted;
+use App\Notifications\Agent\TicketTransferred;
 use App\Notifications\LoginFailed;
 use App\Notifications\LoginSuccessful;
-use App\Notifications\Tickets\Assigned;
-use App\Notifications\Tickets\Closed;
-use App\Notifications\Tickets\Submitted;
-use App\Notifications\Tickets\Transferred;
-use App\Notifications\Tickets\WithAgent;
-use App\Notifications\Tickets\WithCustomer;
+use App\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -59,7 +56,7 @@ class NotificationsTest extends TestCase
     public function testEmailVerificationNotification()
     {
         $token = str_random(40);
-        $notification = new EmailVerification($token);
+        $notification = new VerifyEmail($token);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
 
@@ -115,7 +112,7 @@ class NotificationsTest extends TestCase
         $ticket->posts()->save(factory(TicketPost::class)->make());
         factory(User::class)->create()->assignedTickets()->save($ticket);
 
-        $notification = new Assigned($ticket);
+        $notification = new TicketAssigned($ticket->fresh());
         $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
@@ -131,7 +128,7 @@ class NotificationsTest extends TestCase
      *
      * @return void
      */
-    public function testTicketClosedNotification()
+    public function testAgentTicketClosedNotification()
     {
         $department = Department::first();
 
@@ -139,15 +136,8 @@ class NotificationsTest extends TestCase
         $ticket = factory(Ticket::class)->create(['department_id' => $department->id]);
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
-        $notification = new Closed($ticket, 'user');
+        $notification = new \App\Notifications\Agent\TicketClosed($ticket);
         $notification->setSlackWebhook($this->webhook);
-        $mail = $notification->toMail($this->user);
-        $db = $notification->toArray($this->user);
-        $slack = $notification->toSlack($this->user);
-
-        $this->assertContains('Ticket Closed', $mail->subject);
-        $this->assertArraySubset(['ticket_id'], array_keys($db));
-        $this->assertContains('The following ticket has been closed.', $slack->content);
 
         /** @var User $agent */
         $agent = factory(User::class)->create();
@@ -157,6 +147,30 @@ class NotificationsTest extends TestCase
         $mail = $notification->toMail($agent);
         $db = $notification->toArray($agent);
         $slack = $notification->toSlack($agent);
+
+        $this->assertContains('Ticket Closed', $mail->subject);
+        $this->assertArraySubset(['ticket_id'], array_keys($db));
+        $this->assertContains('The following ticket has been closed.', $slack->content);
+    }
+
+    /**
+     * Test ticket closed notification.
+     *
+     * @return void
+     */
+    public function testUserTicketClosedNotification()
+    {
+        $department = Department::first();
+
+        /** @var Ticket $ticket */
+        $ticket = factory(Ticket::class)->create(['department_id' => $department->id]);
+        $ticket->posts()->save(factory(TicketPost::class)->make());
+
+        $notification = new \App\Notifications\User\TicketClosed($ticket);
+        $notification->setSlackWebhook($this->webhook);
+        $mail = $notification->toMail($this->user);
+        $db = $notification->toArray($this->user);
+        $slack = $notification->toSlack($this->user);
 
         $this->assertContains('Ticket Closed', $mail->subject);
         $this->assertArraySubset(['ticket_id'], array_keys($db));
@@ -174,7 +188,7 @@ class NotificationsTest extends TestCase
         $ticket = factory(Ticket::class)->create();
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
-        $notification = new Submitted($ticket);
+        $notification = new TicketSubmitted($ticket);
         $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
@@ -196,7 +210,7 @@ class NotificationsTest extends TestCase
         $ticket = factory(Ticket::class)->create();
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
-        $notification = new Transferred($ticket);
+        $notification = new TicketTransferred($ticket);
         $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
@@ -218,7 +232,7 @@ class NotificationsTest extends TestCase
         $ticket = factory(Ticket::class)->create();
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
-        $notification = new WithAgent($ticket);
+        $notification = new \App\Notifications\Agent\NewTicketPost($ticket);
         $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);
@@ -240,7 +254,7 @@ class NotificationsTest extends TestCase
         $ticket = factory(Ticket::class)->create();
         $ticket->posts()->save(factory(TicketPost::class)->make());
 
-        $notification = new WithCustomer($ticket);
+        $notification = new \App\Notifications\User\NewTicketPost($ticket);
         $notification->setSlackWebhook($this->webhook);
         $mail = $notification->toMail($this->user);
         $db = $notification->toArray($this->user);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\UserSaved;
+use App\Notifications\Contracts\Optional;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,7 +30,8 @@ use Laravel\Passport\HasApiTokens;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
  * @property-read \App\Models\EmailVerification $emailVerification
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
+ *     $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SlackWebhook[] $slackWebhooks
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
@@ -99,13 +101,15 @@ class User extends Authenticatable
      * Route notifications for the mail channel.
      *
      * @param  \Illuminate\Notifications\Notification $notification
-     * @return string
+     * @return string|null
      */
     public function routeNotificationForMail($notification)
     {
-        $key = $notification->key ?? null;
-        if ($key && !array_get($this->notification_settings, $key.'_email', false)) {
-            return;
+        if ($notification instanceof Optional) {
+            $key = $notification->getKey();
+            if ($key && !array_get($this->notification_settings, $key.'_email', false)) {
+                return;
+            }
         }
 
         return $this->email;
@@ -115,14 +119,19 @@ class User extends Authenticatable
      * Route notifications for the Slack channel.
      *
      * @param  \Illuminate\Notifications\Notification $notification
-     * @return string
+     * @return string|null
      */
     public function routeNotificationForSlack($notification)
     {
-        $key = $notification->key ?? null;
+        if (!$notification instanceof Optional) {
+            return;
+        }
+
+        $key = $notification->getKey();
+
         $webhook = SlackWebhook::find(array_get($this->notification_settings, $key.'_slack', 0));
 
-        if (!$webhook || !$this->can('use', $webhook)) {
+        if (!$this->can('use', $webhook)) {
             return;
         }
 

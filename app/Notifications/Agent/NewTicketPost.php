@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications\Agent;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use App\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class Assigned extends Notification implements ShouldQueue
+class NewTicketPost extends Notification implements Optional, ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
 
     /**
      * The notification key.
      *
      * @var string
      */
-    public $key = 'agent_ticket_assigned';
+    protected static $key = 'agent_ticket_with-agent';
 
     /**
      * The token used to verify the email address.
@@ -62,10 +63,10 @@ class Assigned extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->subject("$appName - Ticket Assigned")
-            ->line('The following ticket has been assigned to you.')
-            ->line("**Submitted by:** {$this->ticket->user->name}")
+            ->subject("$appName - New Reply")
             ->line("**Subject:** {$this->ticket->summary}")
+            ->line("**Response by:** {$this->ticket->user->name}")
+            ->line("**Response:** {$this->ticket->posts->first()->content}")
             ->action('View Ticket', route('agent.tickets.show', $this->ticket));
     }
 
@@ -77,18 +78,16 @@ class Assigned extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
-            ->content(sprintf(
-                'The following ticket has been assigned to %s.', $this->ticket->agent->name
-            ))
+        return parent::toSlack($notifiable)
+            ->content('The following ticket has received a new response.')
             ->attachment(function ($attachment) {
                 /* @var \Illuminate\Notifications\Messages\SlackAttachment $attachment */
                 $attachment->title('Ticket #'.$this->ticket->id, route('agent.tickets.show', $this->ticket))
                     ->fields([
                         'Submitted By' => $this->ticket->user->name,
                         'Subject' => $this->ticket->summary,
+                        'Response by' => $this->ticket->user->name,
+                        'Response' => $this->ticket->posts->first()->content,
                     ]);
             });
     }
@@ -103,7 +102,6 @@ class Assigned extends Notification implements ShouldQueue
     {
         return [
             'ticket_id' => $this->ticket->id,
-            'agent_id' => $this->ticket->agent_id,
         ];
     }
 }

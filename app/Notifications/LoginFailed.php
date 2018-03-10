@@ -2,38 +2,28 @@
 
 namespace App\Notifications;
 
-use App\Notifications\Concerns\RoutesViaSlack;
+use App\Notifications\Concerns\Configurable;
+use App\Notifications\Contracts\Optional;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
 
-class LoginFailed extends Notification implements ShouldQueue
+class LoginFailed extends Notification implements Optional, ShouldQueue
 {
-    use Queueable, RoutesViaSlack;
+    use Configurable, Queueable;
 
     /**
      * The notification key.
      *
      * @var string
      */
-    public $key = 'user_login_failed';
-
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
+    protected static $key = 'user_login_failed';
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -44,7 +34,7 @@ class LoginFailed extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -52,9 +42,9 @@ class LoginFailed extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-                    ->error()
-                    ->subject("$appName - Failed Login Attempt")
-                    ->line("A unsuccessful login attempt has just been made against your $appName account.");
+            ->error()
+            ->subject("$appName - Failed Login Attempt")
+            ->line("A unsuccessful login attempt has just been made against your $appName account.");
     }
 
     /**
@@ -65,16 +55,14 @@ class LoginFailed extends Notification implements ShouldQueue
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)
-            ->from(config('app.name') ?: 'Helpdesk', ':information_source:')
-            ->to($this->webhook->recipient)
+        return parent::toSlack($notifiable)
             ->content('An unsuccessful login attempt has just been made.');
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)
