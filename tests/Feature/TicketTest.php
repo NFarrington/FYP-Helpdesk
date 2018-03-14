@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
@@ -123,6 +124,21 @@ class TicketTest extends TestCase
 
         $response->assertRedirect(route('tickets.show', $ticket->id));
         $this->assertDatabaseHas($ticketPost->getTable(), ['content' => $ticketPost->content]);
+        $this->assertEquals(TicketStatus::STATUS_AGENT, $ticket->fresh()->status->state);
+
+        $ticketPost = factory(TicketPost::class)->make();
+        $agent = factory(User::class)->create();
+        $agent->roles()->sync(Role::agent()->id);
+        $this->actingAs($agent);
+
+        $this->get(route('agent.tickets.show', $ticket->id));
+        $response = $this->post(route('tickets.posts.store', $ticket->id), [
+            'reply' => $ticketPost->content,
+        ]);
+
+        $response->assertRedirect(route('agent.tickets.show', $ticket->id));
+        $this->assertDatabaseHas($ticketPost->getTable(), ['content' => $ticketPost->content]);
+        $this->assertEquals(TicketStatus::STATUS_CUSTOMER, $ticket->fresh()->status->state);
     }
 
     /**

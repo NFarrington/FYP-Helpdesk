@@ -1,40 +1,38 @@
 <?php
 
-namespace App\Notifications\Tickets;
+namespace App\Notifications;
 
-use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class WithCustomer extends Notification implements ShouldQueue
+class VerifyEmail extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * The token used to verify the email address.
      *
-     * @var Ticket
+     * @var string
      */
-    protected $ticket;
+    protected $token;
 
     /**
      * Create a new notification instance.
      *
-     * @param Ticket $ticket
+     * @param string $token
      * @return void
      */
-    public function __construct(Ticket $ticket)
+    public function __construct(string $token)
     {
-        $this->ticket = $ticket;
+        $this->token = $token;
     }
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -45,7 +43,7 @@ class WithCustomer extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -53,22 +51,22 @@ class WithCustomer extends Notification implements ShouldQueue
         $appName = config('app.name');
 
         return (new MailMessage)
-            ->subject("$appName - New Reply")
-            ->line("**Subject:** {$this->ticket->summary}")
-            ->line("**Response:** {$this->ticket->posts->first()->content}")
-            ->action('View Ticket', route('agent.tickets.show', $this->ticket));
+            ->subject("$appName - Verify Email Address")
+            ->line('Please click the button below to verify your email address:')
+            ->action('Verify Email Address', route('email.verify', $this->token));
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  User  $notifiable
+     * @param  User $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            'ticket_id' => $this->ticket->id,
+            'old_email' => $notifiable->getOriginal('email'),
+            'new_email' => $notifiable->getAttribute('email'),
         ];
     }
 }

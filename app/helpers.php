@@ -26,3 +26,34 @@ function markdown($text)
 {
     return (new ParsedownExtra)->text($text);
 }
+
+/**
+ * @param \Eloquent|null $model1
+ * @param \Eloquent|null $model2
+ * @return bool
+ */
+function match($model1, $model2)
+{
+    if (!$model1 || !$model2) {
+        return;
+    }
+
+    return $model1->getKey() === $model2->getKey();
+}
+
+/**
+ * Call the given Closure with the given value then return the value.
+ *
+ * @param  mixed $condition
+ * @param  mixed $value
+ * @param  callable $callback
+ * @return mixed
+ */
+function tap_if($condition, $value, $callback)
+{
+    if ($condition) {
+        $callback($value);
+    }
+
+    return $value;
+}

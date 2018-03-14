@@ -3,10 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\TicketUpdated;
-use App\Notifications\Tickets\Transferred;
+use App\Listeners\Concerns\QueuesTicketNotifications;
+use App\Notifications\Agent\TicketTransferred;
 
 class QueueDepartmentChangedEmail
 {
+    use QueuesTicketNotifications;
+
     /**
      * The application instance.
      *
@@ -27,17 +30,15 @@ class QueueDepartmentChangedEmail
     /**
      * Handle the event.
      *
+     * @param \App\Events\TicketUpdated $event
      * @return void
-     * @throws \Exception
      */
     public function handle(TicketUpdated $event)
     {
         $ticket = $event->ticket;
 
-        if ($ticket->isDirty('department_id') && $ticket->agent_id === null) {
-            foreach ($ticket->department->users as $user) {
-                $user->notify(new Transferred($ticket));
-            }
+        if ($ticket->isDirty('department_id')) {
+            $this->notifyAgentOrDepartment($ticket, new TicketTransferred($ticket));
         }
     }
 }
