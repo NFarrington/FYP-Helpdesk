@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Controller as AdminController;
+use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
@@ -65,6 +66,7 @@ class UserController extends AdminController
         return view('admin.users.edit')->with([
             'user' => $user,
             'roles' => Role::orderBy('id')->get(),
+            'departments' => Department::orderBy('name')->get(),
         ]);
     }
 
@@ -81,6 +83,7 @@ class UserController extends AdminController
             'name' => 'required|string|max:250',
             'email' => 'required|email',
             'roles' => 'array',
+            'departments' => 'array',
         ]);
 
         $user->fill($request->only('name', 'email'));
@@ -91,6 +94,7 @@ class UserController extends AdminController
             $user->password = Hash::make($password);
         }
         $user->roles()->sync($request->input('roles'));
+        $user->departments()->sync($request->input('departments'));
         $user->save();
 
         return redirect()->route('admin.users.index')->with('status', trans('user.updated'));
