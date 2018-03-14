@@ -1,4 +1,3 @@
-
 <div class="form-group">
     <label class="col-md-4 control-label">ID</label>
     <div class="col-md-6">
@@ -40,6 +39,14 @@
                 <strong>{{ $errors->first('description') }}</strong>
             </span>
         @endif
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-md-4 control-label">Users</label>
+    <div class="col-md-6">
+        <p class="form-control-static">You can add roles to individual users in the <a
+                    href="{{ route('admin.users.index') }}">users list</a>.</p>
     </div>
 </div>
 

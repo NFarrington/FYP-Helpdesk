@@ -70,3 +70,24 @@
         @endif
     </div>
 </div>
+
+<div class="form-group{{ $errors->has('departments') ? ' has-error' : '' }}">
+    <label for="departments" class="col-md-4 control-label">Departments</label>
+
+    <div class="col-md-6">
+        <select multiple id="departments" name="departments[]" class="form-control">
+            @foreach($departments as $department)
+                <option value="{{ $department->id }}"
+                        {{ collect(old('departments') ?: $user->departments->pluck('id'))->contains($department->id) ? 'selected' : ''}}>
+                    {{ $department->name }}
+                </option>
+            @endforeach
+        </select>
+
+        @if ($errors->has('departments'))
+            <span class="help-block">
+                <strong>{{ $errors->first('departments') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
