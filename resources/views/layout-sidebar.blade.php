@@ -48,7 +48,7 @@
                   v-bind:active="{{ (int) request()->route()->named('announcements.show', 'announcements.edit') }}"></nav-item>
     @endcomponent
 
-    @if(Auth::user()->hasRole(\App\Models\Role::agent()))
+    @can('agent')
         @component('layout-sidebar-group', ['sidebar' => $sidebar])
             <nav-item name="View Tickets"
                       class="{{ !$sidebar ? 'visible-xs' : '' }}"

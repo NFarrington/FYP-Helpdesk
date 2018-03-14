@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller as BaseController;
-use App\Models\Role;
 use Closure;
 
 abstract class Controller extends BaseController
@@ -18,7 +17,7 @@ abstract class Controller extends BaseController
         $this->middleware('auth');
 
         $this->middleware(function ($request, Closure $next) {
-            $this->authorize('has', Role::agent());
+            $this->authorize('agent');
 
             return $next($request);
         });

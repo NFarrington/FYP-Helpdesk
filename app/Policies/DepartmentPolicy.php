@@ -32,6 +32,6 @@ class DepartmentPolicy
      */
     public function submitTicket(User $user, Department $department)
     {
-        return $user->hasRole(Role::agent()) || $department->internal === false;
+        return $user->can('agent') || $department->internal === false;
     }
 }
