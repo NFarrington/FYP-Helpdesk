@@ -7,7 +7,7 @@
 
 @include('user-notifications.includes.notification-form', ['notifications' => \App\Services\NotificationService::USER_NOTIFICATIONS])
 
-@if($user->hasRole(\App\Models\Role::agent()))
+@can('agent')
     <hr>
     <h5>Agent Notifications</h5>
     @include('user-notifications.includes.notification-form', ['notifications' => \App\Services\NotificationService::AGENT_NOTIFICATIONS])

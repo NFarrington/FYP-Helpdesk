@@ -80,7 +80,7 @@ class SearchService extends Service
      */
     public function searchTickets($user, $searchQuery)
     {
-        $tickets = $user->hasRole(Role::agent())
+        $tickets = $user->can('agent')
             ? Ticket::query()
             : $user->tickets();
 
@@ -95,7 +95,7 @@ class SearchService extends Service
 
         $tickets = $tickets->get();
 
-        return $user->hasRole(Role::agent())
+        return $user->can('agent')
             ? $tickets->filter(function ($ticket) use ($user) {
                 return $user->can('viewAsAgent', $ticket);
             })
