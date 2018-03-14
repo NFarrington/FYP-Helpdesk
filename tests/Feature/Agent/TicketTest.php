@@ -136,6 +136,34 @@ class TicketTest extends TestCase
     }
 
     /**
+     * Test a submitted ticket can be reassigned.
+     *
+     * @return void
+     */
+    public function testTicketsCanBeReassigned()
+    {
+        $ticket = factory(Ticket::class)->states('open')->create(['department_id' => 1]);
+        $this->actingAs($this->user);
+
+        $this->get(route('agent.tickets.show', $ticket));
+
+        $department = 1;
+        $status = TicketStatus::closed()->first()->id;
+        $response = $this->put(route('agent.tickets.update', $ticket), [
+            'department' => $department,
+            'status' => $status,
+            'agent' => $this->user->id,
+        ]);
+
+        $response->assertRedirect(route('agent.tickets.show', $ticket));
+
+        $ticket = $ticket->fresh();
+        $this->assertEquals($department, $ticket->department->id);
+        $this->assertEquals($status, $ticket->status->id);
+        $this->assertEquals($this->user->id, $ticket->agent->id);
+    }
+
+    /**
      * Test a ticket's post can be updated.
      *
      * @return void
