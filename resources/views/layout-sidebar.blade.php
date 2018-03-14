@@ -74,6 +74,10 @@
                       class="{{ !$sidebar ? 'visible-xs' : '' }}"
                       route="{{ route('admin.permissions.index') }}"
                       v-bind:active="{{ (int) request()->route()->named('admin.permissions.*') }}"></nav-item>
+            <nav-item name="View Departments"
+                      class="{{ !$sidebar ? 'visible-xs' : '' }}"
+                      route="{{ route('admin.departments.index') }}"
+                      v-bind:active="{{ (int) request()->route()->named('admin.departments.*') }}"></nav-item>
         @endcomponent
     @endif
 @endguest
