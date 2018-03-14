@@ -26,7 +26,7 @@
                         @endforeach
                     </ul>
                 </td>
-                <td><a href="{{ route('admin.users.edit', $permission) }}">Edit</a></td>
+                <td><a href="{{ route('admin.permissions.edit', $permission) }}">Edit</a></td>
             </tr>
         @endforeach
     </table>
