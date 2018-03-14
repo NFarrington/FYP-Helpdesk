@@ -4,7 +4,6 @@
         <tr>
             <th>{{ __('permission.key.id') }}</th>
             <th>{{ __('permission.key.key') }}</th>
-            <th>{{ __('permission.key.default') }}</th>
             <th>{{ __('permission.key.name') }}</th>
             <th>{{ __('permission.key.description') }}</th>
             <th>{{ __('permission.key.roles') }}</th>
@@ -14,7 +13,6 @@
             <tr>
                 <td>#{{ $permission->id }}</td>
                 <td>{{ $permission->key }}</td>
-                <td><span class="glyphicon glyphicon-{{ $permission->default ? 'ok-sign' : 'remove-sign' }}"></span></td>
                 <td>{{ $permission->name }}</td>
                 <td>{{ $permission->description }}</td>
                 <td>

@@ -19,7 +19,7 @@ use Laravel\Passport\HasApiTokens;
  * @property string|null $password
  * @property string|null $remember_token
  * @property string|null $google2fa_secret
- * @property int|null $facebook_id
+ * @property string|null $facebook_id
  * @property array $facebook_data
  * @property string|null $google_id
  * @property array $google_data
@@ -30,8 +30,7 @@ use Laravel\Passport\HasApiTokens;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
  * @property-read \App\Models\EmailVerification $emailVerification
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[]
- *     $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SlackWebhook[] $slackWebhooks
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ticket[] $tickets
@@ -268,7 +267,7 @@ class User extends Authenticatable
             }
         }
 
-        return $permission->default || $permission->roles->filter(function ($role) {
+        return $permission->roles->filter(function ($role) {
             return $this->hasRole($role);
         })->isNotEmpty();
     }
