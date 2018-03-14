@@ -6,6 +6,7 @@ use App\Http\Controllers\Agent\Controller as AgentController;
 use App\Models\Department;
 use App\Models\Ticket;
 use App\Models\TicketStatus;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -79,9 +80,15 @@ class TicketController extends AgentController
         $this->authorize('update-as-agent', $ticket);
 
         $this->validate($request, [
-            'department' => 'required|integer|exists:departments,id',
-            'status' => 'required|integer|exists:ticket_statuses,id',
+            'department' => 'required|exists:departments,id',
+            'agent' => 'nullable|exists:users,id',
+            'status' => 'required|exists:ticket_statuses,id',
         ]);
+
+        $agent = User::find($request->input('agent'));
+        $ticket->agent_id = $agent && $agent->hasDepartment($request->input('department'))
+            ? $agent->id
+            : null;
 
         $ticket->department_id = $request->input('department');
         $ticket->status_id = $request->input('status');

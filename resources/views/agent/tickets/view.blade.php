@@ -166,6 +166,27 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('agent') ? ' has-error' : '' }}">
+                            <label for="agent" class="col-lg-2 control-label">Agent</label>
+
+                            <div class="col-lg-10">
+                                <select id="agent" name="agent" class="form-control">
+                                    <option value="">Unassigned</option>
+                                    @foreach($ticket->department->users as $user)
+                                        <option value="{{ $user->id }}"
+                                                {{ $user->id == (old('agent') ?: $ticket->agent_id) ? 'selected' : ''}}>
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('agent'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('agent') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
                             <label for="status" class="control-label col-lg-2">Status</label>
 
@@ -178,7 +199,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('status'))
+                                @if($errors->has('status'))
                                     <span class="help-block">
                                 <strong>{{ $errors->first('status') }}</strong>
                             </span>
