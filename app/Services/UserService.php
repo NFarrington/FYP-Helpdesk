@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Hash;
 
 class UserService extends Service
 {
@@ -34,8 +35,26 @@ class UserService extends Service
     public function getViewableBy(User $user)
     {
         return $user->can('view', User::class)
-            ? User::orderBy('id')->paginate(20)
+            ? User::query()->orderBy('id')->paginate(20)
             : new LengthAwarePaginator(collect([$user]), 1, 20);
+    }
+
+    /**
+     * Create a new user.
+     *
+     * @param array $attributes
+     * @return \App\Models\User
+     */
+    public function create(array $attributes)
+    {
+        $user = new User(array_only($attributes, ['name', 'email']));
+        $user->email_verified = true;
+        $user->password = Hash::make($attributes['password']);
+        $user->save();
+        $user->roles()->sync(array_get($attributes, 'roles'));
+        $user->departments()->sync(array_get($attributes, 'departments'));
+
+        return $user;
     }
 
     /**

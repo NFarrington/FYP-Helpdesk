@@ -42,6 +42,20 @@ class RoleService extends Service
     }
 
     /**
+     * Create a role.
+     *
+     * @param array $attributes
+     * @return \App\Models\Role
+     */
+    public function create(array $attributes)
+    {
+        $role = Role::create(array_only($attributes, ['key', 'name', 'description']));
+        $role->permissions()->sync(array_get($attributes, 'permissions'));
+
+        return $role;
+    }
+
+    /**
      * Update a role.
      *
      * @param Role $role

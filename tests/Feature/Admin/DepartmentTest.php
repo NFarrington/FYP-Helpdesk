@@ -47,7 +47,39 @@ class DepartmentTest extends TestCase
         $response = $this->get(route('admin.departments.index'));
 
         $response->assertStatus(200);
-        $response->assertSeeText($this->department->name);
+    }
+
+    public function testDepartmentCreatePageLoads()
+    {
+        $response = $this->get(route('admin.departments.create'));
+
+        $response->assertStatus(200);
+    }
+
+    public function testDepartmentCanBeCreated()
+    {
+        $department = factory(Department::class)->make();
+        $this->get(route('admin.departments.create'));
+        $response = $this->post(route('admin.departments.store'), [
+            'name' => $department->name,
+            'description' => $department->description,
+            'internal' => $department->internal,
+            'users' => [$this->user->id],
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('status', trans('department.created'));
+        $this->assertDatabaseHas('departments', [
+            'name' => $department->name,
+            'description' => $department->description,
+        ]);
+    }
+
+    public function testDepartmentShowPageRedirects()
+    {
+        $response = $this->get(route('admin.departments.show', $this->department));
+
+        $response->assertRedirect(route('admin.departments.edit', $this->department));
     }
 
     public function testDepartmentEditPageLoads()

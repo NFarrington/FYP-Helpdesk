@@ -43,7 +43,7 @@ class Role extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description',
+        'key', 'name', 'description',
     ];
 
     /**
@@ -91,5 +91,16 @@ class Role extends Model
     public function scopeAgent()
     {
         return $this->where('key', self::ROLE_AGENT)->first();
+    }
+
+    /**
+     * Set the role's key.
+     *
+     * @param $value
+     * @return void
+     */
+    public function setKeyAttribute($value)
+    {
+        $this->attributes['key'] = mb_strtolower($value);
     }
 }

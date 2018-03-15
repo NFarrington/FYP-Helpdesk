@@ -12,6 +12,7 @@ return [
         'permissions' => 'Permissions',
     ],
 
+    'created' => 'Role created.',
     'updated' => 'Role updated.',
 
 ];

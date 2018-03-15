@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\User;
 use App\Services\DepartmentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class DepartmentController extends Controller
 {
@@ -40,6 +41,53 @@ class DepartmentController extends Controller
 
         return view('admin.departments.index')
             ->with('departments', $departments);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.departments.create')->with([
+            'department' => new Department(),
+            'users' => User::has('roles')->orderBy('name')->get(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $attributes = $this->validate($request, [
+            'name' => 'required|string|max:250',
+            'description' => 'required|string|max:250',
+            'internal' => 'required|boolean',
+            'users' => 'array',
+        ]);
+
+        $this->service->create($attributes);
+
+        return redirect()->route('admin.departments.index')
+            ->with('status', trans('department.created'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Department $department
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Department $department)
+    {
+        Session::reflash();
+
+        return redirect()->route('admin.departments.edit', $department);
     }
 
     /**

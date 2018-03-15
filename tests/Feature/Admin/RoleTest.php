@@ -54,6 +54,40 @@ class RoleTest extends TestCase
         $response->assertSeeText($this->role->name);
     }
 
+    public function testRoleCreatePageLoads()
+    {
+        $response = $this->get(route('admin.roles.create'));
+
+        $response->assertStatus(200);
+    }
+
+    public function testRoleCanBeCreated()
+    {
+        $role = factory(Role::class)->make();
+        $this->get(route('admin.roles.create'));
+        $response = $this->post(route('admin.roles.store'), [
+            'key' => $role->key,
+            'name' => $role->name,
+            'description' => $role->description,
+            'permissions' => [],
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('status', trans('role.created'));
+        $this->assertDatabaseHas('roles', [
+            'key' => $role->key,
+            'name' => $role->name,
+            'description' => $role->description,
+        ]);
+    }
+
+    public function testRoleShowPageRedirects()
+    {
+        $response = $this->get(route('admin.roles.show', $this->role));
+
+        $response->assertRedirect(route('admin.roles.edit', $this->role));
+    }
+
     /**
      * Test the role edit page loads successfully.
      *
