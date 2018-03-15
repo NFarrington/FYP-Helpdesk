@@ -11,6 +11,7 @@ return [
         'users' => 'Users',
     ],
 
+    'created' => 'Department created.',
     'updated' => 'Department updated.',
 
 ];

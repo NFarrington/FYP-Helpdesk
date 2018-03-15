@@ -1,9 +1,11 @@
-<div class="form-group">
-    <label class="col-md-4 control-label">ID</label>
-    <div class="col-md-6">
-        <p class="form-control-static">#{{ $department->id }}</p>
+@if($department->exists)
+    <div class="form-group">
+        <label class="col-md-4 control-label">ID</label>
+        <div class="col-md-6">
+            <p class="form-control-static">#{{ $department->id }}</p>
+        </div>
     </div>
-</div>
+@endif
 
 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
     <label for="name" class="col-md-4 control-label">Name</label>
