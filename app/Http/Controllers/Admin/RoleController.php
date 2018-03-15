@@ -6,6 +6,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class RoleController extends Controller
 {
@@ -42,6 +43,53 @@ class RoleController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.roles.create')->with([
+            'role' => new Role(),
+            'permissions' => Permission::query()->orderBy('key')->get(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $attributes = $this->validate($request, [
+            'key' => 'required|string|max:50|unique:roles,key',
+            'name' => 'required|string|max:250|unique:roles,name',
+            'description' => 'required|string|max:250',
+            'permissions' => 'array',
+        ]);
+
+        $this->service->create($attributes);
+
+        return redirect()->route('admin.roles.index')
+            ->with('status', trans('role.created'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Role $role
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Role $role)
+    {
+        Session::reflash();
+
+        return redirect()->route('admin.roles.edit', $role);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Role $role
@@ -51,7 +99,7 @@ class RoleController extends Controller
     {
         return view('admin.roles.edit')->with([
             'role' => $role,
-            'permissions' => Permission::orderBy('key')->get(),
+            'permissions' => Permission::query()->orderBy('key')->get(),
         ]);
     }
 
@@ -65,7 +113,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250',
+            'name' => 'required|string|max:250|unique:roles,name',
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends AdminController
 {
@@ -45,6 +46,44 @@ class UserController extends AdminController
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.users.create')->with([
+            'user' => new User(),
+            'roles' => Role::query()->orderBy('id')->get(),
+            'departments' => Department::query()->orderBy('name')->get(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $attributes = $this->validate($request, [
+            'name' => 'required|string|max:250',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
+            'roles' => 'array',
+            'departments' => 'array',
+        ], [
+            'regex' => trans('passwords.requirements'),
+        ]);
+
+        $this->service->create($attributes);
+
+        return redirect()->route('admin.users.index')
+            ->with('status', trans('user.created'));
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param User $user
@@ -52,6 +91,8 @@ class UserController extends AdminController
      */
     public function show(User $user)
     {
+        Session::reflash();
+
         return redirect()->route('admin.users.edit', $user);
     }
 
@@ -65,8 +106,8 @@ class UserController extends AdminController
     {
         return view('admin.users.edit')->with([
             'user' => $user,
-            'roles' => Role::orderBy('id')->get(),
-            'departments' => Department::orderBy('name')->get(),
+            'roles' => Role::query()->orderBy('id')->get(),
+            'departments' => Department::query()->orderBy('name')->get(),
         ]);
     }
 
@@ -81,7 +122,7 @@ class UserController extends AdminController
     {
         $this->validate($request, [
             'name' => 'required|string|max:250',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'roles' => 'array',
             'departments' => 'array',
         ]);
@@ -97,6 +138,7 @@ class UserController extends AdminController
         $user->departments()->sync($request->input('departments'));
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('status', trans('user.updated'));
+        return redirect()->route('admin.users.index')
+            ->with('status', trans('user.updated'));
     }
 }

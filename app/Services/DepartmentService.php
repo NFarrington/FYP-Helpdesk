@@ -42,7 +42,21 @@ class DepartmentService extends Service
     }
 
     /**
-     * Update a permission.
+     * Create a new department.
+     *
+     * @param array $attributes
+     * @return \App\Models\Department
+     */
+    public function create(array $attributes)
+    {
+        $department = Department::create(array_only($attributes, ['name', 'description', 'internal']));
+        $department->users()->sync(array_get($attributes, 'users'));
+
+        return $department;
+    }
+
+    /**
+     * Update a department.
      *
      * @param \App\Models\Department $department
      * @param array $attributes
