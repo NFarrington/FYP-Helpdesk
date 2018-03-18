@@ -14,6 +14,12 @@
                   route="{{ route('home') }}"></nav-item>
     @endcomponent
 
+    @if($sidebar && (Auth::user()->can('admin') || Auth::user()->can('agent')))
+        <ul class="nav nav-sidebar">
+            <li class="dropdown-header">User Pages</li>
+        </ul>
+    @endif
+
     @component('layout-sidebar-group', ['sidebar' => $sidebar])
         <nav-item name="Create Ticket"
                   class="{{ !$sidebar ? 'visible-xs' : '' }}"
@@ -49,6 +55,11 @@
     @endcomponent
 
     @can('agent')
+        @if($sidebar)
+            <ul class="nav nav-sidebar">
+                <li class="dropdown-header">Agent Pages</li>
+            </ul>
+        @endif
         @component('layout-sidebar-group', ['sidebar' => $sidebar])
             <nav-item name="View Tickets"
                       class="{{ !$sidebar ? 'visible-xs' : '' }}"
@@ -60,7 +71,12 @@
         @endcomponent
     @endif
 
-    @if(Auth::user()->hasRole(\App\Models\Role::admin()))
+    @can('admin')
+        @if($sidebar)
+            <ul class="nav nav-sidebar">
+                <li class="dropdown-header">Admin Pages</li>
+            </ul>
+        @endif
         @component('layout-sidebar-group', ['sidebar' => $sidebar])
             <nav-item name="View Users"
                       class="{{ !$sidebar ? 'visible-xs' : '' }}"
