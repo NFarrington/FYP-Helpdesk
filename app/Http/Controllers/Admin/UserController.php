@@ -122,9 +122,12 @@ class UserController extends AdminController
     {
         $this->validate($request, [
             'name' => 'required|string|max:250',
-            'email' => 'required|email|unique:users,email',
+            'email' => "required|email|unique:users,email,{$user->id}",
+            'password' => 'nullable|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/',
             'roles' => 'array',
             'departments' => 'array',
+        ], [
+            'regex' => trans('passwords.requirements'),
         ]);
 
         $user->fill($request->only('name', 'email'));
