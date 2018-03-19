@@ -13,5 +13,9 @@ return [
 
     'created' => 'Department created.',
     'updated' => 'Department updated.',
+    'deleted' => 'Department deleted.',
+    'not-deleted' => [
+        'tickets' => 'Cannot delete department - there are currently tickets in this department.',
+    ],
 
 ];

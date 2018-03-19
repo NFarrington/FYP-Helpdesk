@@ -35,6 +35,18 @@ class RolePolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\Models\User $user
+     * @param \App\Models\Role $role
+     * @return mixed
+     */
+    public function delete(User $user, Role $role)
+    {
+        return $user->can('admin') && $role->key !== 'admin';
+    }
+
+    /**
      * Determine whether the user has the role.
      *
      * @param  \App\Models\User  $user

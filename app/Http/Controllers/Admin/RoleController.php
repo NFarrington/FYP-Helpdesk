@@ -113,7 +113,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250|unique:roles,name',
+            'name' => "required|string|max:250|unique:roles,name,{$role->id}",
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);
@@ -121,5 +121,25 @@ class RoleController extends Controller
         $this->service->update($role, $attributes);
 
         return redirect()->route('admin.roles.index')->with('status', trans('role.updated'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Role $role
+     * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
+     */
+    public function destroy(Role $role)
+    {
+        $this->authorize('delete', $role);
+
+        $role->users()->sync([]);
+        $role->permissions()->sync([]);
+        $role->delete();
+
+        return redirect()->route('admin.roles.index')
+            ->with('status', trans('role.deleted'));
     }
 }

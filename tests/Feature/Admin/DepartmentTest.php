@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Department;
 use App\Models\Role;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -108,5 +109,19 @@ class DepartmentTest extends TestCase
             'name' => $department->name,
             'description' => $department->description,
         ], $this->department->fresh()->toArray());
+    }
+
+    public function testDepartmentCanBeDeleted()
+    {
+        $this->department->tickets()->save(factory(Ticket::class)->make());
+        $response = $this->delete(route('admin.departments.destroy', $this->department));
+        $response->assertRedirect();
+        $response->assertSessionHas('error');
+
+        $this->department->tickets()->delete();
+        $response = $this->delete(route('admin.departments.destroy', $this->department));
+        $response->assertRedirect(route('admin.departments.index'));
+        $response->assertSessionHas('status', trans('department.deleted'));
+        $this->assertDatabaseMissing('departments', ['id' => $this->department->id]);
     }
 }

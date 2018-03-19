@@ -10,7 +10,7 @@
                 <td>{{ $key->name }}</td>
                 <td>{{ $key->created_at }}</td>
                 <td>
-                    <delete-resource route="{{ route('profile.api.destroy', $key) }}"></delete-resource>
+                    <delete-resource link-only route="{{ route('profile.api.destroy', $key) }}"></delete-resource>
                 </td>
             </tr>
         @endforeach

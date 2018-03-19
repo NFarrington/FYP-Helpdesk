@@ -125,4 +125,25 @@ class DepartmentController extends Controller
         return redirect()->route('admin.departments.index')
             ->with('status', trans('department.updated'));
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Department $department
+     * @return \Illuminate\Http\Response
+     * @throws \Exception
+     */
+    public function destroy(Department $department)
+    {
+        if ($department->tickets()->count() > 0) {
+            return redirect()->route('admin.departments.index')
+                ->with('error', trans('department.not-deleted.tickets'));
+        }
+
+        $department->users()->sync([]);
+        $department->delete();
+
+        return redirect()->route('admin.departments.index')
+            ->with('status', trans('department.deleted'));
+    }
 }

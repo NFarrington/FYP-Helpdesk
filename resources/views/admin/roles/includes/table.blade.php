@@ -1,4 +1,3 @@
-
 @if($roles->isNotEmpty())
     <table class="table table-hover {{ $roles->hasPages() ? 'table-bordered-bottom' : '' }}">
         <tr>
@@ -8,6 +7,7 @@
             <th>{{ __('role.key.description') }}</th>
             <th>{{ __('role.key.users') }}</th>
             <th>{{ __('role.key.permissions') }}</th>
+            <th></th>
             <th></th>
         </tr>
         @foreach($roles as $role)
@@ -35,6 +35,11 @@
                     </ul>
                 </td>
                 <td><a href="{{ route('admin.roles.edit', $role) }}">Edit</a></td>
+                <td>
+                    @can('delete', $role)
+                        <delete-resource link-only route="{{ route('admin.roles.destroy', $role) }}"></delete-resource>
+                    @endcan
+                </td>
             </tr>
         @endforeach
     </table>
