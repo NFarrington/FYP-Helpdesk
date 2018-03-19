@@ -45,6 +45,31 @@ class UserTest extends TestCase
         $response->assertSeeText(e($this->user->name));
     }
 
+    public function testUserCreatePageLoads()
+    {
+        $response = $this->get(route('admin.users.create'));
+
+        $response->assertStatus(200);
+    }
+
+    public function testUserCanBeCreated()
+    {
+        $user = factory(User::class)->make();
+        $this->get(route('admin.users.create'));
+        $response = $this->post(route('admin.users.store'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => 'Password1234',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('status', trans('user.created'));
+        $this->assertDatabaseHas('users', [
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+    }
+
     /**
      * Test the user show page redirects successfully.
      *

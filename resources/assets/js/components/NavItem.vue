@@ -8,7 +8,7 @@
         props: ['route', 'name', 'active'],
         computed: {
             isActive: function () {
-                return this.active || window.location.href.replace(/\/$/, '') === this.route;
+                return this.active || window.location.href.replace(/(\/)?(\?.*)?$/, '') === this.route;
             }
         }
     }

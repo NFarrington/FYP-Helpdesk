@@ -99,12 +99,12 @@ class TicketServiceTest extends TestCase
         factory(Department::class)->states('external')->create();
 
         $user = mock(User::class);
-        $user->allows(['hasRole' => true]);
+        $user->allows(['can' => true]);
         $viewable = $this->service->getSubmittableDepartments($user);
         $this->assertEquals(2, $viewable->count());
 
         $user = mock(User::class);
-        $user->allows(['hasRole' => false]);
+        $user->allows(['can' => false]);
         $viewable = $this->service->getSubmittableDepartments($user);
         $this->assertEquals(1, $viewable->count());
     }

@@ -33,6 +33,13 @@ class Department extends Model
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'description', 'internal'];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool

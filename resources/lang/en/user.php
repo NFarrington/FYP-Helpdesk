@@ -10,12 +10,14 @@ return [
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
 
+        'departments' => 'Departments',
         'roles' => 'Roles',
     ],
 
     'email.invalid_token' => 'Invalid token.',
     'email.verified' => 'Email verified successfully!',
     'verification_sent' => 'Please check your email to verify your email address.',
+    'created' => 'User created.',
     'updated' => 'User updated.',
 
 ];

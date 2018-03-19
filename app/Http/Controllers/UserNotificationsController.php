@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
@@ -72,7 +71,7 @@ class UserNotificationsController extends Controller
             $rules["{$notification}_slack"] = 'nullable|exists:slack_webhooks,id';
         }
 
-        if ($request->user()->hasRole(Role::agent())) {
+        if ($request->user()->can('agent')) {
             foreach (NotificationService::AGENT_NOTIFICATIONS as $index => $notification) {
                 $rules["{$notification}_email"] = 'required|boolean';
                 $rules["{$notification}_slack"] = 'nullable|exists:slack_webhooks,id';

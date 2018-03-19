@@ -27,4 +27,26 @@ class UserPolicy
 
         return $user->id === $model->id || $isAdmin;
     }
+
+    /**
+     * Determine whether a user is an admin.
+     *
+     * @param \App\Models\User $user
+     * @return bool
+     */
+    public function admin(User $user)
+    {
+        return $user->hasRole(Role::admin());
+    }
+
+    /**
+     * Determine whether a user is an agent.
+     *
+     * @param \App\Models\User $user
+     * @return bool
+     */
+    public function agent(User $user)
+    {
+        return $user->roles->isNotEmpty();
+    }
 }

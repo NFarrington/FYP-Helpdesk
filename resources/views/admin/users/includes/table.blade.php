@@ -7,8 +7,7 @@
             <th>{{ __('user.key.email') }}</th>
             <th>{{ __('user.key.email_verified') }}</th>
             <th>{{ __('user.key.roles') }}</th>
-            <th>{{ __('user.key.created_at') }}</th>
-            <th>{{ __('user.key.updated_at') }}</th>
+            <th>{{ __('user.key.departments') }}</th>
             <th></th>
         </tr>
         @foreach($users as $user)
@@ -26,8 +25,15 @@
                         @endforeach
                     </ul>
                 </td>
-                <td>{{ $user->created_at }}</td>
-                <td>{{ $user->updated_at }}</td>
+                <td>
+                    <ul class="list-unstyled">
+                        @foreach($user->departments as $department)
+                            <li>
+                                <a href="{{ route('admin.departments.edit', $department) }}">{{ $department->name }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </td>
                 <td><a href="{{ route('admin.users.edit', $user) }}">Edit</a></td>
             </tr>
         @endforeach

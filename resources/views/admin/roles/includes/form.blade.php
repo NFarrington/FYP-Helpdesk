@@ -1,15 +1,27 @@
-
-<div class="form-group">
-    <label class="col-md-4 control-label">ID</label>
-    <div class="col-md-6">
-        <p class="form-control-static">#{{ $role->id }}</p>
+@if($role->exists)
+    <div class="form-group">
+        <label class="col-md-4 control-label">ID</label>
+        <div class="col-md-6">
+            <p class="form-control-static">#{{ $role->id }}</p>
+        </div>
     </div>
-</div>
+@endif
 
 <div class="form-group">
-    <label class="col-md-4 control-label">Key</label>
+    <label for="key" class="col-md-4 control-label">Key</label>
     <div class="col-md-6">
-        <p class="form-control-static">{{ $role->key }}</p>
+        @if($role->exists)
+            <p class="form-control-static">{{ $role->key }}</p>
+        @else
+            <input id="key" type="text" class="form-control" name="key"
+                   value="{{ old('key') ?: $role->key }}" required autofocus>
+
+            @if ($errors->has('key'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('key') }}</strong>
+                </span>
+            @endif
+        @endif
     </div>
 </div>
 
@@ -18,7 +30,7 @@
 
     <div class="col-md-6">
         <input id="name" type="text" class="form-control" name="name"
-               value="{{ old('name') ?: $role->name }}" required autofocus>
+               value="{{ old('name') ?: $role->name }}" required {{ $role->exists ? 'autofocus' : '' }}>
 
         @if ($errors->has('name'))
             <span class="help-block">
@@ -40,6 +52,14 @@
                 <strong>{{ $errors->first('description') }}</strong>
             </span>
         @endif
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-md-4 control-label">Users</label>
+    <div class="col-md-6">
+        <p class="form-control-static">You can add roles to individual users in the <a
+                    href="{{ route('admin.users.index') }}">users list</a>.</p>
     </div>
 </div>
 

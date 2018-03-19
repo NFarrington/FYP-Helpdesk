@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
@@ -67,12 +66,14 @@ class TicketService extends Service
         $department = $this->departmentRepo->getById($attributes['department_id']);
         $this->authorizeForUser($user, 'submit-ticket', $department);
 
-        $ticket = $user->tickets()->make(array_only($attributes, 'summary')); /* @var Ticket $ticket */
+        $ticket = $user->tickets()->make(array_only($attributes, 'summary'));
+        /* @var Ticket $ticket */
         $ticket->department()->associate($department);
         $ticket->status()->associate(TicketStatus::withAgent()->orderBy('id')->first());
         $ticket->save();
 
-        $ticketPost = TicketPost::make(array_only($attributes, 'content')); /* @var TicketPost $ticketPost */
+        $ticketPost = TicketPost::make(array_only($attributes, 'content'));
+        /* @var TicketPost $ticketPost */
         $ticketPost->user()->associate($user);
         $ticketPost->ticket()->associate($ticket);
         $ticketPost->save();
@@ -133,7 +134,7 @@ class TicketService extends Service
      */
     public function getSubmittableDepartments(User $user)
     {
-        return $user->hasRole(Role::agent())
+        return $user->can('agent')
             ? $this->departmentRepo->getAll()
             : $this->departmentRepo->getExternal();
     }
