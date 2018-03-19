@@ -8,6 +8,7 @@
             <th>{{ __('department.key.internal') }}</th>
             <th>{{ __('department.key.users') }}</th>
             <th></th>
+            <th></th>
         </tr>
         @foreach($departments as $department)
             <tr>
@@ -25,6 +26,9 @@
                     </ul>
                 </td>
                 <td><a href="{{ route('admin.departments.edit', $department) }}">Edit</a></td>
+                <td>
+                    <delete-resource link-only route="{{ route('admin.departments.destroy', $department) }}"></delete-resource>
+                </td>
             </tr>
         @endforeach
     </table>
