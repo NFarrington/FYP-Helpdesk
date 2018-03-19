@@ -19,10 +19,12 @@ use App\Policies\RolePolicy;
 use App\Policies\SlackWebhookPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\TicketPostPolicy;
+use App\Policies\TokenPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
+use Laravel\Passport\Token;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         SlackWebhook::class => SlackWebhookPolicy::class,
         Ticket::class => TicketPolicy::class,
         TicketPost::class => TicketPostPolicy::class,
+        Token::class => TokenPolicy::class,
         User::class => UserPolicy::class,
     ];
 
@@ -54,6 +57,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
 
+        Gate::define('admin', UserPolicy::class.'@admin');
         Gate::define('agent', UserPolicy::class.'@agent');
     }
 }

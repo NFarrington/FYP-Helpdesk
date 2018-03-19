@@ -20,8 +20,16 @@
                 @else
                     <nav-item name="Dashboard" class="hidden-xs" route="{{ route('home') }}"></nav-item>
                     @include('layout-sidebar', ['sidebar' => false])
-                    <nav-item name="Profile" route="{{ route('profile.show') }}"></nav-item>
-                    <nav-item name="Notification Settings" route="{{ route('profile.notifications.show') }}"></nav-item>
+                    <li class="dropdown{{ Request::is('profile*') ? ' active' : '' }}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Settings <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <nav-item name="Profile" route="{{ route('profile.show') }}"></nav-item>
+                            <nav-item name="Notifications" route="{{ route('profile.notifications.show') }}"></nav-item>
+                            <nav-item name="API" route="{{ route('profile.api.index') }}"></nav-item>
+                        </ul>
+                    </li>
                     <li>
                         <a href="{{ route('logout') }}"
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
