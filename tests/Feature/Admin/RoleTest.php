@@ -124,4 +124,13 @@ class RoleTest extends TestCase
             'description' => $role->description,
         ], $this->role->fresh()->toArray());
     }
+
+    public function testRoleCanBeDeleted()
+    {
+        $response = $this->delete(route('admin.roles.destroy', $this->role));
+
+        $response->assertRedirect(route('admin.roles.index'));
+        $response->assertSessionHas('status', trans('role.deleted'));
+        $this->assertDatabaseMissing('roles', ['id' => $this->role->id]);
+    }
 }
