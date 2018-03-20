@@ -35,7 +35,7 @@ class UserNotificationsController extends Controller
     public function store(Request $request)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250',
+            'name' => 'required|string|max:50',
             'uri' => 'required|url|max:250',
             'recipient' => 'required|string|max:250',
         ]);
