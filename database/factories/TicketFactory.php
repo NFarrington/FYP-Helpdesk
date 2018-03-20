@@ -11,7 +11,9 @@ $factory->define(Ticket::class, function (Faker $faker) {
         'status_id' => function () {
             return \App\Models\TicketStatus::inRandomOrder()->first()->id;
         },
-        'user_id' => factory(App\Models\User::class)->create()->id,
+        'user_id' => function () {
+            return factory(App\Models\User::class)->create()->id;
+        },
         'summary' => $faker->sentence(),
     ];
 });
