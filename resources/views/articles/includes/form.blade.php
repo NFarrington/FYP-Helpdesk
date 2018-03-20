@@ -1,4 +1,3 @@
-
 <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
     <label for="title" class="col-md-4 control-label">Title</label>
 
@@ -34,7 +33,8 @@
 
     <div class="col-md-3">
         <input id="visible-from-date" type="date" class="form-control" name="visible_from_date"
-               value="{{ old('visible_from_date') ?: ($article->visible_from ? $article->visible_from->toDateString() : '') }}" maxlength="250" placeholder="yyyy-mm-dd">
+               value="{{ old('visible_from_date') ?: ($article->visible_from ? $article->visible_from->toDateString() : '') }}"
+               maxlength="250" placeholder="yyyy-mm-dd">
         @if ($errors->has('visible_from_date'))
             <span class="help-block">
                 <strong>{{ $errors->first('visible_from_date') }}</strong>
@@ -43,7 +43,8 @@
     </div>
     <div class="col-md-3">
         <input id="visible-from-time" type="time" class="form-control" name="visible_from_time"
-               value="{{ old('visible_from_time') ?: ($article->visible_from ? $article->visible_from->format('H:i') : '') }}" maxlength="250" placeholder="hh:mm">
+               value="{{ old('visible_from_time') ?: ($article->visible_from ? $article->visible_from->format('H:i') : '') }}"
+               maxlength="250" placeholder="hh:mm">
         @if ($errors->has('visible_from_time'))
             <span class="help-block">
                 <strong>{{ $errors->first('visible_from_time') }}</strong>
@@ -57,7 +58,8 @@
 
     <div class="col-md-3">
         <input id="visible-to-date" type="date" class="form-control" name="visible_to_date"
-               value="{{ old('visible_to_date') ?: ($article->visible_to ? $article->visible_to->toDateString() : '') }}" maxlength="250" placeholder="yyyy-mm-dd">
+               value="{{ old('visible_to_date') ?: ($article->visible_to ? $article->visible_to->toDateString() : '') }}"
+               maxlength="250" placeholder="yyyy-mm-dd">
         @if ($errors->has('visible_to_date'))
             <span class="help-block">
                 <strong>{{ $errors->first('visible_to_date') }}</strong>
@@ -66,7 +68,8 @@
     </div>
     <div class="col-md-3">
         <input id="visible-to-time" type="time" class="form-control" name="visible_to_time"
-               value="{{ old('visible_to_time') ?: ($article->visible_to ? $article->visible_to->format('H:i') : '') }}" maxlength="250" placeholder="hh:mm">
+               value="{{ old('visible_to_time') ?: ($article->visible_to ? $article->visible_to->format('H:i') : '') }}"
+               maxlength="250" placeholder="hh:mm">
         @if ($errors->has('visible_to_time'))
             <span class="help-block">
                 <strong>{{ $errors->first('visible_to_time') }}</strong>

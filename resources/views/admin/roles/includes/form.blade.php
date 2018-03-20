@@ -14,7 +14,7 @@
             <p class="form-control-static">{{ $role->key }}</p>
         @else
             <input id="key" type="text" class="form-control" name="key"
-                   value="{{ old('key') ?: $role->key }}" required autofocus>
+                   value="{{ old('key') ?: $role->key }}" maxlength="50" required autofocus>
 
             @if ($errors->has('key'))
                 <span class="help-block">
@@ -30,7 +30,7 @@
 
     <div class="col-md-6">
         <input id="name" type="text" class="form-control" name="name"
-               value="{{ old('name') ?: $role->name }}" required {{ $role->exists ? 'autofocus' : '' }}>
+               value="{{ old('name') ?: $role->name }}" maxlength="100" required {{ $role->exists ? 'autofocus' : '' }}>
 
         @if ($errors->has('name'))
             <span class="help-block">
@@ -45,7 +45,7 @@
 
     <div class="col-md-6">
         <input id="description" type="text" class="form-control" name="description"
-               value="{{ old('description') ?: $role->description }}">
+               value="{{ old('description') ?: $role->description }}" maxlength="250">
 
         @if ($errors->has('description'))
             <span class="help-block">

@@ -12,7 +12,7 @@
 
     <div class="col-md-6">
         <input id="name" type="text" class="form-control" name="name"
-               value="{{ old('name') ?: $department->name }}" required autofocus>
+               value="{{ old('name') ?: $department->name }}" maxlength="50" required autofocus>
 
         @if ($errors->has('name'))
             <span class="help-block">
@@ -27,7 +27,7 @@
 
     <div class="col-md-6">
         <input id="description" type="text" class="form-control" name="description"
-               value="{{ old('description') ?: $department->description }}">
+               value="{{ old('description') ?: $department->description }}" maxlength="250">
 
         @if ($errors->has('description'))
             <span class="help-block">

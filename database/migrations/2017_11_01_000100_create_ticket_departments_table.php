@@ -15,7 +15,7 @@ class CreateTicketDepartmentsTable extends Migration
     {
         Schema::create('ticket_departments', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            $table->string('name', 25);
+            $table->string('name', 50);
             $table->string('description', 250);
             $table->boolean('internal');
         });

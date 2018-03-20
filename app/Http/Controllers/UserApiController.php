@@ -60,7 +60,7 @@ class UserApiController extends Controller
     public function store(Request $request)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250',
+            'name' => 'required|string|max:100',
         ]);
 
         $token = $this->service->create($attributes, $request->user());
