@@ -142,3 +142,10 @@ ul.list-unstyled, ol.list-unstyled {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.panel {
+  > .table-responsive > .table > tbody:first-child > tr:first-child th,
+  > .table-responsive > .table > tbody:first-child > tr:first-child td {
+    border-top: 0;
+  }
+}
