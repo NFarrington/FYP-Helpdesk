@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -11,9 +9,9 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Models\User::class, 20)->create();
+        factory(\App\Models\User::class, 50)->create();
 
-        $users = factory(\App\Models\User::class, 10)->create();
+        $users = factory(\App\Models\User::class, 25)->create();
         foreach ($users as $user) {
             $user->roles()->attach(\App\Models\Role::agent());
             if ($user->id % 2 == 0) {
@@ -21,7 +19,7 @@ class UsersTableSeeder extends Seeder
             }
         }
 
-        $users = factory(\App\Models\User::class, 5)->create();
+        $users = factory(\App\Models\User::class, 25)->create();
         foreach ($users as $user) {
             $user->roles()->attach(\App\Models\Role::admin());
             if ($user->id % 2 == 0) {

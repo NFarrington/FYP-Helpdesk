@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 class DepartmentsTableSeeder extends Seeder
 {
     /**
@@ -11,7 +9,7 @@ class DepartmentsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Models\Department::class, 10)->states('internal')->create();
-        factory(\App\Models\Department::class, 10)->states('external')->create();
+        factory(\App\Models\Department::class, 20)->states('internal')->create();
+        factory(\App\Models\Department::class, 20)->states('external')->create();
     }
 }

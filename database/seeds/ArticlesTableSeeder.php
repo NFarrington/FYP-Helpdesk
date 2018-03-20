@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 class ArticlesTableSeeder extends Seeder
 {
     /**
@@ -11,7 +9,7 @@ class ArticlesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Models\Article::class, 10)->states('unpublished')->create();
-        factory(\App\Models\Article::class, 10)->states('published')->create();
+        factory(\App\Models\Article::class, 20)->states('unpublished')->create();
+        factory(\App\Models\Article::class, 20)->states('published')->create();
     }
 }
