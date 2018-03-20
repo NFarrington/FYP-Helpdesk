@@ -134,3 +134,11 @@ ul.list-unstyled, ol.list-unstyled {
     width: ($screen-lg-min/3);
   }
 }
+
+.text-limit {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

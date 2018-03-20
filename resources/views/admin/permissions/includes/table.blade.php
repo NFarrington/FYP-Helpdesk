@@ -19,7 +19,7 @@
                         <ul class="list-unstyled">
                             @foreach($permission->roles as $role)
                                 <li>
-                                    <a href="{{ route('admin.roles.edit', $role) }}">{{ $role->name }}</a>
+                                    <a href="{{ route('admin.roles.edit', $role) }}" class="text-limit">{{ $role->name }}</a>
                                 </li>
                             @endforeach
                         </ul>

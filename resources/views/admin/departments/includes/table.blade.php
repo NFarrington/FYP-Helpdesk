@@ -22,7 +22,9 @@
                         <ul class="list-unstyled">
                             @foreach($department->users as $user)
                                 <li>
-                                    <a href="{{ route('admin.users.edit', $user) }}">{{ $user->name }}</a>
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-limit">
+                                        {{ $user->name }}
+                                    </a>
                                 </li>
                             @endforeach
                         </ul>

@@ -22,7 +22,7 @@
                         <ul class="list-unstyled">
                             @foreach($user->roles as $role)
                                 <li>
-                                    <a href="{{ route('admin.roles.edit', $role) }}">{{ $role->name }}</a>
+                                    <a href="{{ route('admin.roles.edit', $role) }}" class="text-limit">{{ $role->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -31,7 +31,7 @@
                         <ul class="list-unstyled">
                             @foreach($user->departments as $department)
                                 <li>
-                                    <a href="{{ route('admin.departments.edit', $department) }}">{{ $department->name }}</a>
+                                    <a href="{{ route('admin.departments.edit', $department) }}" class="text-limit">{{ $department->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
