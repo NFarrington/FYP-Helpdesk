@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTicketDepartmentsTable extends Migration
+class CreateDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTicketDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_departments', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->tinyIncrements('id');
             $table->string('name', 50);
             $table->string('description', 250);
@@ -28,6 +28,6 @@ class CreateTicketDepartmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ticket_departments');
+        Schema::dropIfExists('departments');
     }
 }

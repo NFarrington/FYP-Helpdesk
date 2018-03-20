@@ -2,9 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class SeedTicketDepartmentsTable extends Migration
+class SeedDepartmentsTable extends Migration
 {
-    private $ticket_departments = [
+    private $departments = [
         ['name' => 'Sales', 'description' => 'Sales enquiries', 'internal' => 0],
         ['name' => 'Support', 'description' => 'Technical support', 'internal' => 0],
     ];
@@ -16,7 +16,7 @@ class SeedTicketDepartmentsTable extends Migration
      */
     public function up()
     {
-        DB::table('ticket_departments')->insert($this->ticket_departments);
+        DB::table('departments')->insert($this->departments);
     }
 
     /**
@@ -26,8 +26,8 @@ class SeedTicketDepartmentsTable extends Migration
      */
     public function down()
     {
-        $statusNames = collect($this->ticket_departments)->pluck('name');
+        $statusNames = collect($this->departments)->pluck('name');
 
-        DB::table('ticket_departments')->whereIn('name', $statusNames)->delete();
+        DB::table('departments')->whereIn('name', $statusNames)->delete();
     }
 }

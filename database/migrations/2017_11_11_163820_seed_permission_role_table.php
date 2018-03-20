@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class SeedPermissionRoleTable extends Migration
@@ -11,14 +9,16 @@ class SeedPermissionRoleTable extends Migration
      *
      * @return array
      */
-    private function administratorRolePermissions()
+    private function getRolePermissions()
     {
-        $roleID = DB::table('roles')->where('name', 'Administrator')->first()->id;
-        $permissionIDs = DB::table('permissions')->pluck('id');
+        $adminId = DB::table('roles')->where('key', 'admin')->first()->id;
+        $agentId = DB::table('roles')->where('key', 'agent')->first()->id;
+        $permissionIds = DB::table('permissions')->pluck('id');
 
         $rolePermissions = [];
-        foreach ($permissionIDs as $permissionID) {
-            $rolePermissions[] = ['role_id' => $roleID, 'permission_id' => $permissionID];
+        foreach ($permissionIds as $permissionId) {
+            $rolePermissions[] = ['role_id' => $adminId, 'permission_id' => $permissionId];
+            $rolePermissions[] = ['role_id' => $agentId, 'permission_id' => $permissionId];
         }
 
         return $rolePermissions;
@@ -31,7 +31,7 @@ class SeedPermissionRoleTable extends Migration
      */
     public function up()
     {
-        DB::table('permission_role')->insert($this->administratorRolePermissions());
+        DB::table('permission_role')->insert($this->getRolePermissions());
     }
 
     /**
@@ -41,7 +41,7 @@ class SeedPermissionRoleTable extends Migration
      */
     public function down()
     {
-        foreach ($this->administratorRolePermissions() as $rolePermission) {
+        foreach ($this->getRolePermissions() as $rolePermission) {
             DB::table('permission_role')->where($rolePermission)->delete();
         }
     }
