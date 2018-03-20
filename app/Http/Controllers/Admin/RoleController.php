@@ -65,7 +65,7 @@ class RoleController extends Controller
     {
         $attributes = $this->validate($request, [
             'key' => 'required|string|max:50|unique:roles,key',
-            'name' => 'required|string|max:250|unique:roles,name',
+            'name' => 'required|string|max:100|unique:roles,name',
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);
@@ -113,7 +113,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $attributes = $this->validate($request, [
-            'name' => "required|string|max:250|unique:roles,name,{$role->id}",
+            'name' => "required|string|max:100|unique:roles,name,{$role->id}",
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);
