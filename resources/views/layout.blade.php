@@ -9,7 +9,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - {{ title_case(str_replace('/', ' / ', Request::decodedPath())) }}</title>
+    <title>{{ config('app.name', 'Laravel') }} - {{ breadcrumbs() }}</title>
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
