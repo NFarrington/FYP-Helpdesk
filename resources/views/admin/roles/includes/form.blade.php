@@ -7,7 +7,7 @@
     </div>
 @endif
 
-<div class="form-group">
+<div class="form-group{{ $errors->has('key') ? ' has-error' : '' }}">
     <label for="key" class="col-md-4 control-label">Key</label>
     <div class="col-md-6">
         @if($role->exists)
