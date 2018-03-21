@@ -3,6 +3,7 @@
         <table class="table table-hover">
             <tr>
                 <th>{{ __('models/announcement.key.title') }}</th>
+                <th>{{ __('models/announcement.key.status') }}</th>
                 <th>{{ __('models/announcement.key.created_at') }}</th>
                 <th>{{ __('models/announcement.key.updated_at') }}</th>
                 <th></th>
@@ -10,6 +11,7 @@
             @foreach($announcements as $announcement)
                 <tr>
                     <td class="wrap">{{ $announcement->title }}</td>
+                    <td>{{ $announcement->getStatusString() }}</td>
                     <td>{{ $announcement->created_at }}</td>
                     <td>{{ $announcement->updated_at }}</td>
                     <td><a href="{{ route('announcements.show', $announcement) }}">View</a></td>
