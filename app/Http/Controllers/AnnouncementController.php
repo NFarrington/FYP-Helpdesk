@@ -37,7 +37,9 @@ class AnnouncementController extends Controller
     {
         $announcements = $this->service->getViewableBy($request->user());
 
-        return view('announcements.index')->with('announcements', $announcements);
+        return view('announcements.index')->with([
+            'announcements' => $this->paginate($announcements, 20, ['path' => route('announcements.index')]),
+        ]);
     }
 
     /**

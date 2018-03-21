@@ -42,7 +42,9 @@ class UserController extends AdminController
     {
         $users = $this->service->getViewableBy($request->user());
 
-        return view('admin.users.index')->with('users', $users);
+        return view('admin.users.index')->with([
+            'users' => $this->paginate($users, 20, ['path' => route('admin.users.index')]),
+        ]);
     }
 
     /**
@@ -114,8 +116,8 @@ class UserController extends AdminController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User   $user
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)

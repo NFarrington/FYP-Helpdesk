@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Department;
 use App\Models\User;
 use App\Repositories\DepartmentRepository;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class DepartmentService extends Service
 {
@@ -30,15 +29,13 @@ class DepartmentService extends Service
      * Get all model instances the user can view.
      *
      * @param User $user
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]
      */
     public function getViewableBy(User $user)
     {
-        $permissions = $user->can('view', Department::class)
+        return $user->can('view', Department::class)
             ? $this->repository->getAll()
             : collect();
-
-        return new LengthAwarePaginator($permissions, $permissions->count(), 20);
     }
 
     /**

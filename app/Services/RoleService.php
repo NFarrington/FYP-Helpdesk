@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Role;
 use App\Models\User;
 use App\Repositories\RoleRepository;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class RoleService extends Service
 {
@@ -30,15 +29,13 @@ class RoleService extends Service
      * Get all model instances the user can view.
      *
      * @param User $user
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]
      */
     public function getViewableBy(User $user)
     {
-        $roles = $user->can('view', Role::class)
+        return $user->can('view', Role::class)
             ? $this->repository->getAll()
             : collect();
-
-        return new LengthAwarePaginator($roles, $roles->count(), 20);
     }
 
     /**

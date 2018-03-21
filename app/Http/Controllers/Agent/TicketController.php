@@ -29,8 +29,8 @@ class TicketController extends AgentController
         });
 
         return view('agent.tickets.index')->with([
-            'assigned' => $tickets->get('assigned') ?: collect(),
-            'open' => $tickets->get('open') ?: collect(),
+            'assigned' => $this->paginate($tickets->get('assigned', collect()), 10, ['pageName' => 'assigned', 'path' => route('agent.tickets.index')]),
+            'open' => $this->paginate($tickets->get('open', collect()), 10, ['pageName' => 'open', 'path' => route('agent.tickets.index')]),
         ]);
     }
 
@@ -45,7 +45,7 @@ class TicketController extends AgentController
         $closedTickets = Ticket::managedBy($request->user())->closed()->get();
 
         return view('agent.tickets.index-closed')->with([
-            'closed' => $closedTickets,
+            'closed' => $this->paginate($closedTickets, 20, ['path' => route('agent.tickets.index.closed')]),
         ]);
     }
 
