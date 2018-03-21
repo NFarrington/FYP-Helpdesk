@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
-class UserNotificationsController extends Controller
+class UserNotificationController extends Controller
 {
     /**
      * The service.

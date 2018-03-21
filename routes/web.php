@@ -53,9 +53,9 @@ Route::get('tickets/{ticket}/posts/{post}/attachment', 'TicketPostController@vie
 
 Route::get('profile', 'ProfileController@show')->name('profile.show');
 Route::put('profile', 'ProfileController@update')->name('profile.update');
-Route::get('profile/notifications', 'UserNotificationsController@show')->name('profile.notifications.show');
-Route::post('profile/notifications', 'UserNotificationsController@store')->name('profile.notifications.store');
-Route::put('profile/notifications', 'UserNotificationsController@update')->name('profile.notifications.update');
+Route::get('profile/notifications', 'UserNotificationController@show')->name('profile.notifications.show');
+Route::post('profile/notifications', 'UserNotificationController@store')->name('profile.notifications.store');
+Route::put('profile/notifications', 'UserNotificationController@update')->name('profile.notifications.update');
 Route::resource('profile/api', 'UserApiController', ['as' => 'profile', 'parameters' => ['api' => 'token']]);
 
 Route::get('settings/two-factor', 'SettingsController@show2FAForm')->name('settings.2fa');
