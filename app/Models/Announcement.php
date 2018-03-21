@@ -123,6 +123,8 @@ class Announcement extends Model
                 return 'Published';
             case self::STATUS_ACTIVE:
                 return 'Active';
+            default:
+                return ''; // @codeCoverageIgnore
         }
     }
 }
