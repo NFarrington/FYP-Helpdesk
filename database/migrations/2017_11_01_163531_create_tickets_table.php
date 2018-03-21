@@ -18,10 +18,12 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->string('summary', 250);
             $table->unsignedTinyInteger('department_id');
+            $table->unsignedInteger('agent_id')->nullable();
             $table->unsignedTinyInteger('status_id');
             $table->timestamps();
 
-            $table->foreign('department_id')->references('id')->on('ticket_departments');
+            $table->foreign('agent_id')->references('id')->on('users');
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->foreign('status_id')->references('id')->on('ticket_statuses');
             $table->foreign('user_id')->references('id')->on('users');
         });

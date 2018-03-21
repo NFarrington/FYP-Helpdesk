@@ -108,4 +108,23 @@ class Announcement extends Model
         return $this->status === self::STATUS_PUBLISHED
             || $this->status === self::STATUS_ACTIVE;
     }
+
+    /**
+     * The string representation of the current status.
+     *
+     * @return string
+     */
+    public function getStatusString()
+    {
+        switch ($this->status) {
+            case self::STATUS_UNPUBLISHED:
+                return 'Unpublished';
+            case self::STATUS_PUBLISHED:
+                return 'Published';
+            case self::STATUS_ACTIVE:
+                return 'Active';
+            default:
+                return ''; // @codeCoverageIgnore
+        }
+    }
 }

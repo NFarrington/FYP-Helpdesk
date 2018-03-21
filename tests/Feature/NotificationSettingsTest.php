@@ -38,8 +38,8 @@ class NotificationSettingsTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\UserNotificationsController::__construct()
-     * @covers \App\Http\Controllers\UserNotificationsController::show()
+     * @covers \App\Http\Controllers\UserNotificationController::__construct()
+     * @covers \App\Http\Controllers\UserNotificationController::show()
      */
     public function testUserCanViewTheirNotificationSettings()
     {
@@ -48,8 +48,8 @@ class NotificationSettingsTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\UserNotificationsController::__construct()
-     * @covers \App\Http\Controllers\UserNotificationsController::update()
+     * @covers \App\Http\Controllers\UserNotificationController::__construct()
+     * @covers \App\Http\Controllers\UserNotificationController::update()
      */
     public function testUserCanUpdateTheirNotificationSettings()
     {
@@ -79,8 +79,8 @@ class NotificationSettingsTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\UserNotificationsController::__construct()
-     * @covers \App\Http\Controllers\UserNotificationsController::store()
+     * @covers \App\Http\Controllers\UserNotificationController::__construct()
+     * @covers \App\Http\Controllers\UserNotificationController::store()
      */
     public function testUserCanAddNewSlackWebhook()
     {

@@ -31,13 +31,16 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         $permissions = $this->service->getViewableBy($request->user());
 
-        return view('admin.permissions.index')->with('permissions', $permissions);
+        return view('admin.permissions.index')->with([
+            'permissions' => $this->paginate($permissions, 20, ['path' => route('admin.permissions.index')]),
+        ]);
     }
 
     /**
@@ -57,7 +60,7 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @param  \App\Models\Permission $permission
      * @return \Illuminate\Http\Response
      */

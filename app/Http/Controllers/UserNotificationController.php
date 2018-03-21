@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
-class UserNotificationsController extends Controller
+class UserNotificationController extends Controller
 {
     /**
      * The service.
@@ -35,9 +35,11 @@ class UserNotificationsController extends Controller
     public function store(Request $request)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250',
-            'uri' => 'required|url|max:250',
-            'recipient' => 'required|string|max:250',
+            'name' => 'required|string|max:50',
+            'uri' => ['required', 'url', 'max:250', 'regex:/https:\/\/hooks.slack.com\/services\/[A-Za-z0-9]*\/[A-Za-z0-9]*\/[A-Za-z0-9]/'],
+            'recipient' => ['required', 'string', 'max:250', 'regex:/^#|^@/'],
+        ], [
+            'uri.regex' => 'Must be in the format https://hooks.slack.com/services/X/Y/Z',
         ]);
 
         $this->service->createWebhook($attributes, $request->user());

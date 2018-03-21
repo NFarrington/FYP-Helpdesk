@@ -5,10 +5,16 @@ use Illuminate\Database\Migrations\Migration;
 class SeedPermissionsTable extends Migration
 {
     private $permissions = [
-        ['key' => 'articles.view', 'name' => 'Articles | View', 'description' => 'Allows users to view all knowledgebase articles.', 'default' => 0],
-        ['key' => 'articles.create', 'name' => 'Articles | Create', 'description' => 'Allows users to create knowledgebase articles.', 'default' => 0],
-        ['key' => 'articles.update', 'name' => 'Articles | Update', 'description' => 'Allows users to update all knowledgebase articles.', 'default' => 0],
-        ['key' => 'articles.delete', 'name' => 'Articles | Delete', 'description' => 'Allows users to delete all knowledgebase articles.', 'default' => 0],
+        ['key' => 'announcements.view', 'name' => 'Announcements | View', 'description' => 'Allows users to view any announcement.'],
+        ['key' => 'announcements.create', 'name' => 'Announcements | Create', 'description' => 'Allows users to create announcements.'],
+        ['key' => 'announcements.update', 'name' => 'Announcements | Update', 'description' => 'Allows users to update any announcement.'],
+        ['key' => 'announcements.delete', 'name' => 'Announcements | Delete', 'description' => 'Allows users to delete any announcement.'],
+        ['key' => 'articles.view', 'name' => 'Articles | View', 'description' => 'Allows users to view any knowledgebase article.'],
+        ['key' => 'articles.create', 'name' => 'Articles | Create', 'description' => 'Allows users to create knowledgebase articles.'],
+        ['key' => 'articles.update', 'name' => 'Articles | Update', 'description' => 'Allows users to update any knowledgebase article.'],
+        ['key' => 'articles.delete', 'name' => 'Articles | Delete', 'description' => 'Allows users to delete any knowledgebase article.'],
+        ['key' => 'tickets.posts.update', 'name' => 'Ticket Posts | Update', 'description' => 'Allows users to modify any ticket post.'],
+        ['key' => 'tickets.posts.delete', 'name' => 'Ticket Posts | Delete', 'description' => 'Allows users to delete any ticket post.'],
     ];
 
     /**

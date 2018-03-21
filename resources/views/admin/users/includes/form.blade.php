@@ -12,7 +12,7 @@
 
     <div class="col-md-6">
         <input id="name" type="text" class="form-control" name="name"
-               value="{{ old('name') ?: $user->name }}" required autofocus>
+               value="{{ old('name') ?: $user->name }}" maxlength="250" required autofocus>
 
         @if ($errors->has('name'))
             <span class="help-block">

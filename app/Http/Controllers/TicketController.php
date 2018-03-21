@@ -38,8 +38,8 @@ class TicketController extends Controller
         $tickets = $this->service->getTicketsByStatus($request->user());
 
         return view('tickets.index')->with([
-            'open' => $tickets['open'],
-            'closed' => $tickets['closed'],
+            'open' => $this->paginate($tickets['open'], 10, ['pageName' => 'open', 'path' => route('tickets.index')]),
+            'closed' => $this->paginate($tickets['closed'], 10, ['pageName' => 'closed', 'path' => route('tickets.index')]),
         ]);
     }
 

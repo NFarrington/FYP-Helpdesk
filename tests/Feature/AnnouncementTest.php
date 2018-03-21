@@ -150,6 +150,24 @@ class AnnouncementTest extends TestCase
     }
 
     /**
+     * Test an announcement can be active.
+     *
+     * @return void
+     */
+    public function testAnnouncementCanBeActive()
+    {
+        $this->actingAs($this->user);
+
+        $announcement = factory(Announcement::class)->states('active')->create(['user_id' => $this->user->id]);
+
+        $response = $this->get(route('announcements.index'));
+        $response->assertSeeText($announcement->title);
+
+        $response = $this->get(route('home'));
+        $response->assertSeeText($announcement->title);
+    }
+
+    /**
      * Test an announcement can be published.
      *
      * @return void

@@ -3,7 +3,7 @@
 
     <div class="col-md-6">
         <input id="name" type="text" class="form-control" name="name"
-               value="{{ old('name') }}" maxlength="250" required>
+               value="{{ old('name') }}" maxlength="50" required>
 
         @if ($errors->has('name'))
             <span class="help-block">

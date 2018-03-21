@@ -6,7 +6,7 @@ $factory->define(App\Models\Announcement::class, function (Faker $faker) {
     return [
         'title' => $faker->sentence,
         'content' => $faker->paragraph,
-        'status' => mt_rand(0, 2),
+        'status' => \App\Models\Announcement::STATUS_UNPUBLISHED,
         'user_id' => function () {
             return factory(App\Models\User::class)->create()->id;
         },

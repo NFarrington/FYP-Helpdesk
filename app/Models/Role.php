@@ -101,6 +101,9 @@ class Role extends Model
      */
     public function setKeyAttribute($value)
     {
-        $this->attributes['key'] = mb_strtolower($value);
+        $value = mb_strtolower($value);
+        $value = preg_replace('/\s+/', '.', $value);
+
+        $this->attributes['key'] = $value;
     }
 }

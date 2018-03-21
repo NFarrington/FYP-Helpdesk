@@ -107,3 +107,45 @@ ul.list-unstyled, ol.list-unstyled {
   @extend a;
   cursor: pointer;
 }
+
+.wrap {
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  width: ($screen-xs-max/2);
+}
+
+@media (min-width: $screen-sm-min) {
+  .wrap {
+    width: ($screen-sm-min/3);
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  .wrap {
+    width: ($screen-md-min/3);
+  }
+}
+
+@media (min-width: $screen-lg-min) {
+  .wrap {
+    width: ($screen-lg-min/3);
+  }
+}
+
+.text-limit {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel {
+  > .table-responsive > .table > tbody:first-child > tr:first-child th,
+  > .table-responsive > .table > tbody:first-child > tr:first-child td {
+    border-top: 0;
+  }
+}

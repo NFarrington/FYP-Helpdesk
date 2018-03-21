@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Repositories\ArticleRepository;
 use App\Repositories\TicketRepository;
 use App\Repositories\UserRepository;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class SearchService extends Service
 {
@@ -109,12 +108,12 @@ class SearchService extends Service
      *
      * @param User $user
      * @param string[] $searchQuery
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \App\Models\User[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function searchUsers($user, $searchQuery)
+    public function searchUsers(User $user, $searchQuery)
     {
         if (!$user->hasRole(Role::admin())) {
-            return new LengthAwarePaginator(collect(), 0, 1);
+            return collect();
         }
 
         $users = User::query();
@@ -126,6 +125,6 @@ class SearchService extends Service
             });
         }
 
-        return $users->paginate(20);
+        return $users->get();
     }
 }

@@ -10,6 +10,8 @@ return [
         'visible_to' => 'Visible To',
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
+
+        'status' => 'Status',
     ],
 
 ];

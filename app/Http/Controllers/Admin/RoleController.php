@@ -39,7 +39,9 @@ class RoleController extends Controller
     {
         $roles = $this->service->getViewableBy($request->user());
 
-        return view('admin.roles.index')->with('roles', $roles);
+        return view('admin.roles.index')->with([
+            'roles' => $this->paginate($roles, 20, ['path' => route('admin.roles.index')]),
+        ]);
     }
 
     /**
@@ -65,7 +67,7 @@ class RoleController extends Controller
     {
         $attributes = $this->validate($request, [
             'key' => 'required|string|max:50|unique:roles,key',
-            'name' => 'required|string|max:250|unique:roles,name',
+            'name' => 'required|string|max:100|unique:roles,name',
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);
@@ -113,7 +115,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $attributes = $this->validate($request, [
-            'name' => "required|string|max:250|unique:roles,name,{$role->id}",
+            'name' => "required|string|max:100|unique:roles,name,{$role->id}",
             'description' => 'required|string|max:250',
             'permissions' => 'array',
         ]);

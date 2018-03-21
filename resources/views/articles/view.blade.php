@@ -52,18 +52,9 @@
 
     @foreach($article->comments as $comment)
         <div class="panel panel-default">
+            <div class="panel-heading">{{ $comment->user->name }} at {{ $comment->created_at }}</div>
             <div class="panel-body">
-                <div class="form-horizontal">
-                    <label class="col-md-3 control-label">Name</label>
-                    <div class="col-md-7">
-                        <p class="form-control-static">{{ $comment->user->name }}</p>
-                    </div>
-
-                    <label class="col-md-3 control-label">Comment</label>
-                    <div class="col-md-7">
-                        <p class="form-control-static">{{ $comment->content }}</p>
-                    </div>
-                </div>
+                {!! nl2br(e($comment->content)) !!}
             </div>
         </div>
     @endforeach

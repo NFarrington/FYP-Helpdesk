@@ -16,7 +16,7 @@ class CreateSlackWebhooksTable extends Migration
         Schema::create('slack_webhooks', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->string('name');
+            $table->string('name', 50);
             $table->string('uri');
             $table->string('recipient');
         });

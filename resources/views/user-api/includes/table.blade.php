@@ -1,20 +1,22 @@
 @if($keys->isNotEmpty())
-    <table class="table table-hover {{ $keys->hasPages() ? 'table-bordered-bottom' : '' }}">
-        <tr>
-            <th>{{ __('token.key.name') }}</th>
-            <th>{{ __('token.key.created_at') }}</th>
-            <th></th>
-        </tr>
-        @foreach($keys as $key)
+    <div class="table-responsive">
+        <table class="table table-hover {{ $keys->hasPages() ? 'table-bordered-bottom' : '' }}">
             <tr>
-                <td>{{ $key->name }}</td>
-                <td>{{ $key->created_at }}</td>
-                <td>
-                    <delete-resource link-only route="{{ route('profile.api.destroy', $key) }}"></delete-resource>
-                </td>
+                <th>{{ __('token.key.name') }}</th>
+                <th>{{ __('token.key.created_at') }}</th>
+                <th></th>
             </tr>
-        @endforeach
-    </table>
+            @foreach($keys as $key)
+                <tr>
+                    <td class="wrap">{{ $key->name }}</td>
+                    <td>{{ $key->created_at }}</td>
+                    <td>
+                        <delete-resource link-only route="{{ route('profile.api.destroy', $key) }}"></delete-resource>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+    </div>
 
     <div class="text-center">{{ $keys->links() }}</div>
 @else

@@ -1,14 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class SeedRolesTable extends Migration
 {
     protected $roles = [
-        ['name' => 'Administrator'],
-        ['name' => 'Agent'],
+        ['key' => 'admin', 'name' => 'Administrator', 'description' => 'Provides elevated permissions to configure and manage the application'],
+        ['key' => 'agent', 'name' => 'Agent', 'description' => 'Provides access to agent-related customer-service infrastructure'],
     ];
 
     /**

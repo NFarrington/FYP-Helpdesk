@@ -39,8 +39,9 @@ class DepartmentController extends Controller
     {
         $departments = $this->service->getViewableBy($request->user());
 
-        return view('admin.departments.index')
-            ->with('departments', $departments);
+        return view('admin.departments.index')->with([
+            'departments' => $this->paginate($departments, 20, ['path' => route('admin.departments.index')]),
+        ]);
     }
 
     /**
@@ -65,7 +66,7 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250',
+            'name' => 'required|string|max:50',
             'description' => 'required|string|max:250',
             'internal' => 'required|boolean',
             'users' => 'array',
@@ -114,7 +115,7 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $attributes = $this->validate($request, [
-            'name' => 'required|string|max:250',
+            'name' => 'required|string|max:50',
             'description' => 'required|string|max:250',
             'internal' => 'required|boolean',
             'users' => 'array',
