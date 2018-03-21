@@ -39,8 +39,9 @@ class DepartmentController extends Controller
     {
         $departments = $this->service->getViewableBy($request->user());
 
-        return view('admin.departments.index')
-            ->with('departments', $departments);
+        return view('admin.departments.index')->with([
+            'departments' => $this->paginate($departments, 20, ['path' => route('admin.departments.index')]),
+        ]);
     }
 
     /**

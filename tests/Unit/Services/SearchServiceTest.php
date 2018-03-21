@@ -85,6 +85,6 @@ class SearchServiceTest extends TestCase
         preg_match('/[A-Z0-9_]+/i', $user->name, $matches);
 
         $result = $this->service->searchUsers($this->user, explode(' ', $matches[0]));
-        $this->assertEquals($user->id, $result->items()[0]->id);
+        $this->assertEquals($user->id, $result->first()->id);
     }
 }

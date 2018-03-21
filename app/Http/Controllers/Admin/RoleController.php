@@ -39,7 +39,9 @@ class RoleController extends Controller
     {
         $roles = $this->service->getViewableBy($request->user());
 
-        return view('admin.roles.index')->with('roles', $roles);
+        return view('admin.roles.index')->with([
+            'roles' => $this->paginate($roles, 20, ['path' => route('admin.roles.index')]),
+        ]);
     }
 
     /**

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 
 abstract class Controller extends BaseController
@@ -34,14 +34,14 @@ abstract class Controller extends BaseController
     /**
      * Paginate a collection of Eloquent models.
      *
-     * @param \Illuminate\Database\Eloquent\Collection $items
+     * @param \Illuminate\Support\Collection $items
      * @param int $perPage
      * @param array $options
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     protected function paginate(Collection $items, int $perPage = 10, array $options = [])
     {
-        $currentPage = $this->getPaginatorPage(app(Request::class));
+        $currentPage = $this->getPaginatorPage(app(Request::class), $options);
 
         return new LengthAwarePaginator(
             $items->forPage($currentPage, $perPage),
@@ -54,11 +54,13 @@ abstract class Controller extends BaseController
      * Calculate the current pagination page.
      *
      * @param \Illuminate\Http\Request $request
+     * @param array $options
      * @return int|null|string
      */
-    private function getPaginatorPage(Request $request)
+    private function getPaginatorPage(Request $request, array $options)
     {
-        $page = $request->input('page');
+        $pageName = array_get($options, 'pageName') ?: 'page';
+        $page = $request->input($pageName);
 
         return is_numeric($page) ? $page : null;
     }

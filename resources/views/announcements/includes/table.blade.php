@@ -17,6 +17,8 @@
             @endforeach
         </table>
     </div>
+
+    <div class="text-center">{{ $announcements->links() }}</div>
 @else
     <div class="panel-body text-center">
         <span>Nothing to show.</span>

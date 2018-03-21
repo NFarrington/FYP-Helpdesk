@@ -49,9 +49,9 @@ class SearchController extends Controller
         $users = $this->service->searchUsers($request->user(), $searchQuery);
 
         return view('search.index')->with([
-            'tickets' => $tickets,
-            'articles' => $articles,
-            'users' => $users,
+            'tickets' => $this->paginate($tickets, 10, ['pageName' => 'tickets', 'path' => route('search')])->appends('q', $request->input('q')),
+            'articles' => $this->paginate($articles, 10, ['pageName' => 'articles', 'path' => route('search')])->appends('q', $request->input('q')),
+            'users' => $this->paginate($users, 10, ['pageName' => 'users', 'path' => route('search')])->appends('q', $request->input('q')),
         ]);
     }
 }

@@ -37,7 +37,9 @@ class ArticleController extends Controller
     {
         $articles = $this->service->getViewableBy($request->user());
 
-        return view('articles.index')->with('articles', $articles);
+        return view('articles.index')->with([
+            'articles' => $this->paginate($articles, 20, ['path' => route('articles.index')]),
+        ]);
     }
 
     /**

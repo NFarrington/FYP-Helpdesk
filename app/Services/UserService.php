@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 
 class UserService extends Service
@@ -30,13 +29,13 @@ class UserService extends Service
      * Get all model instances the user can view.
      *
      * @param User $user
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return \App\Models\User[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     public function getViewableBy(User $user)
     {
         return $user->can('view', User::class)
-            ? User::query()->orderBy('id')->paginate(20)
-            : new LengthAwarePaginator(collect([$user]), 1, 20);
+            ? User::orderBy('id')->get()
+            : collect([$user]);
     }
 
     /**
