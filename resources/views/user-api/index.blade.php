@@ -22,4 +22,11 @@
 
         @include('user-api.includes.table', ['keys' => $keys])
     </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Documentation</div>
+        <div class="panel-body">
+            @include('user-api.includes.documentation')
+        </div>
+    </div>
 @endsection

@@ -24,7 +24,7 @@ function app_key()
  */
 function markdown($text)
 {
-    return (new ParsedownExtra)->text($text);
+    return (new \App\Libraries\ParsedownExtra)->text($text);
 }
 
 /**
