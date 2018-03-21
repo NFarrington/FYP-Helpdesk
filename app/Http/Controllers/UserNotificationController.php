@@ -36,8 +36,10 @@ class UserNotificationController extends Controller
     {
         $attributes = $this->validate($request, [
             'name' => 'required|string|max:50',
-            'uri' => 'required|url|max:250',
-            'recipient' => 'required|string|max:250',
+            'uri' => ['required', 'url', 'max:250', 'regex:/https:\/\/hooks.slack.com\/services\/[A-Za-z0-9]*\/[A-Za-z0-9]*\/[A-Za-z0-9]/'],
+            'recipient' => ['required', 'string', 'max:250', 'regex:/^#|^@/'],
+        ], [
+            'uri.regex' => 'Must be in the format https://hooks.slack.com/services/X/Y/Z',
         ]);
 
         $this->service->createWebhook($attributes, $request->user());
