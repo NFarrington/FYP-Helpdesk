@@ -8,7 +8,9 @@ use App\Models\Ticket;
 use App\Models\TicketPost;
 use App\Models\TicketStatus;
 use App\Models\User;
+use App\Notifications\User\TicketClosed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class TicketTest extends TestCase
@@ -224,5 +226,21 @@ class TicketTest extends TestCase
         ]);
 
         $response->assertRedirect(route('agent.tickets.show', $ticket));
+    }
+
+    public function testTicketDoesntSendNotificationToPoster()
+    {
+        $ticket = factory(Ticket::class)->create(['department_id' => 1, 'user_id' => $this->user->id, 'status_id' => TicketStatus::withAgent()->first()->id]);
+        $this->actingAs($this->user);
+
+        $status = TicketStatus::closed()->first()->id;
+        $this->get(route('agent.tickets.show', $ticket->id));
+        $this->put(route('agent.tickets.update', $ticket), [
+            'department' => 1,
+            'status' => $status,
+            'agent' => null,
+        ]);
+
+        Notification::assertNotSentTo([$this->user], TicketClosed::class);
     }
 }
