@@ -2,7 +2,14 @@
 
 @section('content')
     <div class="panel panel-default">
-        <div class="panel-heading">Update Role</div>
+        <div class="panel-heading">
+            Update Role
+            @can('delete', $role)
+                <span class="pull-right">
+                    <delete-resource route="{{ route('admin.roles.destroy', $role) }}"></delete-resource>
+                </span>
+            @endcan
+        </div>
 
         <div class="panel-body">
             <form class="form-horizontal" method="POST" action="{{ route('admin.roles.update', $role) }}">

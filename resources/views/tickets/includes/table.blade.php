@@ -1,4 +1,3 @@
-
 @if($tickets->isNotEmpty())
     <div class="table-responsive">
         <table class="table table-hover">

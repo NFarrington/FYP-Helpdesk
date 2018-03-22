@@ -2,7 +2,12 @@
 
 @section('content')
     <div class="panel panel-default">
-        <div class="panel-heading">Update Department</div>
+        <div class="panel-heading">
+            Update Department
+            <span class="pull-right">
+                <delete-resource route="{{ route('admin.departments.destroy', $department) }}"></delete-resource>
+            </span>
+        </div>
 
         <div class="panel-body">
             <form class="form-horizontal" method="POST" action="{{ route('admin.departments.update', $department) }}">

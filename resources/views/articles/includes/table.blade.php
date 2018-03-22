@@ -9,6 +9,7 @@
                 @endcan
                 <th>{{ __('article.key.created_at') }}</th>
                 <th>{{ __('article.key.updated_at') }}</th>
+                <th></th>
             </tr>
             @foreach($articles as $article)
                 <tr>
@@ -19,6 +20,7 @@
                     @endcan
                     <td>{{ $article->created_at }}</td>
                     <td>{{ $article->updated_at }}</td>
+                    <td><a href="{{ route('articles.show', $article) }}">View</a></td>
                 </tr>
             @endforeach
         </table>
