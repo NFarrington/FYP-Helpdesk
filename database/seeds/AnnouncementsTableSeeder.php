@@ -14,5 +14,11 @@ class AnnouncementsTableSeeder extends Seeder
             factory(\App\Models\Announcement::class, 2)
                 ->create(['user_id' => $user->id]);
         }
+
+        foreach ($users->take(5) as $user) {
+            factory(\App\Models\Announcement::class, 2)
+                ->states('published')
+                ->create(['user_id' => $user->id]);
+        }
     }
 }
