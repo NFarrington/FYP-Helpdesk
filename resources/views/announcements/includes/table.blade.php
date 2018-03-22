@@ -2,6 +2,7 @@
     <div class="table-responsive">
         <table class="table table-hover">
             <tr>
+                <th>{{ __('models/announcement.key.id') }}</th>
                 <th>{{ __('models/announcement.key.title') }}</th>
                 <th>{{ __('models/announcement.key.status') }}</th>
                 <th>{{ __('models/announcement.key.created_at') }}</th>
@@ -10,6 +11,7 @@
             </tr>
             @foreach($announcements as $announcement)
                 <tr>
+                    <td><a href="{{ route('announcements.show', $announcement) }}">#{{ $announcement->id }}</a></td>
                     <td class="wrap">{{ $announcement->title }}</td>
                     <td>{{ $announcement->getStatusString() }}</td>
                     <td>{{ $announcement->created_at }}</td>
